@@ -13,8 +13,8 @@ export default function Page() {
     const [l, setL] = React.useState<number>(2);
     const [d, setD] = React.useState<number>(2);
 
-    const x = d3.range(-1, 1, 0.01);
-    const y = React.useMemo(() => d3.range(-2000, 2000, 10), []);
+    const x = d3.range(-0.5, 0.5, 0.01);
+    const y = React.useMemo(() => d3.range(-1000, 1000, 5), []);
     const [z, setZ] = React.useState<number[]>([]);
     const [w, setW] = React.useState<number[][]>([]);
     const [delta, setDelta] = React.useState<string>("");
@@ -92,8 +92,17 @@ export default function Page() {
                                 config={{staticPlot: true}}
                                 data={[{type: "scatter", mode: "lines", x: z, y: y}]}
                                 layout={{
-                                    width: 320, height: 400, margin: {t: 0, l: 0, r: 0, b: 0},
-                                    xaxis: {visible: false}, yaxis: {visible: false},
+                                    width: 400, height: 400, margin: {t: 0, l: 48, r: 0, b: 40},
+                                    xaxis: {
+                                        visible: true, showline: true, showticklabels: true,
+                                        linewidth: 2, ticks: "outside", tickwidth: 2,
+                                        minor: {showgrid: true, dtick: 0.05}
+                                    },
+                                    yaxis: {
+                                        visible: true, showline: true, showticklabels: true,
+                                        linewidth: 2, ticks: "outside", tickwidth: 2,
+                                        minor: {showgrid: true, dtick: 100}
+                                    },
                                     grid: {rows: 1, columns: 1, domain: {y: [0, 1]}}
                                 }}
                             />
@@ -104,7 +113,7 @@ export default function Page() {
                                     colorscale: [[0, "white"], [1, "black"]], showscale: false,
                                 }]}
                                 layout={{
-                                    width: 50, height: 360, margin: {t: 0, l: 0, r: 0, b: 0},
+                                    width: 50, height: 360, margin: {t: 0, l: 0, r: 0, b: 40},
                                     xaxis: {visible: false}, yaxis: {visible: false}
                                 }}
                             />
