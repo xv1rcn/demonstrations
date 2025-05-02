@@ -19,6 +19,11 @@ export default function Page() {
                                 <Typography>Single-slit</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="wedge">
+                                <Typography>Wedge</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
