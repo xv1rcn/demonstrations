@@ -73,7 +73,7 @@ export default function Page() {
                                 config={{staticPlot: true}}
                                 data={[{type: "scatter", mode: "lines", x: z, y: y}]}
                                 layout={{
-                                    width: 160, height: 400, margin: {t: 0, l: 48, r: 0, b: 40},
+                                    width: 400, height: 400, margin: {t: 0, l: 48, r: 0, b: 40},
                                     xaxis: {
                                         visible: true, showline: true, showticklabels: true,
                                         linewidth: 2, ticks: "outside", tickwidth: 2,
@@ -94,7 +94,7 @@ export default function Page() {
                                     colorscale: [[0, "white"], [1, "black"]], showscale: false,
                                 }]}
                                 layout={{
-                                    width: 360, height: 360, margin: {t: 0, l: 0, r: 0, b: 40},
+                                    width: 400, height: 400, margin: {t: 0, l: 0, r: 0, b: 40},
                                     xaxis: {visible: false}, yaxis: {visible: false}
                                 }}
                             />
