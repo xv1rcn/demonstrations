@@ -24,6 +24,11 @@ export default function Page() {
                                 <Typography>Wedge</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="newton">
+                                <Typography>Newton&apos;s Ring</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
