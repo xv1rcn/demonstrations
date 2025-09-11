@@ -29,6 +29,11 @@ export default function Page() {
                                 <Typography>Newton&apos;s Ring</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="polarization">
+                                <Typography>Polarization</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
