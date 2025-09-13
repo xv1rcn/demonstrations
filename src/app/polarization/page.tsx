@@ -11,8 +11,13 @@ export default function Page() {
     const [extinction, setExtinction] = React.useState(10);
     const [intensity, setIntensity] = React.useState(1);
 
+    const actualIntensity = (t: number, i: number) => {
+        const minI = i / extinction;
+        return minI + (i - minI) * Math.pow(Math.cos(t * Math.PI / 180), 2);
+    };
+
     const x1 = React.useMemo(() => Array.from({ length: 101 }, (_, i) => Math.PI * i / 50), []);
-    const y1 = React.useMemo(() => x1.map(x => intensity * Math.sin(x)), [x1, intensity]);
+    const y1 = React.useMemo(() => x1.map(x => actualIntensity(theta, intensity) * Math.sin(x)), [x1, theta, intensity]);
 
     const polAxis = React.useMemo(() => {
         const r = 1;
@@ -21,10 +26,7 @@ export default function Page() {
     }, [theta]);
 
     const x3 = React.useMemo(() => Array.from({ length: 181 }, (_, i) => i), []);
-    const y3 = React.useMemo(() => x3.map(t => {
-        const minI = intensity / extinction;
-        return minI + (intensity - minI) * Math.pow(Math.cos(t * Math.PI / 180), 2);
-    }), [x3, intensity, extinction]);
+    const y3 = React.useMemo(() => x3.map(t => actualIntensity(t, intensity)), [x3, intensity, extinction]);
     const currentI = y3[theta];
 
     return (
@@ -84,9 +86,12 @@ export default function Page() {
                                     x: x1, y: y1, type: 'scatter', mode: 'lines', line: { color: 'blue' }
                                 }]}
                                 layout={{
-                                    width: 400, height: 320, margin: { t: 20, l: 48, r: 0, b: 20 },
-                                    xaxis: { showticklabels: false, showgrid: false, range: [0, Math.PI * 2] },
-                                    yaxis: { range: [-1.2, 1.2] }
+                                    width: 400, height: 320, margin: { t: 20, l: 64, r: 0, b: 20 },
+                                    xaxis: {
+                                        showticklabels: false, showgrid: false,
+                                        range: [0, Math.PI * 2], title: { text: '振幅' }
+                                    },
+                                    yaxis: { range: [-1.2, 1.2], title: { text: '时间' } }
                                 }}
                             />
                             <Plot
@@ -95,14 +100,24 @@ export default function Page() {
                                     x: x3, y: y3,
                                     type: 'scatter', mode: 'lines', line: { color: 'green' },
                                 }, {
-                                    x: [theta, theta], y: [0, currentI],
+                                    x: [theta, theta], y: [-0.2, 1.2],
                                     type: 'scatter', mode: 'lines', line: { color: 'red', dash: 'dot' },
+                                }, {
+                                    x: [theta], y: [currentI], type: 'scatter', mode: 'markers',
+                                    line: { color: 'red', width: 12 }
                                 }]}
                                 layout={{
-                                    width: 400, height: 320, margin: { t: 20, l: 48, r: 0, b: 20 },
-                                    xaxis: { showticklabels: false, showgrid: false },
-                                    yaxis: { range: [-0.2, 1.2] },
-                                    showlegend: false
+                                    width: 400, height: 320, margin: { t: 20, l: 64, r: 0, b: 20 },
+                                    xaxis: {
+                                        showticklabels: false, showgrid: false,
+                                        title: { text: '偏振片角度 θ' }, range: [0, 180]
+                                    },
+                                    yaxis: { range: [-0.2, 1.2], title: { text: '光强' } },
+                                    showlegend: false,
+                                    annotations: [{
+                                        x: theta, y: currentI, text: `${(currentI * 100).toFixed(2)}%`,
+                                        xanchor: 'right', yanchor: 'bottom'
+                                    }]
                                 }}
                             />
                         </Stack>
