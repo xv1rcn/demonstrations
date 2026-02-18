@@ -79,6 +79,11 @@ export default function Page() {
                                 <Typography>Convex Lens Imaging</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="microscope">
+                                <Typography>Microscope Imaging</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
