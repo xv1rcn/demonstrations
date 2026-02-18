@@ -84,6 +84,11 @@ export default function Page() {
                                 <Typography>Microscope Imaging</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="telescope-magnification">
+                                <Typography>Telescope Magnification</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
