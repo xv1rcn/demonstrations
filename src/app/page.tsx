@@ -54,6 +54,11 @@ export default function Page() {
                                 <Typography>Fiber TIR</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="bubble-tir">
+                                <Typography>Bubble TIR</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
