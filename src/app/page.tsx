@@ -49,6 +49,11 @@ export default function Page() {
                                 <Typography>Critical Angle</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="fiber-tir">
+                                <Typography>Fiber TIR</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
