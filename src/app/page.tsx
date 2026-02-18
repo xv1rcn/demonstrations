@@ -69,6 +69,11 @@ export default function Page() {
                                 <Typography>Rainbow Formation</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="lens-chromatic">
+                                <Typography>Lens Chromatic Aberration</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
