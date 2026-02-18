@@ -64,6 +64,11 @@ export default function Page() {
                                 <Typography>Prism Dispersion</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="rainbow">
+                                <Typography>Rainbow Formation</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
