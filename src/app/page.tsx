@@ -44,6 +44,11 @@ export default function Page() {
                                 <Typography>3D Polarization Glasses</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="critical-angle">
+                                <Typography>Critical Angle</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
