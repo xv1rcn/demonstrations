@@ -34,6 +34,11 @@ export default function Page() {
                                 <Typography>Polarization</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="brewster">
+                                <Typography>Brewster</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
