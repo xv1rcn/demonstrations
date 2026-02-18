@@ -39,6 +39,11 @@ export default function Page() {
                                 <Typography>Brewster</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="polarization-3d">
+                                <Typography>3D Polarization Glasses</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
