@@ -59,6 +59,11 @@ export default function Page() {
                                 <Typography>Bubble TIR</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="prism-dispersion">
+                                <Typography>Prism Dispersion</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
