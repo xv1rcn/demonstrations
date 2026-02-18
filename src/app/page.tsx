@@ -74,6 +74,11 @@ export default function Page() {
                                 <Typography>Lens Chromatic Aberration</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="convex-lens">
+                                <Typography>Convex Lens Imaging</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
