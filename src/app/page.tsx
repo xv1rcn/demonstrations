@@ -104,6 +104,11 @@ export default function Page() {
                                 <Typography>Stopping Voltage</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="photo-current-intensity">
+                                <Typography>Photo Current vs Intensity</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
