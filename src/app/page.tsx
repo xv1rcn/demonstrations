@@ -1,115 +1,85 @@
 'use client';
 
 import * as React from "react";
-import {Card, CardContent, Link, MenuItem, MenuList, Typography} from "@mui/material";
+import {Card, CardContent, Divider, Link, MenuItem, MenuList, Typography} from "@mui/material";
+
+type NavItem = {
+    href: string;
+    label: string;
+};
+
+type NavGroup = {
+    title: string;
+    members: NavItem[];
+};
+
+const NAV_GROUPS: NavGroup[] = [
+    {
+        title: '波动与偏振',
+        members: [
+            {href: 'double-slit', label: '① 杨氏双缝干涉'},
+            {href: 'single-slit', label: '② 单缝衍射'},
+            {href: 'grating-diffraction', label: '③ 平面光栅衍射'},
+            {href: 'polarization', label: '④ 偏振片・马吕斯定律'},
+            {href: 'brewster', label: '⑤ 布儒斯特角・反射偏振'},
+            {href: 'polarization-3d', label: '⑥ 3D 眼镜偏振分离'},
+        ],
+    },
+    {
+        title: '折射与成像',
+        members: [
+            {href: 'critical-angle', label: '⑦ 全反射临界角'},
+            {href: 'fiber-tir', label: '⑧ 光纤全反射'},
+            {href: 'bubble-tir', label: '⑨ 水中气泡全反射'},
+            {href: 'prism-dispersion', label: '⑩ 三棱镜色散'},
+            {href: 'rainbow', label: '⑪ 彩虹水滴折射'},
+            {href: 'lens-chromatic', label: '⑫ 透镜色差'},
+            {href: 'convex-lens', label: '⑬ 凸透镜成像'},
+            {href: 'microscope', label: '⑭ 显微镜成像'},
+            {href: 'telescope-magnification', label: '⑮ 望远镜倍率'},
+        ],
+    },
+    {
+        title: '光电效应',
+        members: [
+            {href: 'photoelectric', label: '⑯ 光电效应・光电子动能'},
+            {href: 'stopping-voltage', label: '⑰ 遏止电压'},
+            {href: 'photo-current-intensity', label: '⑱ 光电流与光强'},
+        ],
+    },
+    {
+        title: '其他',
+        members: [
+            {href: 'wedge', label: 'Ⓐ 劈尖干涉'},
+            {href: 'newton', label: 'Ⓑ 牛顿环'},
+        ],
+    },
+];
 
 export default function Page() {
     return (
         <div className="flex items-center justify-center h-screen">
-            <Card>
+            <Card className="max-h-[90vh] overflow-hidden">
                 <CardContent className="flex flex-row">
-                    <MenuList className="w-72">
-                        <MenuItem>
-                            <Link href="double-slit">
-                                <Typography>Double-slit</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="single-slit">
-                                <Typography>Single-slit</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="grating-diffraction">
-                                <Typography>Grating Diffraction</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="wedge">
-                                <Typography>Wedge</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="newton">
-                                <Typography>Newton&apos;s Ring</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="polarization">
-                                <Typography>Polarization</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="brewster">
-                                <Typography>Brewster</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="polarization-3d">
-                                <Typography>3D Polarization Glasses</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="critical-angle">
-                                <Typography>Critical Angle</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="fiber-tir">
-                                <Typography>Fiber TIR</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="bubble-tir">
-                                <Typography>Bubble TIR</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="prism-dispersion">
-                                <Typography>Prism Dispersion</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="rainbow">
-                                <Typography>Rainbow Formation</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="lens-chromatic">
-                                <Typography>Lens Chromatic Aberration</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="convex-lens">
-                                <Typography>Convex Lens Imaging</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="microscope">
-                                <Typography>Microscope Imaging</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="telescope-magnification">
-                                <Typography>Telescope Magnification</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="photoelectric">
-                                <Typography>Photoelectric Effect</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="stopping-voltage">
-                                <Typography>Stopping Voltage</Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link href="photo-current-intensity">
-                                <Typography>Photo Current vs Intensity</Typography>
-                            </Link>
-                        </MenuItem>
-                    </MenuList>
+                    <div className="w-[30rem] max-h-[82vh] overflow-y-auto pr-1">
+                        {NAV_GROUPS.map(({title, members}, groupIdx) => (
+                            <React.Fragment key={title}>
+                                <Typography variant="subtitle2" color="text.secondary" className="px-4 pt-1 pb-1">
+                                    {title}
+                                </Typography>
+                                <MenuList dense>
+                                    {members.map((item) => (
+                                        <MenuItem key={item.href}>
+                                            <Link href={item.href} underline="hover">
+                                                <Typography>{item.label}</Typography>
+                                            </Link>
+                                        </MenuItem>
+                                    ))}
+                                </MenuList>
+                                {groupIdx < NAV_GROUPS.length - 1 && <Divider className="my-1"/>}
+                            </React.Fragment>
+                        ))}
+                    </div>
                 </CardContent>
             </Card>
         </div>
