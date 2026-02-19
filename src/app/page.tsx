@@ -20,6 +20,11 @@ export default function Page() {
                             </Link>
                         </MenuItem>
                         <MenuItem>
+                            <Link href="grating-diffraction">
+                                <Typography>Grating Diffraction</Typography>
+                            </Link>
+                        </MenuItem>
+                        <MenuItem>
                             <Link href="wedge">
                                 <Typography>Wedge</Typography>
                             </Link>
