@@ -3,6 +3,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import {Card, CardContent, Chip, Divider, Skeleton, Slider, Stack, TextField} from "@mui/material";
+import type {Data} from 'plotly.js';
 
 const Plot = dynamic(() => import('react-plotly.js'),
     {ssr: false, loading: () => (<Skeleton width={760} height={460}/>)},
@@ -27,7 +28,7 @@ export default function Page() {
     const lensX = 0;
     const yRays = [0.7, 0.35, -0.35, -0.7];
 
-    const redRays = yRays.flatMap((y) => ([
+    const redRays: Data[] = yRays.flatMap((y) => ([
         {
             type: 'scatter' as const,
             mode: 'lines' as const,
@@ -35,7 +36,7 @@ export default function Page() {
             y: [y, y],
             line: {color: 'rgba(220,38,38,0.5)', width: 2},
             showlegend: false,
-            hoverinfo: 'skip',
+            hoverinfo: 'skip' as const,
         },
         {
             type: 'scatter' as const,
@@ -44,11 +45,11 @@ export default function Page() {
             y: [y, 0],
             line: {color: 'rgba(220,38,38,0.85)', width: 2.5},
             showlegend: false,
-            hoverinfo: 'skip',
+            hoverinfo: 'skip' as const,
         },
     ]));
 
-    const blueRays = yRays.flatMap((y) => ([
+    const blueRays: Data[] = yRays.flatMap((y) => ([
         {
             type: 'scatter' as const,
             mode: 'lines' as const,
@@ -56,7 +57,7 @@ export default function Page() {
             y: [y + 0.08, y + 0.08],
             line: {color: 'rgba(37,99,235,0.45)', width: 2},
             showlegend: false,
-            hoverinfo: 'skip',
+            hoverinfo: 'skip' as const,
         },
         {
             type: 'scatter' as const,
@@ -65,7 +66,7 @@ export default function Page() {
             y: [y + 0.08, 0],
             line: {color: 'rgba(37,99,235,0.85)', width: 2.5},
             showlegend: false,
-            hoverinfo: 'skip',
+            hoverinfo: 'skip' as const,
         },
     ]));
 
@@ -127,7 +128,7 @@ export default function Page() {
                                 },
                                 {
                                     type: 'scatter',
-                                    mode: 'markers+text',
+                                    mode: 'text+markers',
                                     x: [fRedPlot],
                                     y: [0],
                                     marker: {size: 10, color: '#dc2626'},
@@ -137,7 +138,7 @@ export default function Page() {
                                 },
                                 {
                                     type: 'scatter',
-                                    mode: 'markers+text',
+                                    mode: 'text+markers',
                                     x: [fBluePlot],
                                     y: [0],
                                     marker: {size: 10, color: '#2563eb'},

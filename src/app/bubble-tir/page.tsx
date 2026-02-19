@@ -57,7 +57,7 @@ export default function Page() {
         point[1] + 1.8 * dRef[1],
     ];
 
-    const refractedEnd = React.useMemo<[number, number] | null>(() => {
+    const refractedEnd: [number, number] | null = (() => {
         const sinThetaT = nWater * Math.sin(toRadian(thetaIn));
         if (Math.abs(sinThetaT) > 1) return null;
         const thetaT = Math.asin(Math.max(-1, Math.min(1, sinThetaT)));
@@ -66,7 +66,7 @@ export default function Page() {
             Math.cos(thetaT) * normalToAir[1] + Math.sin(thetaT) * tangent[1],
         ]);
         return [point[0] + 1.4 * dTrans[0], point[1] + 1.4 * dTrans[1]];
-    }, [nWater, thetaIn, normalToAir, tangent, point]);
+    })();
 
     const normalStart: [number, number] = [
         point[0] - 1.0 * normalToAir[0],
