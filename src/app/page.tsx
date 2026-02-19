@@ -94,6 +94,11 @@ export default function Page() {
                                 <Typography>Photoelectric Effect</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="stopping-voltage">
+                                <Typography>Stopping Voltage</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
