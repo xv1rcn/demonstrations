@@ -89,6 +89,11 @@ export default function Page() {
                                 <Typography>Telescope Magnification</Typography>
                             </Link>
                         </MenuItem>
+                        <MenuItem>
+                            <Link href="photoelectric">
+                                <Typography>Photoelectric Effect</Typography>
+                            </Link>
+                        </MenuItem>
                     </MenuList>
                 </CardContent>
             </Card>
