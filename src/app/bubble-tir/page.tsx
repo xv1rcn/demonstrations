@@ -26,14 +26,15 @@ export default function Page() {
     }, [nWater]);
     const isTotalInternalReflection = thetaIn > thetaCritical;
 
-    const center: [number, number] = [0, 0];
+    const centerX = 0;
+    const centerY = 0;
     const radius = 1;
     const interfacePolar = 140;
-    const px = center[0] + radius * Math.cos(toRadian(interfacePolar));
-    const py = center[1] + radius * Math.sin(toRadian(interfacePolar));
+    const px = centerX + radius * Math.cos(toRadian(interfacePolar));
+    const py = centerY + radius * Math.sin(toRadian(interfacePolar));
     const point: [number, number] = [px, py];
 
-    const normalToAir = normalize([center[0] - point[0], center[1] - point[1]]);
+    const normalToAir = normalize([centerX - point[0], centerY - point[1]]);
     const tangent = normalize([-normalToAir[1], normalToAir[0]]);
 
     const dInc = normalize([
@@ -78,11 +79,11 @@ export default function Page() {
 
     const circleAngles = React.useMemo(() => Array.from({length: 361}, (_, i) => i), []);
     const bubbleX = React.useMemo(
-        () => circleAngles.map((deg) => center[0] + radius * Math.cos(toRadian(deg))),
+        () => circleAngles.map((deg) => centerX + radius * Math.cos(toRadian(deg))),
         [circleAngles],
     );
     const bubbleY = React.useMemo(
-        () => circleAngles.map((deg) => center[1] + radius * Math.sin(toRadian(deg))),
+        () => circleAngles.map((deg) => centerY + radius * Math.sin(toRadian(deg))),
         [circleAngles],
     );
 

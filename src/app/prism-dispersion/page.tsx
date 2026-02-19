@@ -99,17 +99,6 @@ const wavelengthToColor = (lambda: number) => {
     return `rgb(${to255(r)}, ${to255(g)}, ${to255(b)})`;
 };
 
-const lineIntersection = (p: Vec, d: Vec, a: Vec, b: Vec): Vec | null => {
-    const e = sub(b, a);
-    const den = cross2(d, e);
-    if (Math.abs(den) < 1e-10) return null;
-    const ap = sub(a, p);
-    const t = cross2(ap, e) / den;
-    const u = cross2(ap, d) / den;
-    if (t <= 1e-6 || u < -1e-6 || u > 1 + 1e-6) return null;
-    return add(p, scale(d, t));
-};
-
 const raySegmentIntersection = (p: Vec, d: Vec, a: Vec, b: Vec): SegmentHit | null => {
     const e = sub(b, a);
     const den = cross2(d, e);

@@ -11,13 +11,13 @@ export default function Page() {
     const [extinction, setExtinction] = React.useState(10);
     const [intensity, setIntensity] = React.useState(1);
 
-    const actualIntensity = (t: number, i: number) => {
+    const actualIntensity = React.useCallback((t: number, i: number) => {
         const minI = i / extinction;
         return minI + (i - minI) * Math.pow(Math.cos(t * Math.PI / 180), 2);
-    };
+    }, [extinction]);
 
     const x1 = React.useMemo(() => Array.from({ length: 101 }, (_, i) => Math.PI * i / 50), []);
-    const y1 = React.useMemo(() => x1.map(x => actualIntensity(theta, intensity) * Math.sin(x)), [x1, theta, intensity]);
+    const y1 = React.useMemo(() => x1.map(x => actualIntensity(theta, intensity) * Math.sin(x)), [x1, theta, intensity, actualIntensity]);
 
     const polAxis = React.useMemo(() => {
         const r = 1;
@@ -26,7 +26,7 @@ export default function Page() {
     }, [theta]);
 
     const x3 = React.useMemo(() => Array.from({ length: 181 }, (_, i) => i), []);
-    const y3 = React.useMemo(() => x3.map(t => actualIntensity(t, intensity)), [x3, intensity, extinction]);
+    const y3 = React.useMemo(() => x3.map(t => actualIntensity(t, intensity)), [x3, intensity, actualIntensity]);
     const currentI = y3[theta];
 
     return (

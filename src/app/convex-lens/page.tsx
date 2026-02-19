@@ -63,17 +63,16 @@ export default function Page() {
     const yImg = nearFocus ? 0 : m * yObj;
 
     const objectTop: Point = {x: xObj, y: yObj};
-    const lensParallelPoint: Point = {x: 0, y: yObj};
     const centerPoint: Point = {x: 0, y: 0};
 
     const rayParallelOut: Ray = React.useMemo(() => {
         if (nearFocus) {
-            return {p: lensParallelPoint, d: {x: 1, y: 0}};
+            return {p: {x: 0, y: yObj}, d: {x: 1, y: 0}};
         }
         if (v > 0) {
-            return {p: lensParallelPoint, d: {x: xImg - lensParallelPoint.x, y: yImg - lensParallelPoint.y}};
+            return {p: {x: 0, y: yObj}, d: {x: xImg, y: yImg - yObj}};
         }
-        return {p: lensParallelPoint, d: {x: xF, y: yObj}};
+        return {p: {x: 0, y: yObj}, d: {x: xF, y: yObj}};
     }, [nearFocus, v, xImg, yImg, xF, yObj]);
 
     const rayCenterOut: Ray = {
