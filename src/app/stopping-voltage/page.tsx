@@ -117,8 +117,8 @@ export default function Page() {
                                 width: 860,
                                 height: 500,
                                 margin: {t: 24, l: 58, r: 24, b: 52},
-                                xaxis: {title: '频率 ν (Hz)', range: [nuMin, nuMax], fixedrange: true},
-                                yaxis: {title: '遏止电压 Uc (V)', range: [yMin, yMax], fixedrange: true},
+                                xaxis: {title: {text: '频率 ν (Hz)'}, range: [nuMin, nuMax], fixedrange: true},
+                                yaxis: {title: {text: '遏止电压 Uc (V)'}, range: [yMin, yMax], fixedrange: true},
                                 shapes,
                                 annotations: [
                                     {

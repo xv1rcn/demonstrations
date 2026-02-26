@@ -138,12 +138,12 @@ export default function Page() {
                                 height: 500,
                                 margin: {t: 24, l: 56, r: 24, b: 52},
                                 xaxis: {
-                                    title: '频率 ν (Hz)',
+                                    title: {text: '频率 ν (Hz)'},
                                     range: [nuMin, nuMax],
                                     fixedrange: true,
                                 },
                                 yaxis: {
-                                    title: 'Ek (eV)',
+                                    title: {text: 'Ek (eV)'},
                                     range: [yMin, yMax],
                                     fixedrange: true,
                                 },

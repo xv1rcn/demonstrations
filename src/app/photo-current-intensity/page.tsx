@@ -107,12 +107,12 @@ export default function Page() {
                                 height: 500,
                                 margin: {t: 24, l: 58, r: 24, b: 52},
                                 xaxis: {
-                                    title: '光强 I',
+                                    title: {text: '光强 I'},
                                     range: [0, 1],
                                     fixedrange: true,
                                 },
                                 yaxis: {
-                                    title: '饱和光电流 Is (a.u.)',
+                                    title: {text: '饱和光电流 Is (a.u.)'},
                                     range: [0, responseCoeff * 1.15],
                                     fixedrange: true,
                                 },
