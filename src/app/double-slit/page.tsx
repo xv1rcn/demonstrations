@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import dynamic from "next/dynamic";
-import {Chip, Skeleton, Stack, TextField} from "@mui/material";
-import {SimulationPageTemplate} from "@/components/simulation-page-template";
-import {MathKatexInline} from "@/components/math-katex-inline";
-import {type ParameterItem} from "@/components/parameter-controls";
-import {wavelengthToRgb} from "@/lib/utils";
-import type {Data} from 'plotly.js';
+import { Chip, Skeleton, Stack, TextField } from "@mui/material";
+import { SimulationPageTemplate } from "@/components/simulation-page-template";
+import { MathKatexInline } from "@/components/math-katex-inline";
+import { type ParameterItem } from "@/components/parameter-controls";
+import { wavelengthToRgb } from "@/lib/utils";
+import type { Data } from 'plotly.js';
 
 const Plot = dynamic(() => import('react-plotly.js'),
-    {ssr: false, loading: () => (<Skeleton width={860} height={500}/>)},
+    { ssr: false, loading: () => (<Skeleton width={860} height={500} />) },
 );
 
 const FIXED_Y_RANGE_UM: [number, number] = [-50000, 50000];
@@ -29,7 +29,7 @@ export default function Page() {
     const yAxisUm = React.useMemo(() => {
         const [yMin, yMax] = FIXED_Y_RANGE_UM;
         return Array.from(
-            {length: Y_SAMPLE_POINTS},
+            { length: Y_SAMPLE_POINTS },
             (_, idx) => yMin + ((yMax - yMin) * idx) / (Y_SAMPLE_POINTS - 1),
         );
     }, []);
@@ -39,7 +39,7 @@ export default function Page() {
         [yAxisUm, dMm, lambdaNm, distanceM],
     );
 
-    const screenX = React.useMemo(() => Array.from({length: 26}, (_, idx) => idx / 25), []);
+    const screenX = React.useMemo(() => Array.from({ length: 26 }, (_, idx) => idx / 25), []);
     const heatmapZ = React.useMemo(
         () => intensityLine.map((value) => Array(screenX.length).fill(value)),
         [intensityLine, screenX.length],
@@ -53,7 +53,7 @@ export default function Page() {
             mode: 'lines',
             x: intensityLine,
             y: yAxisUm,
-            line: {color: lineColor, width: 3},
+            line: { color: lineColor, width: 3 },
             name: '干涉强度分布',
             xaxis: 'x',
             yaxis: 'y',
@@ -76,7 +76,7 @@ export default function Page() {
     const parameterItems: ParameterItem[] = [
         {
             key: 'dMm',
-            label: <span>双缝间距 <MathKatexInline math="d" fallback="d"/> (mm)</span>,
+            label: <span>双缝间距 <MathKatexInline math="d" fallback="d" /> (mm)</span>,
             type: 'slider',
             value: dMm,
             min: 0.1,
@@ -84,11 +84,11 @@ export default function Page() {
             step: 0.1,
             valueLabelDisplay: 'auto',
             onChange: setDMm,
-            marks: [{value: 0.1, label: '0.1'}, {value: 2, label: '2.0'}],
+            marks: [{ value: 0.1, label: '0.1' }, { value: 2, label: '2.0' }],
         },
         {
             key: 'lambdaNm',
-            label: <span>波长 <MathKatexInline math="\\lambda" fallback="λ"/> (nm)</span>,
+            label: <span>波长 <MathKatexInline math="\\lambda" fallback="λ" /> (nm)</span>,
             type: 'slider',
             value: lambdaNm,
             min: 400,
@@ -96,11 +96,11 @@ export default function Page() {
             step: 1,
             valueLabelDisplay: 'auto',
             onChange: setLambdaNm,
-            marks: [{value: 400, label: '400'}, {value: 700, label: '700'}],
+            marks: [{ value: 400, label: '400' }, { value: 700, label: '700' }],
         },
         {
             key: 'distanceM',
-            label: <span>缝屏距离 <MathKatexInline math="D" fallback="D"/> (m)</span>,
+            label: <span>缝屏距离 <MathKatexInline math="D" fallback="D" /> (m)</span>,
             type: 'slider',
             value: distanceM,
             min: 1,
@@ -108,37 +108,37 @@ export default function Page() {
             step: 0.1,
             valueLabelDisplay: 'auto',
             onChange: setDistanceM,
-            marks: [{value: 1, label: '1'}, {value: 5, label: '5'}],
+            marks: [{ value: 1, label: '1' }, { value: 5, label: '5' }],
         },
     ];
 
     const controlsFooter = (
         <Stack spacing={2} direction="row">
             <Chip
-                label={<span>条纹间距 <MathKatexInline math="\Delta x" fallback="Δx"/> (μm)</span>}
+                label={<span>条纹间距 <MathKatexInline math="\Delta x" fallback="Δx" /> (μm)</span>}
                 variant="outlined"
                 className="w-56"
             />
-            <TextField disabled hiddenLabel size="small" variant="standard" value={deltaUm.toFixed(3)}/>
+            <TextField disabled hiddenLabel size="small" variant="standard" value={deltaUm.toFixed(3)} />
         </Stack>
     );
 
     const visualization = (
         <Plot
-            config={{staticPlot: true}}
+            config={{ staticPlot: true }}
             data={traces}
             layout={{
                 width: 860,
                 height: 500,
-                margin: {t: 24, l: 58, r: 24, b: 52},
+                margin: { t: 24, l: 58, r: 24, b: 52 },
                 xaxis: {
                     domain: [0, 0.83],
-                    title: {text: '归一化强度 I'},
+                    title: { text: '归一化强度 I' },
                     range: [0, 1.02],
                     fixedrange: true,
                 },
                 yaxis: {
-                    title: {text: '屏上位置 y (μm)'},
+                    title: { text: '屏上位置 y (μm)' },
                     range: FIXED_Y_RANGE_UM,
                     fixedrange: true,
                 },
@@ -171,11 +171,11 @@ export default function Page() {
                         y: 1.03,
                         text: '屏上条纹',
                         showarrow: false,
-                        font: {size: 12},
+                        font: { size: 12 },
                     },
                 ],
                 showlegend: true,
-                legend: {orientation: 'h', x: 0.02, y: 1.08},
+                legend: { orientation: 'h', x: 0.02, y: 1.08 },
             }}
         />
     );

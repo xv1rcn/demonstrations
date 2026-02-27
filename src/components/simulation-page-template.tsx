@@ -17,7 +17,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import {ParameterControls, type ParameterItem} from '@/components/parameter-controls';
+import { ParameterControls, type ParameterItem } from '@/components/parameter-controls';
 
 export type SimulationPreset = {
     label: string;
@@ -93,7 +93,7 @@ export function SimulationPageTemplate({
             const next = checked
                 ? Array.from(new Set([...current, optionIndex])).sort((a, b) => a - b)
                 : current.filter((idx) => idx !== optionIndex);
-            return {...prev, [questionId]: next};
+            return { ...prev, [questionId]: next };
         });
     }, []);
 
@@ -127,8 +127,8 @@ export function SimulationPageTemplate({
     }, [results, submitted]);
 
     return (
-        <Box className="min-h-screen w-full">
-            <Box sx={{borderBottom: 1, borderColor: 'divider', px: 2, pt: 1}}>
+        <Box className="min-h-screen h-full w-full flex flex-col">
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 2, pt: 1 }}>
                 <Tabs
                     value={tab}
                     onChange={(_event, value) => setTab(value)}
@@ -142,13 +142,13 @@ export function SimulationPageTemplate({
                         },
                     }}
                 >
-                    <Tab value="simulation" label="模拟仿真"/>
-                    <Tab value="knowledge" label="知识学习"/>
+                    <Tab value="simulation" label="模拟仿真" />
+                    <Tab value="knowledge" label="知识学习" />
                 </Tabs>
             </Box>
 
             {tab === 'simulation' && (
-                <Box className="h-[calc(100vh-64px)] overflow-auto px-6 py-4">
+                <Box className="flex-1 min-h-0 overflow-auto px-6 py-4">
                     <Box className="min-h-full flex items-center">
                         <Box className="flex flex-row w-full">
                             <Stack spacing={4} direction="column" className="justify-center w-[31rem] mr-6">
@@ -161,16 +161,16 @@ export function SimulationPageTemplate({
                                         ))}
                                     </Stack>
                                 )}
-                                {simulationParameters.length > 0 && <ParameterControls items={simulationParameters}/>} 
+                                {simulationParameters.length > 0 && <ParameterControls items={simulationParameters} />}
                                 {simulationControlsFooter && (
                                     <Stack spacing={2}>
-                                        {simulationParameters.length > 0 && <Divider/>}
+                                        {simulationParameters.length > 0 && <Divider />}
                                         {simulationControlsFooter}
                                     </Stack>
                                 )}
                                 {simulationControls}
                             </Stack>
-                            <Divider orientation="vertical" flexItem/>
+                            <Divider orientation="vertical" flexItem />
                             <Box className="mx-6 my-2">{simulationVisualization}</Box>
                         </Box>
                     </Box>
@@ -178,16 +178,16 @@ export function SimulationPageTemplate({
             )}
 
             {tab === 'knowledge' && (
-                <Box className="h-[calc(100vh-64px)] overflow-auto px-6 py-4">
+                <Box className="flex-1 min-h-0 overflow-auto px-6 py-4">
                     <Stack spacing={3}>
                         <Box>
-                            <Typography variant="h6" sx={{fontSize: 20, mb: 0.5}}>知识问答</Typography>
+                            <Typography variant="h6" sx={{ fontSize: 20, mb: 0.5 }}>知识问答</Typography>
                             <Stack spacing={2} className="mt-2">
                                 {questions.map((question, index) => {
                                     const result = results[question.id];
                                     return (
-                                        <Box key={question.id} sx={{border: '1px solid', borderColor: 'divider', borderRadius: 1.5, p: 2}}>
-                                            <Typography variant="body1" sx={{mb: 1, fontSize: 16}}>
+                                        <Box key={question.id} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1.5, p: 2 }}>
+                                            <Typography variant="body1" sx={{ mb: 1, fontSize: 16 }}>
                                                 {index + 1}. {question.prompt}
                                             </Typography>
 
@@ -218,7 +218,7 @@ export function SimulationPageTemplate({
                                                     value={singleAnswers[question.id] ?? -1}
                                                     onChange={e => {
                                                         const v = Number(e.target.value);
-                                                        setSingleAnswers(prev => ({...prev, [question.id]: v}));
+                                                        setSingleAnswers(prev => ({ ...prev, [question.id]: v }));
                                                     }}
                                                 >
                                                     {question.options.map((option, optionIdx) => (
@@ -250,13 +250,13 @@ export function SimulationPageTemplate({
                                                     }}
                                                     onChange={(event) => {
                                                         const value = event.target.value;
-                                                        setFillAnswers((prev) => ({...prev, [question.id]: value}));
+                                                        setFillAnswers((prev) => ({ ...prev, [question.id]: value }));
                                                     }}
                                                 />
                                             )}
 
                                             {submitted && result !== null && result !== undefined && (
-                                                <Alert severity={result ? 'success' : 'warning'} sx={{mt: 1.5}}>
+                                                <Alert severity={result ? 'success' : 'warning'} sx={{ mt: 1.5 }}>
                                                     {result ? question.successTip : question.failTip}
                                                 </Alert>
                                             )}
@@ -276,26 +276,26 @@ export function SimulationPageTemplate({
                             </Stack>
                         </Box>
 
-                        <Divider/>
+                        <Divider />
 
                         <Box>
-                            <Typography variant="h6" sx={{fontSize: 20, mb: 1}}>知识梳理</Typography>
+                            <Typography variant="h6" sx={{ fontSize: 20, mb: 1 }}>知识梳理</Typography>
                             <Stack spacing={1}>
                                 {summaryItems.map((item, index) => (
-                                    <Typography key={`summary-${index}`} variant="body1" sx={{fontSize: 16}}>
+                                    <Typography key={`summary-${index}`} variant="body1" sx={{ fontSize: 16 }}>
                                         {index + 1}. {item}
                                     </Typography>
                                 ))}
                             </Stack>
                         </Box>
 
-                        <Divider/>
+                        <Divider />
 
                         <Box>
-                            <Typography variant="h6" sx={{fontSize: 20, mb: 1}}>知识应用</Typography>
+                            <Typography variant="h6" sx={{ fontSize: 20, mb: 1 }}>知识应用</Typography>
                             <Stack spacing={1}>
                                 {applicationItems.map((item, index) => (
-                                    <Typography key={`application-${index}`} variant="body1" sx={{fontSize: 16}}>
+                                    <Typography key={`application-${index}`} variant="body1" sx={{ fontSize: 16 }}>
                                         {index + 1}. {item}
                                     </Typography>
                                 ))}
