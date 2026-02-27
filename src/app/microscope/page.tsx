@@ -2,20 +2,23 @@
 
 import * as React from "react";
 import dynamic from "next/dynamic";
-import {Card, CardContent, Chip, Divider, Skeleton, Slider, Stack, TextField} from "@mui/material";
-import type {Data} from 'plotly.js';
+import { Chip, Skeleton, Stack, TextField } from "@mui/material";
+import { SimulationPageTemplate } from "@/components/simulation-page-template";
+import { MathKatexInline } from "@/components/math-katex-inline";
+import { type ParameterItem } from "@/components/parameter-controls";
+import type { Data } from 'plotly.js';
 
 const Plot = dynamic(() => import('react-plotly.js'), {
     ssr: false,
-    loading: () => (<Skeleton width={920} height={540}/>),
+    loading: () => (<Skeleton width={920} height={540} />),
 });
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 export default function Page() {
-    const [fObj, setFObj] = React.useState<number>(5);
-    const [fEye, setFEye] = React.useState<number>(12);
-    const [uObj, setUObj] = React.useState<number>(7);
+    const [fObj, setFObj] = React.useState<number>(4);
+    const [fEye, setFEye] = React.useState<number>(10);
+    const [uObj, setUObj] = React.useState<number>(5);
 
     const uMin = React.useMemo(() => Number((fObj + 0.5).toFixed(1)), [fObj]);
     const uMax = React.useMemo(() => Number((fObj + 10).toFixed(1)), [fObj]);
@@ -68,7 +71,7 @@ export default function Page() {
             mode: 'lines',
             x: [xMin, xMax],
             y: [0, 0],
-            line: {color: '#111827', width: 2},
+            line: { color: '#111827', width: 2 },
             name: '主光轴',
         },
         {
@@ -76,7 +79,7 @@ export default function Page() {
             mode: 'text+lines',
             x: [xObj, xObj],
             y: [0, yObjectTop],
-            line: {color: '#111827', width: 4},
+            line: { color: '#111827', width: 4 },
             text: ['', '物'],
             textposition: yObjectTop >= 0 ? 'top center' : 'bottom center',
             name: '物体',
@@ -86,7 +89,7 @@ export default function Page() {
             mode: 'text+lines',
             x: [xInter, xInter],
             y: [0, yInter],
-            line: {color: '#374151', width: 4},
+            line: { color: '#374151', width: 4 },
             text: ['', '中间实像'],
             textposition: yInter >= 0 ? 'top center' : 'bottom center',
             name: '中间像',
@@ -96,7 +99,7 @@ export default function Page() {
             mode: 'text+lines',
             x: [xFinal, xFinal],
             y: [0, yFinal],
-            line: {color: '#111827', width: 4, dash: 'dot'},
+            line: { color: '#111827', width: 4, dash: 'dot' },
             text: ['', '最终虚像'],
             textposition: yFinal >= 0 ? 'top center' : 'bottom center',
             name: '最终虚像',
@@ -107,7 +110,7 @@ export default function Page() {
             mode: 'lines',
             x: [xObj, xLens1],
             y: [yObjectTop, yObjectTop],
-            line: {color: '#ef4444', width: 3},
+            line: { color: '#ef4444', width: 3 },
             name: '物镜平行主光线',
         },
         {
@@ -115,7 +118,7 @@ export default function Page() {
             mode: 'lines',
             x: [xLens1, xInter],
             y: [yObjectTop, yInter],
-            line: {color: '#ef4444', width: 3},
+            line: { color: '#ef4444', width: 3 },
             showlegend: false,
         },
         {
@@ -123,7 +126,7 @@ export default function Page() {
             mode: 'lines',
             x: [xObj, xLens1],
             y: [yObjectTop, 0],
-            line: {color: '#2563eb', width: 3},
+            line: { color: '#2563eb', width: 3 },
             name: '物镜中心主光线',
         },
         {
@@ -131,7 +134,7 @@ export default function Page() {
             mode: 'lines',
             x: [xLens1, xInter],
             y: [0, yInter],
-            line: {color: '#2563eb', width: 3},
+            line: { color: '#2563eb', width: 3 },
             showlegend: false,
         },
 
@@ -140,7 +143,7 @@ export default function Page() {
             mode: 'lines',
             x: [xInter, xLens2],
             y: [yInter, yInter],
-            line: {color: '#f59e0b', width: 3},
+            line: { color: '#f59e0b', width: 3 },
             name: '目镜平行主光线',
         },
         {
@@ -148,7 +151,7 @@ export default function Page() {
             mode: 'lines',
             x: [xLens2, xRight],
             y: [yInter, yRay1AtRight],
-            line: {color: '#f59e0b', width: 3},
+            line: { color: '#f59e0b', width: 3 },
             showlegend: false,
         },
         {
@@ -156,7 +159,7 @@ export default function Page() {
             mode: 'lines',
             x: [xInter, xLens2],
             y: [yInter, 0],
-            line: {color: '#0ea5e9', width: 3},
+            line: { color: '#0ea5e9', width: 3 },
             name: '目镜中心主光线',
         },
         {
@@ -164,7 +167,7 @@ export default function Page() {
             mode: 'lines',
             x: [xLens2, xRight],
             y: [0, yRay2AtRight],
-            line: {color: '#0ea5e9', width: 3},
+            line: { color: '#0ea5e9', width: 3 },
             showlegend: false,
         },
 
@@ -173,7 +176,7 @@ export default function Page() {
             mode: 'lines',
             x: [xLens2, xFinal],
             y: [yInter, yFinal],
-            line: {color: '#f59e0b', width: 2, dash: 'dot'},
+            line: { color: '#f59e0b', width: 2, dash: 'dot' },
             name: '反向延长线',
         },
         {
@@ -181,133 +184,229 @@ export default function Page() {
             mode: 'lines',
             x: [xLens2, xFinal],
             y: [0, yFinal],
-            line: {color: '#0ea5e9', width: 2, dash: 'dot'},
+            line: { color: '#0ea5e9', width: 2, dash: 'dot' },
             showlegend: false,
         },
     ];
 
+    const parameterItems: ParameterItem[] = [
+        {
+            key: 'fObj',
+            label: <span>物镜焦距 <MathKatexInline math="f_{\text{物}}" fallback="f物" /> (mm)</span>,
+            type: 'slider',
+            value: fObj,
+            min: 2,
+            max: 10,
+            step: 0.1,
+            valueLabelDisplay: 'auto',
+            onChange: setFObj,
+            marks: [{ value: 2, label: '2' }, { value: 4, label: '4' }, { value: 10, label: '10' }],
+        },
+        {
+            key: 'fEye',
+            label: <span>目镜焦距 <MathKatexInline math="f_{\text{目}}" fallback="f目" /> (mm)</span>,
+            type: 'slider',
+            value: fEye,
+            min: 5,
+            max: 25,
+            step: 0.1,
+            valueLabelDisplay: 'auto',
+            onChange: setFEye,
+            marks: [{ value: 5, label: '5' }, { value: 10, label: '10' }, { value: 25, label: '25' }],
+        },
+        {
+            key: 'uObj',
+            label: <span>物距 <MathKatexInline math="u" fallback="u" /> (mm)</span>,
+            type: 'slider',
+            value: uObj,
+            min: uMin,
+            max: uMax,
+            step: 0.1,
+            valueLabelDisplay: 'auto',
+            onChange: setUObj,
+            marks: [{ value: uMin, label: `${uMin}` }, { value: uMax, label: `${uMax}` }],
+        },
+    ];
+
+    const controlsFooter = (
+        <>
+            <Stack spacing={2} direction="row">
+                <Chip label={<span>物镜放大率 <MathKatexInline math="M_{\text{物}}" fallback="M物" /></span>} variant="outlined" className="w-56" />
+                <TextField disabled hiddenLabel size="small" variant="standard" value={mObj.toFixed(3)} />
+            </Stack>
+            <Stack spacing={2} direction="row">
+                <Chip label={<span>目镜放大率 <MathKatexInline math="M_{\text{目}}" fallback="M目" /></span>} variant="outlined" className="w-56" />
+                <TextField disabled hiddenLabel size="small" variant="standard" value={mEye.toFixed(3)} />
+            </Stack>
+            <Stack spacing={2} direction="row">
+                <Chip label={<span>总放大倍率 <MathKatexInline math="M" fallback="M" /></span>} variant="outlined" className="w-56" />
+                <TextField disabled hiddenLabel size="small" variant="standard" value={mTotal.toFixed(3)} />
+            </Stack>
+        </>
+    );
+
+    const visualization = (
+        <Plot
+            config={{ staticPlot: true }}
+            data={traces}
+            layout={{
+                width: 920,
+                height: 540,
+                margin: { t: 24, l: 28, r: 24, b: 24 },
+                xaxis: { range: [xMin, xMax], visible: false, fixedrange: true },
+                yaxis: { range: [yMin, yMax], visible: false, fixedrange: true, scaleanchor: 'x', scaleratio: 1 },
+                shapes: [
+                    {
+                        type: 'line',
+                        x0: xLens1,
+                        x1: xLens1,
+                        y0: yMin * 0.65,
+                        y1: yMax * 0.65,
+                        line: { color: '#64748b', width: 4 },
+                    },
+                    {
+                        type: 'line',
+                        x0: xLens2,
+                        x1: xLens2,
+                        y0: yMin * 0.65,
+                        y1: yMax * 0.65,
+                        line: { color: '#64748b', width: 4 },
+                    },
+                ],
+                annotations: [
+                    {
+                        x: xLens1,
+                        y: yMax * 0.78,
+                        text: '物镜',
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.8)',
+                        bordercolor: '#cbd5e1',
+                        borderwidth: 1,
+                    },
+                    {
+                        x: xLens2,
+                        y: yMax * 0.78,
+                        text: '目镜',
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.8)',
+                        bordercolor: '#cbd5e1',
+                        borderwidth: 1,
+                    },
+                    {
+                        xref: 'paper',
+                        yref: 'paper',
+                        x: 0.01,
+                        y: 0.98,
+                        text: `v物=${vObj.toFixed(2)}mm, v目=${vEye.toFixed(2)}mm（虚像）`,
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.8)',
+                        bordercolor: '#cbd5e1',
+                        borderwidth: 1,
+                    },
+                ],
+                showlegend: true,
+                legend: { orientation: 'h', x: 0.02, y: 1.08 },
+            }}
+        />
+    );
+
     return (
-        <div className="flex items-center justify-center h-screen">
-            <Card>
-                <CardContent className="flex flex-row">
-                    <Stack spacing={4} direction="column" className="justify-center w-[30rem] mr-6">
-                        <Stack spacing={2} direction="row">
-                            <Chip label="物镜焦距 f物 (mm)" variant="outlined" className="w-52"/>
-                            <Slider
-                                min={2}
-                                max={10}
-                                value={fObj}
-                                step={0.1}
-                                valueLabelDisplay="auto"
-                                onChange={(_event, newValue) => setFObj(typeof newValue === 'number' ? newValue : newValue[0])}
-                                marks={[{value: 2, label: '2'}, {value: 10, label: '10'}]}
-                            />
-                        </Stack>
-                        <Stack spacing={2} direction="row">
-                            <Chip label="目镜焦距 f目 (mm)" variant="outlined" className="w-52"/>
-                            <Slider
-                                min={5}
-                                max={25}
-                                value={fEye}
-                                step={0.1}
-                                valueLabelDisplay="auto"
-                                onChange={(_event, newValue) => setFEye(typeof newValue === 'number' ? newValue : newValue[0])}
-                                marks={[{value: 5, label: '5'}, {value: 25, label: '25'}]}
-                            />
-                        </Stack>
-                        <Stack spacing={2} direction="row">
-                            <Chip label="物距 u (mm)" variant="outlined" className="w-52"/>
-                            <Slider
-                                min={uMin}
-                                max={uMax}
-                                value={uObj}
-                                step={0.1}
-                                valueLabelDisplay="auto"
-                                onChange={(_event, newValue) => setUObj(typeof newValue === 'number' ? newValue : newValue[0])}
-                                marks={[{value: uMin, label: `${uMin}`}, {value: uMax, label: `${uMax}`}]}
-                            />
-                        </Stack>
-                        <Divider/>
-                        <Stack spacing={2} direction="row">
-                            <Chip label="物镜放大率 M物" variant="outlined" className="w-52"/>
-                            <TextField disabled hiddenLabel size="small" variant="standard" value={mObj.toFixed(3)}/>
-                        </Stack>
-                        <Stack spacing={2} direction="row">
-                            <Chip label="目镜放大率 M目" variant="outlined" className="w-52"/>
-                            <TextField disabled hiddenLabel size="small" variant="standard" value={mEye.toFixed(3)}/>
-                        </Stack>
-                        <Stack spacing={2} direction="row">
-                            <Chip label="总放大倍率 M" variant="outlined" className="w-52"/>
-                            <TextField disabled hiddenLabel size="small" variant="standard" value={mTotal.toFixed(3)}/>
-                        </Stack>
-                    </Stack>
-                    <Divider orientation="vertical" flexItem/>
-                    <div className="mx-6 my-2">
-                        <Plot
-                            config={{staticPlot: true}}
-                            data={traces}
-                            layout={{
-                                width: 920,
-                                height: 540,
-                                margin: {t: 24, l: 28, r: 24, b: 24},
-                                xaxis: {range: [xMin, xMax], visible: false, fixedrange: true},
-                                yaxis: {range: [yMin, yMax], visible: false, fixedrange: true, scaleanchor: 'x', scaleratio: 1},
-                                shapes: [
-                                    {
-                                        type: 'line',
-                                        x0: xLens1,
-                                        x1: xLens1,
-                                        y0: yMin * 0.65,
-                                        y1: yMax * 0.65,
-                                        line: {color: '#64748b', width: 4},
-                                    },
-                                    {
-                                        type: 'line',
-                                        x0: xLens2,
-                                        x1: xLens2,
-                                        y0: yMin * 0.65,
-                                        y1: yMax * 0.65,
-                                        line: {color: '#64748b', width: 4},
-                                    },
-                                ],
-                                annotations: [
-                                    {
-                                        x: xLens1,
-                                        y: yMax * 0.78,
-                                        text: '物镜',
-                                        showarrow: false,
-                                        bgcolor: 'rgba(255,255,255,0.8)',
-                                        bordercolor: '#cbd5e1',
-                                        borderwidth: 1,
-                                    },
-                                    {
-                                        x: xLens2,
-                                        y: yMax * 0.78,
-                                        text: '目镜',
-                                        showarrow: false,
-                                        bgcolor: 'rgba(255,255,255,0.8)',
-                                        bordercolor: '#cbd5e1',
-                                        borderwidth: 1,
-                                    },
-                                    {
-                                        xref: 'paper',
-                                        yref: 'paper',
-                                        x: 0.01,
-                                        y: 0.98,
-                                        text: `v物=${vObj.toFixed(2)}mm, v目=${vEye.toFixed(2)}mm（虚像）`,
-                                        showarrow: false,
-                                        bgcolor: 'rgba(255,255,255,0.8)',
-                                        bordercolor: '#cbd5e1',
-                                        borderwidth: 1,
-                                    },
-                                ],
-                                showlegend: true,
-                                legend: {orientation: 'h', x: 0.02, y: 1.08},
-                            }}
-                        />
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+        <SimulationPageTemplate
+            simulationParameters={parameterItems}
+            simulationControlsFooter={controlsFooter}
+            presets={[
+                {
+                    label: '标准',
+                    onClick: () => {
+                        setFObj(4);
+                        setFEye(10);
+                        setUObj(5);
+                    },
+                },
+                {
+                    label: '高倍',
+                    onClick: () => {
+                        setFObj(2);
+                        setFEye(10);
+                        setUObj(5);
+                    },
+                },
+                {
+                    label: '低倍',
+                    onClick: () => {
+                        setFObj(10);
+                        setFEye(25);
+                        setUObj(12);
+                    },
+                },
+            ]}
+            simulationVisualization={visualization}
+            questions={[
+                {
+                    id: 'microscope-objective-image-type',
+                    type: 'single',
+                    prompt: (
+                        <span>
+                            显微镜物镜首先形成的像，通常具有什么性质？
+                        </span>
+                    ),
+                    options: [
+                        <span key="q1-o1">正立、缩小的虚像</span>,
+                        <span key="q1-o2">倒立、放大的实像</span>,
+                        <span key="q1-o3">正立、等大的实像</span>,
+                        <span key="q1-o4">倒立、缩小的虚像</span>,
+                    ],
+                    correctOptionIndex: 1,
+                    successTip: (
+                        <span>
+                            正确：物镜先把样品成倒立放大实像，目镜再对该中间像进行二次放大观察。
+                        </span>
+                    ),
+                    failTip: (
+                        <span>
+                            提示：显微镜的物镜负责将物体成实像，目镜仅起到放大作用。
+                        </span>
+                    ),
+                },
+                {
+                    id: 'microscope-objective-focal-effect',
+                    type: 'single',
+                    prompt: (
+                        <span>
+                            当物镜焦距 <MathKatexInline math="f_{\text{物}}" fallback="f物" /> 变小时，放大倍数如何变化？
+                        </span>
+                    ),
+                    options: [
+                        <span key="q2-o1">物镜放大倍数降低</span>,
+                        <span key="q2-o2">物镜放大倍数基本不变</span>,
+                        <span key="q2-o3">物镜放大倍数升高</span>,
+                        <span key="q2-o4">只改变亮度，不改变放大能力</span>,
+                    ],
+                    correctOptionIndex: 2,
+                    successTip: (
+                        <span>
+                            正确：在成像位置合理时，物镜焦距越小，通常获得更大的线放大率。
+                        </span>
+                    ),
+                    failTip: (
+                        <span>
+                            提示：物镜的焦距与放大倍数成反比，焦距越小，放大能力越强。
+                        </span>
+                    ),
+                },
+            ]}
+            summaryItems={[
+                <span key="s1">单透镜成像公式：<MathKatexInline math="\\frac{1}{f}=\\frac{1}{u}+\\frac{1}{v}" fallback="1/f=1/u+1/v" />。</span>,
+                <span key="s2">线放大率：<MathKatexInline math="m=-\\frac{v}{u}" fallback="m=-v/u" />，负号代表倒立像。</span>,
+                <span key="s3">当 <MathKatexInline math="u>2f" fallback="u>2f" /> 时，得到倒立缩小实像（可类比照相机）。</span>,
+                <span key="s4">当 <MathKatexInline math="f<u<2f" fallback="f<u<2f" /> 时，得到倒立放大实像（可类比投影成像阶段）。</span>,
+                <span key="s5">当 <MathKatexInline math="u<f" fallback="u<f" /> 时，得到正立放大虚像（可类比放大镜观察）。</span>,
+            ]}
+            applicationItems={[
+                '生物显微镜通过短焦物镜与目镜组合，把细胞等微小结构放大到可见尺度。',
+                '病理检测中利用显微成像观察组织切片形态，为诊断提供关键微观证据。',
+                '电子显微镜虽不使用可见光透镜公式，但同样遵循“先成中间像再放大”的多级成像思想。',
+            ]}
+        />
     );
 }
