@@ -79,13 +79,13 @@ function splitNavLabel(label: string): NavLabelParts {
 
 function getNavIcon(href: string) {
     const iconSx = { fontSize: 18 };
-    if (['double-slit', 'single-slit', 'grating-diffraction', 'wedge', 'newton'].includes(href)) {
+    if (['double-slit', 'single-slit', 'grating-diffraction', 'wedge-interference', 'newton-rings'].includes(href)) {
         return <WavesIcon sx={iconSx} />;
     }
-    if (['polarization', 'polarization-3d', 'brewster'].includes(href)) {
+    if (['polarization', 'polarization-3d', 'brewster-angle'].includes(href)) {
         return <BlurOnIcon sx={iconSx} />;
     }
-    if (['critical-angle', 'fiber-tir', 'bubble-tir'].includes(href)) {
+    if (['critical-angle', 'fiber-total-internal-reflection', 'bubble-total-internal-reflection'].includes(href)) {
         return <FlareIcon sx={iconSx} />;
     }
     if (['prism-dispersion', 'rainbow', 'lens-chromatic'].includes(href)) {
@@ -167,7 +167,7 @@ const NAV_GROUPS: NavGroup[] = [
             { href: 'single-slit', label: '② 单缝衍射' },
             { href: 'grating-diffraction', label: '③ 平面光栅衍射' },
             { href: 'polarization', label: '④ 偏振片・马吕斯定律' },
-            { href: 'brewster', label: '⑤ 布儒斯特角・反射偏振' },
+            { href: 'brewster-angle', label: '⑤ 布儒斯特角・反射偏振' },
             { href: 'polarization-3d', label: '⑥ 3D 眼镜偏振分离' },
         ],
     },
@@ -175,8 +175,8 @@ const NAV_GROUPS: NavGroup[] = [
         title: '折射与成像',
         members: [
             { href: 'critical-angle', label: '⑦ 全反射临界角' },
-            { href: 'fiber-tir', label: '⑧ 光纤全反射' },
-            { href: 'bubble-tir', label: '⑨ 水中气泡全反射' },
+            { href: 'fiber-total-internal-reflection', label: '⑧ 光纤全反射' },
+            { href: 'bubble-total-internal-reflection', label: '⑨ 水中气泡全反射' },
             { href: 'prism-dispersion', label: '⑩ 三棱镜色散' },
             { href: 'rainbow', label: '⑪ 彩虹水滴折射' },
             { href: 'lens-chromatic', label: '⑫ 透镜色差' },
@@ -196,8 +196,8 @@ const NAV_GROUPS: NavGroup[] = [
     {
         title: '其他',
         members: [
-            { href: 'wedge', label: 'Ⓐ 劈尖干涉' },
-            { href: 'newton', label: 'Ⓑ 牛顿环' },
+            { href: 'wedge-interference', label: 'Ⓐ 劈尖干涉' },
+            { href: 'newton-rings', label: 'Ⓑ 牛顿环' },
         ],
     },
 ];
