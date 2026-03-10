@@ -201,6 +201,7 @@ const NAV_GROUPS: NavGroup[] = [
             { href: 'optical-doppler', label: 'Ⓒ 光的多普勒效应' },
             { href: 'beer-lambert', label: 'Ⓓ 光的吸收定律' },
             { href: 'fiber-loss', label: 'Ⓔ 光纤损耗・长距离通信' },
+            { href: 'rayleigh-scattering', label: 'Ⓕ 瑞利散射' },
         ],
     },
 ];
