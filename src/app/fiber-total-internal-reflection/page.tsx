@@ -343,6 +343,16 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '光纤全反射',
+                content: (
+                    <span>
+                        家里的光纤宽带、医院的医疗内窥镜，都是光在光纤中多次全反射的应用。调节纤芯
+                        <MathKatexInline math="n_1" fallback="n1" /> 和包层
+                        <MathKatexInline math="n_2" fallback="n2" /> 的折射率、入射光角度，能看到光的传输效果：纤芯折射率越大、包层越小，越易传输，入射角过大会出现漏光，理解光纤传输的核心参数。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

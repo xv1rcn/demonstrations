@@ -208,6 +208,16 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '光电效应・光电子动能',
+                content: (
+                    <span>
+                        光控开关的自动感应、太阳能电池的发电，都基于光电效应。调节入射光频率
+                        <MathKatexInline math="\nu" fallback="ν" />、金属逸出功
+                        <MathKatexInline math="W" fallback="W" />，能看到光电子的产生与否：频率高于临界值才有光电子，与光强无关，直观证明光的粒子性。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

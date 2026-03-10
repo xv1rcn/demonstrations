@@ -261,6 +261,17 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '透镜色差',
+                content: (
+                    <span>
+                        相机消色差镜头的设计、望远镜的清晰成像，都是为了克服透镜色差。调节透镜焦距
+                        <MathKatexInline math="f_0" fallback="f0" />、红光
+                        <MathKatexInline math="n_r" fallback="nr" /> 和蓝光
+                        <MathKatexInline math="n_b" fallback="nb" /> 的折射率，能看到色差变化：红蓝折射率差值越大、焦距越小，色差越明显，理解双胶合透镜消色差的原理。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

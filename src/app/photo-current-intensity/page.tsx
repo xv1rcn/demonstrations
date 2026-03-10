@@ -166,6 +166,15 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '光电流与光强',
+                content: (
+                    <span>
+                        照度计的测光、路灯的自动控制，核心是光电流与光强的关系。调节入射光强
+                        <MathKatexInline math="I" fallback="I" />，能看到饱和光电流的变化：光强越大，饱和光电流越大，二者成正比，理解光强代表光子数量，频率达标才会产生光电流。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

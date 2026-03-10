@@ -6,9 +6,14 @@ import {
     Box,
     Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Chip,
     Divider,
     FormControlLabel,
+    IconButton,
     Radio,
     RadioGroup,
     Stack,
@@ -17,11 +22,18 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { ParameterControls, type ParameterItem } from '@/components/parameter-controls';
 
 export type SimulationPreset = {
     label: string;
     onClick: () => void;
+};
+
+export type SimulationHint = {
+    content: React.ReactNode;
+    title?: React.ReactNode;
+    buttonAriaLabel?: string;
 };
 
 
@@ -63,6 +75,7 @@ type SimulationPageTemplateProps = {
     simulationControlsFooter?: React.ReactNode;
     simulationVisualization: React.ReactNode;
     presets?: SimulationPreset[];
+    hint?: SimulationHint;
     questions: KnowledgeQuestion[];
     summaryItems: React.ReactNode[];
     applicationItems: React.ReactNode[];
@@ -76,6 +89,7 @@ export function SimulationPageTemplate({
     simulationControlsFooter,
     simulationVisualization,
     presets = [],
+    hint,
     questions,
     summaryItems,
     applicationItems,
@@ -86,6 +100,14 @@ export function SimulationPageTemplate({
     const [fillAnswers, setFillAnswers] = React.useState<Record<string, string>>({});
     const [results, setResults] = React.useState<QuestionResult>({});
     const [submitted, setSubmitted] = React.useState(false);
+    const [isHintOpen, setIsHintOpen] = React.useState(false);
+    const [hasAutoOpenedHint, setHasAutoOpenedHint] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!hint || hasAutoOpenedHint) return;
+        setIsHintOpen(true);
+        setHasAutoOpenedHint(true);
+    }, [hint, hasAutoOpenedHint]);
 
     const toggleMultiOption = React.useCallback((questionId: string, optionIndex: number, checked: boolean) => {
         setMultiAnswers((prev) => {
@@ -152,13 +174,25 @@ export function SimulationPageTemplate({
                     <Box className="min-h-full flex items-center">
                         <Box className="flex flex-row w-full">
                             <Stack spacing={4} direction="column" className="justify-center w-[31rem] mr-6">
-                                {presets.length > 0 && (
-                                    <Stack spacing={1} direction="row" className="flex-wrap">
-                                        {presets.map((preset) => (
-                                            <Button key={preset.label} size="small" variant="outlined" onClick={preset.onClick}>
-                                                {preset.label}
-                                            </Button>
-                                        ))}
+                                {(presets.length > 0 || hint) && (
+                                    <Stack spacing={1} direction="row" className="items-center justify-between">
+                                        <Stack spacing={1} direction="row" className="flex-wrap">
+                                            {presets.map((preset) => (
+                                                <Button key={preset.label} size="small" variant="outlined" onClick={preset.onClick}>
+                                                    {preset.label}
+                                                </Button>
+                                            ))}
+                                        </Stack>
+                                        {hint && (
+                                            <IconButton
+                                                size="small"
+                                                color="primary"
+                                                aria-label={hint.buttonAriaLabel ?? '查看实验提示'}
+                                                onClick={() => setIsHintOpen(true)}
+                                            >
+                                                <HelpOutlineIcon fontSize="small" />
+                                            </IconButton>
+                                        )}
                                     </Stack>
                                 )}
                                 {simulationParameters.length > 0 && <ParameterControls items={simulationParameters} />}
@@ -303,6 +337,25 @@ export function SimulationPageTemplate({
                         </Box>
                     </Stack>
                 </Box>
+            )}
+
+            {hint && (
+                <Dialog
+                    open={isHintOpen}
+                    onClose={() => setIsHintOpen(false)}
+                    maxWidth="sm"
+                    fullWidth
+                >
+                    <DialogTitle>{hint.title ?? '提示'}</DialogTitle>
+                    <DialogContent dividers>
+                        <Typography variant="body1" sx={{ fontSize: 16 }}>
+                            {hint.content}
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsHintOpen(false)} variant="contained">知道了</Button>
+                    </DialogActions>
+                </Dialog>
             )}
         </Box>
     );

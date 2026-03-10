@@ -273,6 +273,16 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '全反射临界角',
+                content: (
+                    <span>
+                        光纤通信的光传输、钻石的璀璨闪光，核心是光的全反射。调节两种介质的折射率
+                        <MathKatexInline math="n_1/n_2" fallback="n1/n2" />（光密→光疏）、入射光角度
+                        <MathKatexInline math="\theta" fallback="θ" />，当角度超过临界角时，光会全部反射无折射，能精准找到不同介质的全反射临界角，感受全反射的产生条件。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

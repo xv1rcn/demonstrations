@@ -246,6 +246,16 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '望远镜倍率',
+                content: (
+                    <span>
+                        天文望远镜观星、观鸟镜看远处景物，核心是物镜和目镜的焦距搭配。调节物镜焦距
+                        <MathKatexInline math="f_{\text{物}}" fallback="f物" />、目镜焦距
+                        <MathKatexInline math="f_{\text{目}}" fallback="f目" />，能看到放大倍率变化：物镜焦距越长、目镜越短，放大倍率越高，理解望远镜收集光和放大视角的双重作用。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

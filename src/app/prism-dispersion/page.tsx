@@ -423,6 +423,17 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '三棱镜色散',
+                content: (
+                    <span>
+                        雨后的彩虹、钻石的多彩火彩，都是光的三棱镜色散效果。调节三棱镜顶角
+                        <MathKatexInline math="A" fallback="A" />、入射光波长
+                        <MathKatexInline math="\lambda" fallback="λ" />、入射角度
+                        <MathKatexInline math="\theta_1" fallback="θ1" />，能看到光的偏折变化：波长越短（紫光）、顶角越大，偏折越明显，清晰看到白光分解为七色光的色散规律。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

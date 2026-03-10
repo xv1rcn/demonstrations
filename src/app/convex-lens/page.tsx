@@ -355,6 +355,19 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '凸透镜成像',
+                content: (
+                    <span>
+                        人眼的视物、照相机的拍照、放大镜的放大，都遵循凸透镜成像规律。调节物距
+                        <MathKatexInline math="u" fallback="u" />、焦距
+                        <MathKatexInline math="f" fallback="f" />，能看到成像的虚实、大小变化：
+                        <MathKatexInline math="u>2f" fallback="u>2f" /> 成倒立缩小实像，
+                        <MathKatexInline math="f<u<2f" fallback="f<u<2f" /> 成倒立放大实像，
+                        <MathKatexInline math="u<f" fallback="u<f" /> 成正立放大虚像，贴合生活的成像场景一目了然。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

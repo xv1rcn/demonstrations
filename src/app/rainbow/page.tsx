@@ -356,6 +356,17 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '彩虹水滴折射',
+                content: (
+                    <span>
+                        雨后天空的彩虹、喷雾形成的人工彩虹，是光在小水珠中折射反射的结果。调节光的波长（红光/紫光）、入射角度
+                        <MathKatexInline math="\theta_i" fallback="θi" />，能看到红光出射角约
+                        <MathKatexInline math="42^\circ" fallback="42°" /> 在外圈、紫光约
+                        <MathKatexInline math="40.5^\circ" fallback="40.5°" /> 在内圈，理解彩虹圆形轮廓和色彩分布的形成原因。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

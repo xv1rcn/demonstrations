@@ -136,6 +136,17 @@ export default function Page() {
                 { label: '宽条纹', onClick: () => { setLambdaNm(700); setThetaDeg(2); setN(1.2); } },
                 { label: '密条纹', onClick: () => { setLambdaNm(450); setThetaDeg(12); setN(2.0); } },
             ]}
+            hint={{
+                title: '劈尖干涉',
+                content: (
+                    <span>
+                        两块玻璃夹出微小楔角时出现的平行明暗条纹、精密光学检验中的平面度判断，都是劈尖干涉的典型应用。调节入射波长
+                        <MathKatexInline math="\lambda" fallback="λ" />、楔角
+                        <MathKatexInline math="\theta" fallback="θ" />、介质折射率
+                        <MathKatexInline math="n" fallback="n" />，能看到条纹疏密变化：楔角越大或折射率越高，条纹越密；波长越长，条纹越疏，直观理解薄膜厚度线性变化导致的干涉规律。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

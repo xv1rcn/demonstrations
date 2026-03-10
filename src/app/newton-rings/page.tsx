@@ -124,6 +124,17 @@ export default function Page() {
                 { label: '短波', onClick: () => { setLambdaNm(420); setRadiusM(8); } },
                 { label: '大曲率半径', onClick: () => { setLambdaNm(550); setRadiusM(12); } },
             ]}
+            hint={{
+                title: '牛顿环',
+                content: (
+                    <span>
+                        透镜轻压平板时出现的同心圆条纹、光学面形检测中的环纹判读，核心都是牛顿环干涉。调节光的波长
+                        <MathKatexInline math="\lambda" fallback="λ" /> 与透镜曲率半径
+                        <MathKatexInline math="R" fallback="R" />，能看到环纹分布变化：波长越短或曲率半径越小，环纹越密；波长越长或曲率半径越大，环纹越疏，清晰理解
+                        <MathKatexInline math="r_m\propto\sqrt{R\lambda}" fallback="r_m∝√(Rλ)" /> 的实验规律。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

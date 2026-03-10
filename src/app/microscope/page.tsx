@@ -340,6 +340,17 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '显微镜成像',
+                content: (
+                    <span>
+                        生物显微镜的细胞观察、病理检测的细节放大，靠的是显微镜的物镜和目镜配合。调节物镜焦距
+                        <MathKatexInline math="f_{\text{物}}" fallback="f物" />、目镜焦距
+                        <MathKatexInline math="f_{\text{目}}" fallback="f目" />、物距
+                        <MathKatexInline math="u" fallback="u" />，能看到放大效果：物镜焦距越小、目镜倍率越高，总放大倍数越大，理解显微镜的放大原理。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {

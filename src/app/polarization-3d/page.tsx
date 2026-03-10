@@ -173,6 +173,16 @@ export default function Page() {
                     },
                 },
             ]}
+            hint={{
+                title: '3D 眼镜偏振分离',
+                content: (
+                    <span>
+                        3D电影的立体画面、VR设备的沉浸式显示，靠的是3D眼镜的偏振原理。调节左右偏振片夹角、入射光偏振角
+                        <MathKatexInline math="\gamma" fallback="γ" />，能看到左右眼的通光效果：夹角
+                        <MathKatexInline math="90^\circ" fallback="90°" /> 时左右眼接收独立画面，旋转头部改变偏振角则会出现重影，理解立体视觉的形成原理。
+                    </span>
+                ),
+            }}
             simulationVisualization={visualization}
             questions={[
                 {
