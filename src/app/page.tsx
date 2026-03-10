@@ -200,6 +200,7 @@ const NAV_GROUPS: NavGroup[] = [
             { href: 'newton-rings', label: 'Ⓑ 牛顿环' },
             { href: 'optical-doppler', label: 'Ⓒ 光的多普勒效应' },
             { href: 'beer-lambert', label: 'Ⓓ 光的吸收定律' },
+            { href: 'fiber-loss', label: 'Ⓔ 光纤损耗・长距离通信' },
         ],
     },
 ];
