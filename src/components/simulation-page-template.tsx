@@ -26,7 +26,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { ParameterControls, type ParameterItem } from '@/components/parameter-controls';
 
 export type SimulationPreset = {
-    label: string;
+    label: React.ReactNode;
     onClick: () => void;
 };
 
@@ -177,8 +177,8 @@ export function SimulationPageTemplate({
                                 {(presets.length > 0 || hint) && (
                                     <Stack spacing={1} direction="row" className="items-center justify-between">
                                         <Stack spacing={1} direction="row" className="flex-wrap">
-                                            {presets.map((preset) => (
-                                                <Button key={preset.label} size="small" variant="outlined" onClick={preset.onClick}>
+                                            {presets.map((preset, index) => (
+                                                <Button key={`preset-${index}`} size="small" variant="outlined" onClick={preset.onClick}>
                                                     {preset.label}
                                                 </Button>
                                             ))}
@@ -348,7 +348,7 @@ export function SimulationPageTemplate({
                 >
                     <DialogTitle>{hint.title ?? '提示'}</DialogTitle>
                     <DialogContent dividers>
-                        <Typography variant="body1" sx={{ fontSize: 16 }}>
+                        <Typography component="div" variant="body1" sx={{ fontSize: 16 }}>
                             {hint.content}
                         </Typography>
                     </DialogContent>

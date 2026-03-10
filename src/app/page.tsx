@@ -199,6 +199,7 @@ const NAV_GROUPS: NavGroup[] = [
             { href: 'wedge-interference', label: 'Ⓐ 劈尖干涉' },
             { href: 'newton-rings', label: 'Ⓑ 牛顿环' },
             { href: 'optical-doppler', label: 'Ⓒ 光的多普勒效应' },
+            { href: 'beer-lambert', label: 'Ⓓ 光的吸收定律' },
         ],
     },
 ];
