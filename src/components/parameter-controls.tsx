@@ -16,6 +16,8 @@ export interface ParameterItem {
     valueLabelDisplay?: "auto" | "on" | "off";
     marks?: { value: number; label: string }[];
     disabled?: boolean;
+    tipIncrease?: React.ReactNode;
+    tipDecrease?: React.ReactNode;
 }
 
 export interface ParameterControlsProps {
@@ -38,7 +40,7 @@ export function ParameterControls({items}: ParameterControlsProps) {
                             max={item.max}
                             value={item.value}
                             step={item.step}
-                            valueLabelDisplay={item.valueLabelDisplay || "auto"}
+                            valueLabelDisplay={item.valueLabelDisplay ?? "auto"}
                             onChange={(_e, v) => item.onChange(typeof v === "number" ? v : v[0])}
                             marks={item.marks}
                             disabled={item.disabled}
