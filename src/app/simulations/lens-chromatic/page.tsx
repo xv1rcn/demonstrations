@@ -116,8 +116,9 @@ export default function Page() {
             min: 50,
             max: 200,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setF0,
+            tipIncrease: '调大透镜的基础焦距，不同颜色光的焦距绝对差异会变大，但相对差异会变小，色差的视觉效果会稍有减弱。',
+            tipDecrease: '调小透镜的基础焦距，焦距绝对差异变小，相对差异变大，色差的视觉效果会增强。',
             marks: [{ value: 50, label: '50' }, { value: 200, label: '200' }],
         },
         {
@@ -128,11 +129,12 @@ export default function Page() {
             min: 1.50,
             max: 1.57,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: (value) => {
                 setNr(value);
                 setNb((prev) => Math.max(prev, value + 0.001));
             },
+            tipIncrease: '调大红光的折射率，红光与蓝光的折射率差会变小，色差会减弱。',
+            tipDecrease: '调小红光的折射率，折射率差会变大，色差会增强。',
             marks: [{ value: 1.50, label: '1.50' }, { value: 1.57, label: '1.57' }],
         },
         {
@@ -143,8 +145,9 @@ export default function Page() {
             min: 1.51,
             max: 1.59,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: (value) => setNb(Math.max(value, nr + 0.001)),
+            tipIncrease: '调大蓝光的折射率，蓝光与红光的折射率差会变大，色差会增强，成像边缘彩色镶边更明显。',
+            tipDecrease: '调小蓝光的折射率，折射率差会变小，色差会减弱。',
             marks: [{ value: 1.51, label: '1.51' }, { value: 1.59, label: '1.59' }],
         },
     ];
@@ -237,7 +240,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认',
+                    label: '📷相机镜头型',
+                    tip: '对应普通相机镜头的轻微色差状态，不同颜色光的焦距差异较小，成像边缘仅有轻微的彩色镶边，画面整体清晰，是日常摄影的常见镜头效果。',
                     onClick: () => {
                         setF0(100);
                         setNr(1.54);
@@ -245,7 +249,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '色差大',
+                    label: '🔍明显色差型',
+                    tip: '对应普通放大镜的色差状态，不同颜色光的焦距差异大，成像边缘出现明显的彩色镶边，画面模糊，色彩偏移严重，体现了单透镜的色差缺陷。',
                     onClick: () => {
                         setF0(50);
                         setNr(1.50);
@@ -253,7 +258,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '色差小',
+                    label: '✨消色差型',
+                    tip: '对应专业消色差镜头的状态，不同颜色光的焦距差异极小，成像边缘无彩色镶边，画面清晰锐利，类似单反相机的高端镜头效果，解决了单透镜的色差问题。',
                     onClick: () => {
                         setF0(200);
                         setNr(1.545);

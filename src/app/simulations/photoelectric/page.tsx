@@ -96,20 +96,22 @@ export default function Page() {
             min: 1,
             max: 4,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setWorkFunction,
+            tipIncrease: '调大金属的逸出功，产生光电效应所需的入射光截止频率会变高，更难产生光电子。',
+            tipDecrease: '调小金属的逸出功，截止频率会变低，更易产生光电子。',
             marks: [{ value: 1, label: '1' }, { value: 2, label: '2' }, { value: 4, label: '4' }],
         },
         {
             key: 'frequency',
-            label: <span>频率 <MathKatexInline math="\nu" fallback="ν" /> (Hz)</span>,
+            label: <span>频率 <MathKatexInline math="\\nu" fallback="ν" /> (Hz)</span>,
             type: 'slider',
             value: frequency,
             min: nuMin,
             max: nuMax,
             step: 1e13,
-            valueLabelDisplay: 'auto',
             onChange: setFrequency,
+            tipIncrease: '调大入射光的频率，光电子的最大初动能会随之增大，光电流的产生更稳定。',
+            tipDecrease: '调小入射光的频率，当频率低于截止频率时，将无法产生光电子，无光电流形成。',
             marks: [{ value: 3e14, label: '3e14' }, { value: 5e14, label: '5e14' }, { value: 7e14, label: '7e14' }],
         },
     ];
@@ -187,21 +189,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '临界频率',
+                    label: '⚡临界感光型',
+                    tip: '对应光控开关的临界感光状态，入射光的频率达到金属的截止频率，刚好能产生光电子，处于有光电流和无光电流的临界状态，稍降低频率就会失去感光效果。',
                     onClick: () => {
                         setFrequency(5e14);
                         setWorkFunction(2);
                     },
                 },
                 {
-                    label: '有光电子',
+                    label: '🔋发电感光型',
+                    tip: '对应太阳能电池的正常发电状态，入射光的频率高于金属的截止频率，能稳定产生光电子，形成持续的光电流，将光能转化为电能，是光电效应的典型应用。',
                     onClick: () => {
                         setFrequency(7e14);
                         setWorkFunction(2);
                     },
                 },
                 {
-                    label: '无光电子',
+                    label: '🚫无光感光型',
+                    tip: '对应光线频率过低时的感光失效状态，入射光的频率低于金属的截止频率，无法产生光电子，无光电流形成，如同太阳能电池在弱光下无法发电的状态。',
                     onClick: () => {
                         setFrequency(3e14);
                         setWorkFunction(2);

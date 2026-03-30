@@ -65,8 +65,9 @@ export default function Page() {
             min: 0,
             max: 1,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: setIntensity,
+            tipIncrease: '调大入射光的强度，单位时间内入射的光子数量会增多，产生的光电子数量也会增多，饱和光电流会随之增大。',
+            tipDecrease: '调小入射光的强度，光子数量减少，光电子数量减少，饱和光电流会随之减小。',
             marks: [{ value: 0, label: '0' }, { value: 0.5, label: '0.5' }, { value: 1, label: '1' }],
         },
         {
@@ -77,8 +78,9 @@ export default function Page() {
             min: nuMin,
             max: nuMax,
             step: 1e13,
-            valueLabelDisplay: 'auto',
             onChange: setFrequency,
+            tipIncrease: '调大入射光的频率，只要频率高于截止频率，光电子的动能会增大，但饱和光电流与频率无关。',
+            tipDecrease: '调小入射光的频率，当频率低于截止频率时，无论光强多大，都无法产生光电流。',
             marks: [{ value: nuMin, label: '3e14' }, { value: nu0, label: 'ν0' }, { value: nuMax, label: '9e14' }],
         },
     ];
@@ -145,21 +147,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '弱光',
+                    label: '🌙弱光感应型',
+                    tip: '对应路灯自动控制的弱光感应状态，入射光强度低，单位时间内的光子数量少，产生的光电子数量少，形成的光电流弱，路灯会因弱光而自动开启。',
                     onClick: () => {
                         setIntensity(0.2);
                         setFrequency(6.2e14);
                     },
                 },
                 {
-                    label: '中等',
+                    label: '☀️自然光感应型',
+                    tip: '对应照度计在自然光下的测量状态，入射光强度适中，单位时间内的光子数量适中，光电流稳定，能准确测量环境的光照强度，是日常测光的常见状态。',
                     onClick: () => {
                         setIntensity(0.5);
                         setFrequency(6.2e14);
                     },
                 },
                 {
-                    label: '强光',
+                    label: '🔦强光感应型',
+                    tip: '对应光伏板在强光下的发电状态，入射光强度高，单位时间内的光子数量多，产生的光电子数量多，形成的饱和光电流大，光伏板的发电效率达到最高。',
                     onClick: () => {
                         setIntensity(1.0);
                         setFrequency(6.2e14);

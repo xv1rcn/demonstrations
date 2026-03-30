@@ -242,8 +242,9 @@ export default function Page() {
             min: 5,
             max: 60,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setU,
+            tipIncrease: '调大物距，当物距大于 2 倍焦距时，像距会变小，成的实像会更缩小。',
+            tipDecrease: '调小物距，当物距在 1 至 2 倍焦距之间时，像距会变大，成的实像会更放大；物距小于焦距时成虚像且放大率变大。',
             marks: [{ value: 5, label: '5' }, { value: 20, label: '20' }, { value: 30, label: '30' }, { value: 60, label: '60' }],
         },
         {
@@ -254,8 +255,9 @@ export default function Page() {
             min: 5,
             max: 20,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setF,
+            tipIncrease: '调大透镜的焦距，相同物距下，像距会变大，成的像会更放大。',
+            tipDecrease: '调小透镜的焦距，相同物距下，像距会变小，成的像会更缩小。',
             marks: [{ value: 5, label: '5' }, { value: 10, label: '10' }, { value: 20, label: '20' }],
         },
     ];
@@ -334,21 +336,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '实像',
+                    label: '📸相机拍照型',
+                    tip: '对应照相机的成像状态，成倒立缩小的实像，像距适中，能将远处物体清晰成像在底片上，是凸透镜最常见的成像应用之一。',
                     onClick: () => {
                         setU(30);
                         setF(10);
                     },
                 },
                 {
-                    label: '等大',
+                    label: '📏等大成像型',
+                    tip: '对应凸透镜成等大实像的标准状态，物距和像距固定，成倒立等大的实像，是理解成像规律的关键临界状态。',
                     onClick: () => {
                         setU(20);
                         setF(10);
                     },
                 },
                 {
-                    label: '虚像',
+                    label: '🔍放大镜观察型',
+                    tip: '对应放大镜的成像状态，成正立放大的虚像，像与物在透镜同侧，能将细小物体放大，便于观察细节，是凸透镜近距成像的典型效果。',
                     onClick: () => {
                         setU(5);
                         setF(10);

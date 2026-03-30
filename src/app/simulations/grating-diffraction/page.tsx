@@ -100,8 +100,9 @@ export default function Page() {
             min: 1,
             max: 10,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setDUm,
+            tipIncrease: '调大光栅常数，光栅的色散效果会变弱，不同光的衍射角差异变小，谱线更密集。',
+            tipDecrease: '调小光栅常数，光栅的色散效果会变强，不同光的衍射角差异变大，谱线更稀疏。',
             marks: [
                 { value: 1, label: '1' },
                 { value: 10, label: '10' },
@@ -115,8 +116,9 @@ export default function Page() {
             min: 400,
             max: 700,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setLambdaNm,
+            tipIncrease: '调大光的波长，光的衍射角会变大，在谱线中所处位置更偏外。',
+            tipDecrease: '调小光的波长，光的衍射角会变小，在谱线中所处位置更偏内。',
             marks: [
                 { value: 400, label: '400' },
                 { value: 700, label: '700' },
@@ -130,8 +132,9 @@ export default function Page() {
             min: 0,
             max: 20,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setIncidenceDeg,
+            tipIncrease: '调大入射角，会改变衍射角分布，能观察到更高级次的光栅衍射谱线；',
+            tipDecrease: '调小入射角，仅能观察到低级次的光栅衍射谱线，高级次谱线会消失。',
             marks: [
                 { value: 0, label: '0' },
                 { value: 20, label: '20' },
@@ -204,7 +207,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认参数',
+                    label: '📀光盘反光型',
+                    tip: '对应 CD/DVD 表面的彩色反光效果，光栅衍射的谱线清晰且间距适中，是生活中最典型的光栅衍射现象，能看到不同颜色的光被分解后的清晰谱线。',
                     onClick: () => {
                         setDUm(2);
                         setLambdaNm(550);
@@ -212,7 +216,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '高色散',
+                    label: '🔬光谱分辨型',
+                    tip: '色散效果极强，不同波长的光被分解得更彻底，谱线间距大，类似专业光谱仪的检测效果，能清晰分辨波长差异较小的光，适合精细光谱观察。',
                     onClick: () => {
                         setDUm(1);
                         setLambdaNm(700);
@@ -220,7 +225,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '低色散',
+                    label: '🎨淡彩反光型',
+                    tip: '色散效果较弱，不同波长的光分解不明显，谱线密集且间距小，如同手机背面的淡彩色反光，光栅衍射的彩色效果柔和，不易分辨精细谱线。',
                     onClick: () => {
                         setDUm(10);
                         setLambdaNm(400);

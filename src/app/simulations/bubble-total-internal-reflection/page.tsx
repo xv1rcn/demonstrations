@@ -105,8 +105,9 @@ export default function Page() {
             min: 1.30,
             max: 1.40,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: setNWater,
+            tipIncrease: '调大水的折射率，水中气泡全反射的临界角会变小，气泡更易发生全反射而发亮。',
+            tipDecrease: '调小水的折射率，临界角会变大，气泡更难发生全反射，透光性更强。',
             marks: [
                 { value: 1.30, label: '1.30' },
                 { value: 1.33, label: '1.33' },
@@ -121,8 +122,9 @@ export default function Page() {
             min: 0,
             max: 80,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setThetaIn,
+            tipIncrease: '调大光线的入射角，当入射角超过临界角时，气泡会从透光变为完全全反射，亮度大幅提升。',
+            tipDecrease: '调小光线的入射角，气泡会从全反射变为透光，亮度降低。',
             marks: [
                 { value: 0, label: '0' },
                 { value: 48.8, label: '48.8' },
@@ -253,21 +255,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '水',
+                    label: '💧水泡透光型',
+                    tip: '对应水中小气泡的日常透光状态，光线入射角较小，气泡部分透光、部分反光，气泡在水中呈现淡透明状，和平时看水中普通气泡的效果一致。',
                     onClick: () => {
                         setNWater(1.33);
                         setThetaIn(0);
                     },
                 },
                 {
-                    label: '临界角',
+                    label: '🌟临界反光型',
+                    tip: '对应水中气泡达到全反射临界角的状态，气泡的反光强度大幅提升，边缘开始变得明亮，是气泡从透光到完全反光的临界状态，稍改变光线角度就会完全发亮。',
                     onClick: () => {
                         setNWater(1.33);
                         setThetaIn(48.8);
                     },
                 },
                 {
-                    label: '全反射',
+                    label: '✨水泡发亮型',
+                    tip: '对应水中气泡完全全反射的状态，光线入射角大于临界角，气泡无透光，全部光线发生反射，气泡在水中像小镜子一样明亮，类似开水里的气泡反光效果。',
                     onClick: () => {
                         setNWater(1.33);
                         setThetaIn(55);

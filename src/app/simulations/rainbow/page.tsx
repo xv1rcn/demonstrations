@@ -253,8 +253,9 @@ export default function Page() {
             min: 1.30,
             max: 1.36,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: setNWater,
+            tipIncrease: '调大水的折射率，不同颜色光的出射角差异会变大，彩虹的色彩间距会更宽，色彩更清晰。',
+            tipDecrease: '调小水的折射率，出射角差异会变小，彩虹的色彩更密集、暗淡。',
             marks: [{ value: 1.30, label: '1.30' }, { value: 1.33, label: '1.33' }, { value: 1.36, label: '1.36' }],
         },
         {
@@ -265,8 +266,9 @@ export default function Page() {
             min: 20,
             max: 75,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setIncidence,
+            tipIncrease: '调大光线的入射角，彩虹的整体出射角度会变大，色彩会变得模糊甚至消失，出现漫射效果。',
+            tipDecrease: '调小光线的入射角，彩虹的出射角度更标准，色彩更清晰、鲜艳。',
             marks: [{ value: 20, label: '20' }, { value: 42, label: '42' }, { value: 70, label: '70' }],
         },
     ];
@@ -335,21 +337,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '红光',
+                    label: '🔴红光彩虹型',
+                    tip: '对应雨后彩虹的外圈红光效果，红光的折射率适中，出射角达到彩虹的典型角度，红光在彩虹外圈清晰呈现，是彩虹色彩分布的主要特征之一。',
                     onClick: () => {
                         setNWater(1.33);
                         setIncidence(42);
                     },
                 },
                 {
-                    label: '紫光',
+                    label: '🟣紫光彩虹型',
+                    tip: '对应雨后彩虹的内圈紫光效果，紫光的折射率更大，出射角更小，紫光在彩虹内圈呈现，与红光形成鲜明的内外圈色彩对比，是彩虹的核心色彩特征。',
                     onClick: () => {
                         setNWater(1.34);
                         setIncidence(42);
                     },
                 },
                 {
-                    label: '大角度入射',
+                    label: '🌤️漫射彩虹型',
+                    tip: '对应阳光大角度入射时的淡彩虹效果，光线入射角度过大，彩虹的色彩偏折规律被打破，色彩变得暗淡且模糊，类似阴天或喷雾形成的淡彩虹，不易分辨清晰的色彩层次。',
                     onClick: () => {
                         setNWater(1.33);
                         setIncidence(70);

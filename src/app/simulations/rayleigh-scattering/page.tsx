@@ -97,7 +97,8 @@ export default function Page() {
             max: 1e17,
             step: 1e15,
             onChange: setParticleN,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大散射粒子的浓度，无论何种波长的光，散射效果都会增强，整体散射光的亮度提升，如雾霾天粒子多导致光线发白。',
+            tipDecrease: '调小散射粒子浓度，散射效果减弱，光的直线传播性更强，如高空天空更蓝。',
             marks: [{ value: 1e15, label: '1e15' }, { value: 5e16, label: '5e16' }, { value: 1e17, label: '1e17' }],
         },
         {
@@ -109,7 +110,8 @@ export default function Page() {
             max: 700,
             step: 1,
             onChange: setLambdaNm,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光的波长，瑞利散射的强度会急剧降低，光的散射效果变弱，更多光沿直线传播。',
+            tipDecrease: '调小光的波长，瑞利散射的强度会急剧升高，光的散射效果变强，光向各个方向扩散。',
             marks: [{ value: 400, label: '400' }, { value: 550, label: '550' }, { value: 700, label: '700' }],
         },
         {
@@ -121,7 +123,7 @@ export default function Page() {
             max: 1,
             step: 0.01,
             onChange: setI0,
-            valueLabelDisplay: 'auto',
+            
             marks: [{ value: 0, label: '0' }, { value: 0.5, label: '0.5' }, { value: 1, label: '1.0' }],
         },
         {
@@ -133,7 +135,7 @@ export default function Page() {
             max: 180,
             step: 1,
             onChange: setThetaDeg,
-            valueLabelDisplay: 'auto',
+            
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
     ];
@@ -207,15 +209,18 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: <span>蓝光</span>,
+                    label: '🔵蓝天形成型',
+                    tip: '对应白天天空呈现蓝色的状态，蓝光的波长最短，瑞利散射效果最强，蓝光被大气分子散射到各个方向，让天空呈现出明亮的蓝色。',
                     onClick: () => { setParticleN(3e16); setLambdaNm(400); setI0(1); setThetaDeg(90); },
                 },
                 {
-                    label: <span>绿光</span>,
+                    label: '🟢晴空漫射型',
+                    tip: '对应晴空下的绿光散射状态，绿光波长适中，瑞利散射效果中等，与蓝光叠加后让天空呈现出淡蓝绿色，是日常晴空的散射效果体现。',
                     onClick: () => { setParticleN(3e16); setLambdaNm(550); setI0(1); setThetaDeg(90); },
                 },
                 {
-                    label: <span>红光</span>,
+                    label: '🔴落日形成型',
+                    tip: '对应日出日落天空呈现红色的状态，红光波长最长，瑞利散射效果最弱，阳光穿过厚大气层时短波光被大量散射，仅剩长波红光到达地面，让天空呈现红色。',
                     onClick: () => { setParticleN(3e16); setLambdaNm(700); setI0(1); setThetaDeg(90); },
                 },
             ]}

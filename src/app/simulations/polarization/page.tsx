@@ -66,8 +66,9 @@ export default function Page() {
             min: 0,
             max: 180,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setAlphaDeg,
+            tipIncrease: '调大两个偏振片的夹角，透过的光强会逐渐减小，夹角接近 90° 时出现消光。调小两个偏振片的夹角，透过的光强会逐渐增大，夹角为 0° 时光强最大。',
+            tipDecrease: '调大两个偏振片的夹角，透过的光强会逐渐减小，夹角接近 90° 时出现消光。调小两个偏振片的夹角，透过的光强会逐渐增大，夹角为 0° 时光强最大。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
         {
@@ -78,8 +79,9 @@ export default function Page() {
             min: 0,
             max: 180,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setBetaDeg,
+            tipIncrease: '调大两个偏振片的夹角，透过的光强会逐渐减小，夹角接近 90° 时出现消光。调小两个偏振片的夹角，透过的光强会逐渐增大，夹角为 0° 时光强最大。',
+            tipDecrease: '调大两个偏振片的夹角，透过的光强会逐渐减小，夹角接近 90° 时出现消光。调小两个偏振片的夹角，透过的光强会逐渐增大，夹角为 0° 时光强最大。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
         {
@@ -90,8 +92,9 @@ export default function Page() {
             min: 0,
             max: 1,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: setI0,
+            tipIncrease: '调大入射光的初始光强，透过偏振片后的光强会按比例增大，整体亮度提升。',
+            tipDecrease: '调小入射光的初始光强，透过偏振片后的光强会按比例减小，整体亮度降低。',
             marks: [{ value: 0, label: '0' }, { value: 1, label: '1' }],
         },
     ];
@@ -152,7 +155,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认参数',
+                    label: '😎墨镜透光型',
+                    tip: '对应偏振太阳镜正常透光的状态，偏振片透光方向一致，光强达到最大，如同佩戴偏振墨镜正对阳光时的视觉效果，光线正常透过。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(0);
@@ -160,7 +164,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '消光',
+                    label: '🚫屏幕消光型',
+                    tip: '对应旋转手机屏幕到某一角度时画面变暗的效果，两个偏振片透光方向垂直，光强几乎为 0，出现消光现象，类似偏振片交叉后的遮光效果。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(90);
@@ -168,7 +173,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '半光强',
+                    label: '☀️半亮透光型',
+                    tip: '对应偏振墨镜侧对阳光时的状态，两个偏振片透光方向呈 45°，光强变为原来的一半，光线半透半遮，亮度适中。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(45);

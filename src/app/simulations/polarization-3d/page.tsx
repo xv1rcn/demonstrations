@@ -40,8 +40,9 @@ export default function Page() {
             min: 0,
             max: 180,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setAlphaDeg,
+            tipIncrease: '调大左眼偏振角，与投影光偏振角的夹角变大，左眼接收的光强会减小，画面变暗。',
+            tipDecrease: '调小左眼偏振角，与投影光偏振角的夹角变小，左眼接收的光强会增大，画面变亮。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
         {
@@ -52,8 +53,9 @@ export default function Page() {
             min: 0,
             max: 180,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setBetaDeg,
+            tipIncrease: '调大右眼偏振角，与投影光偏振角的夹角变大，右眼接收的光强会减小，画面变暗。',
+            tipDecrease: '调小右眼偏振角，与投影光偏振角的夹角变小，右眼接收的光强会增大，画面变亮。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
         {
@@ -64,8 +66,9 @@ export default function Page() {
             min: 0,
             max: 180,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setGammaDeg,
+            tipIncrease: '调大投影光偏振角，与其中一眼偏振角的夹角变小、另一眼变大，会出现单眼亮、单眼暗的情况，破坏立体视觉。',
+            tipDecrease: '调小投影光偏振角，会改变左右眼的光强接收比例，导致立体效果变差。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }, { value: 180, label: '180' }],
         },
     ];
@@ -149,7 +152,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '标准3D',
+                    label: '🎬影院观影型',
+                    tip: '对应 3D 电影院的标准观影状态，左右眼偏振片方向垂直，投影光的偏振方向与左右眼匹配，大脑能完美合成立体视觉，无重影、立体感强。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(90);
@@ -157,7 +161,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '左眼可见',
+                    label: '👁️左眼单看型',
+                    tip: '对应仅左眼能看到 3D 画面的状态，投影光偏振方向与左眼偏振片一致，右眼因偏振方向不匹配无法看到画面，适合测试左眼偏振效果。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(90);
@@ -165,7 +170,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '右眼可见',
+                    label: '👁️右眼单看型',
+                    tip: '对应仅右眼能看到 3D 画面的状态，投影光偏振方向与右眼偏振片一致，左眼因偏振方向不匹配无法看到画面，适合测试右眼偏振效果。',
                     onClick: () => {
                         setAlphaDeg(0);
                         setBetaDeg(90);

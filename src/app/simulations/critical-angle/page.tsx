@@ -69,11 +69,12 @@ export default function Page() {
             min: 1.0,
             max: 2.0,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: (value) => {
                 setN1(value);
                 setN2((prev) => Math.min(prev, value));
             },
+            tipIncrease: '调大光密介质的折射率，全反射的临界角会变小，更易发生全反射现象。',
+            tipDecrease: '调小光密介质的折射率，全反射的临界角会变大，更难发生全反射现象。',
             marks: [
                 { value: 1.0, label: '1.0' },
                 { value: 2.0, label: '2.0' },
@@ -87,8 +88,9 @@ export default function Page() {
             min: 1.0,
             max: n1,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: (value) => setN2(Math.min(value, n1)),
+            tipIncrease: '调大光疏介质的折射率，全反射的临界角会变大，难发生全反射。',
+            tipDecrease: '调小光疏介质的折射率，全反射的临界角会变小，易发生全反射。',
             marks: [
                 { value: 1.0, label: '1.0' },
                 { value: n1, label: n1.toFixed(2) },
@@ -102,8 +104,9 @@ export default function Page() {
             min: 0,
             max: 80,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setThetaIncident,
+            tipIncrease: '调大入射角，当入射角超过临界角时，会从折射现象变为全反射现象，反射光强从弱变强。',
+            tipDecrease: '调小入射角，当入射角低于临界角时，会从全反射现象变为折射现象，出现折射光。',
             marks: [
                 { value: 0, label: '0' },
                 { value: 40, label: '40' },
@@ -249,7 +252,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '玻璃→空气',
+                    label: '🔮玻璃透光型',
+                    tip: '对应光线从玻璃射入空气的日常透光状态，入射角较小，光大部分发生折射，小部分发生反射，和平时看玻璃透光的效果一致，无全反射现象。',
                     onClick: () => {
                         setN1(1.5);
                         setN2(1.0);
@@ -257,7 +261,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '临界状态',
+                    label: '⚡临界透光型',
+                    tip: '对应光线达到全反射临界角的状态，折射光沿两种介质分界面传播，反射光强度大幅提升，是全反射的临界状态，此时稍增大入射角就会发生全反射。',
                     onClick: () => {
                         setN1(1.5);
                         setN2(1.0);
@@ -265,7 +270,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '全反射',
+                    label: '✨玻璃反光型',
+                    tip: '对应光线在玻璃内部发生全反射的状态，入射角大于临界角，无折射光，所有光都发生反射，玻璃如同镜子一样完全反光，类似钻石内部的反光效果。',
                     onClick: () => {
                         setN1(1.5);
                         setN2(1.0);

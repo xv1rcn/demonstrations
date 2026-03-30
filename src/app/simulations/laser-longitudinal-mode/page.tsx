@@ -106,7 +106,8 @@ export default function Page() {
             max: 2,
             step: 0.01,
             onChange: setLengthM,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大谐振腔的长度，纵模之间的频率间隔会变小，能容纳的纵模数增多，激光的单色性会变差，光谱变宽。',
+            tipDecrease: '调小谐振腔的长度，纵模频率间隔会变大，纵模数减少，激光的单色性会变好，光谱变窄。',
             marks: [{ value: 0.1, label: '0.1' }, { value: 1, label: '1.0' }, { value: 2, label: '2.0' }],
         },
         {
@@ -118,7 +119,8 @@ export default function Page() {
             max: 700,
             step: 0.1,
             onChange: setLambdaNm,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光的波长，在相同腔长下，驻波模式数会减少，纵模的波长间隔会变大。',
+            tipDecrease: '调小光的波长，驻波模式数会增多，纵模的波长间隔会变小。',
             marks: [{ value: 400, label: '400' }, { value: 550, label: '550' }, { value: 632.8, label: '632.8' }, { value: 700, label: '700' }],
         },
         {
@@ -130,7 +132,7 @@ export default function Page() {
             max: 1000,
             step: 1,
             onChange: setGainBwMhz,
-            valueLabelDisplay: 'auto',
+            
             marks: [{ value: 100, label: '100' }, { value: 500, label: '500' }, { value: 1000, label: '1000' }],
         },
     ];
@@ -198,9 +200,21 @@ export default function Page() {
             simulationParameters={parameterItems}
             simulationControlsFooter={controlsFooter}
             presets={[
-                { label: '短腔', onClick: () => { setLengthM(0.1); setLambdaNm(632.8); setGainBwMhz(400); } },
-                { label: '标准腔', onClick: () => { setLengthM(0.3); setLambdaNm(632.8); setGainBwMhz(400); } },
-                { label: '长腔', onClick: () => { setLengthM(0.5); setLambdaNm(632.8); setGainBwMhz(400); } },
+                {
+                    label: '✏️激光笔型',
+                    tip: '对应普通激光笔的谐振腔状态，谐振腔较短，纵模间隔大，激光的单色性较好，光斑集中，适合激光指示等用途。',
+                    onClick: () => { setLengthM(0.1); setLambdaNm(632.8); setGainBwMhz(400); }
+                },
+                {
+                    label: '🛜光纤通信型',
+                    tip: '对应光纤通信的单纵模激光器状态，谐振腔长度适中，纵模间隔适中，激光的单色性极佳，光谱宽度极窄，能保证光纤通信的信号稳定。',
+                    onClick: () => { setLengthM(0.3); setLambdaNm(632.8); setGainBwMhz(400); }
+                },
+                {
+                    label: '🔦大功率激光型',
+                    tip: '对应大功率多纵模激光的状态，谐振腔较长，纵模间隔小，激光的单色性较差，光谱宽度较宽，光功率大，适合工业应用。',
+                    onClick: () => { setLengthM(0.5); setLambdaNm(632.8); setGainBwMhz(400); }
+                },
             ]}
             hint={{
                 title: '激光谐振腔纵模',

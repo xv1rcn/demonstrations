@@ -82,9 +82,10 @@ export default function Page() {
             min: 0.1,
             max: 2,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setDMm,
             marks: [{ value: 0.1, label: '0.1' }, { value: 2, label: '2.0' }],
+            tipIncrease: '调大双缝间距，会让干涉条纹的分布变得更密集。',
+            tipDecrease: '调小双缝间距，会让干涉条纹的分布变得更稀疏。',
         },
         {
             key: 'lambdaNm',
@@ -94,9 +95,10 @@ export default function Page() {
             min: 400,
             max: 700,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setLambdaNm,
             marks: [{ value: 400, label: '400' }, { value: 700, label: '700' }],
+            tipIncrease: '调大光的波长，会让干涉条纹的间距变大，条纹更宽。',
+            tipDecrease: '调小光的波长，会让干涉条纹的间距变小，条纹更窄。',
         },
         {
             key: 'distanceM',
@@ -106,9 +108,10 @@ export default function Page() {
             min: 1,
             max: 5,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setDistanceM,
             marks: [{ value: 1, label: '1' }, { value: 5, label: '5' }],
+            tipIncrease: '调大缝到屏的距离，会让干涉条纹的间距变大，条纹分布更疏。',
+            tipDecrease: '调小缝到屏的距离，会让干涉条纹的间距变小，条纹分布更密。',
         },
     ];
 
@@ -186,7 +189,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认参数',
+                    label: '🔍日常观察型',
+                    tip: '生活中最易观察到的双缝干涉效果，对应普通环境下的干涉条纹呈现，就像阳光透过纱窗缝隙在地面形成的淡淡条纹，是最基础的干涉现象体现。',
                     onClick: () => {
                         setDMm(0.5);
                         setLambdaNm(550);
@@ -194,7 +198,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '条纹稀疏',
+                    label: '✨清晰宽纹型',
+                    tip: '干涉条纹变得稀疏且清晰，类似肥皂泡表面大面积的彩色宽纹路，能直观看到不同颜色的条纹间隔，便于分辨干涉规律。',
                     onClick: () => {
                         setDMm(0.1);
                         setLambdaNm(700);
@@ -202,7 +207,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '条纹密集',
+                    label: '🧩细密窄纹型',
+                    tip: '干涉条纹密集且狭窄，如同水面油膜上细密的彩色纹理，条纹间区分度降低，体现了参数变化对干涉条纹分布的显著影响。',
                     onClick: () => {
                         setDMm(2.0);
                         setLambdaNm(400);

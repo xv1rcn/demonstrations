@@ -84,7 +84,8 @@ export default function Page() {
             max: 2,
             step: 0.01,
             onChange: setAlpha0,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大介质的吸收系数，光在介质中的衰减速度会变快，相同厚度下透过的光强会变得更小。',
+            tipDecrease: '调小介质的吸收系数，光的衰减速度会变慢，相同厚度下透过的光强会变得更大。',
             marks: [{ value: 0.1, label: '0.1' }, { value: 1, label: '1.0' }, { value: 2, label: '2.0' }],
         },
         {
@@ -96,7 +97,8 @@ export default function Page() {
             max: 10,
             step: 0.1,
             onChange: setThicknessCm,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光在介质中的传播厚度，光的衰减程度会增加，透过的光强会变小。',
+            tipDecrease: '调小传播厚度，光的衰减程度会降低，透过的光强会变大。',
             marks: [{ value: 0.5, label: '0.5' }, { value: 5, label: '5.0' }, { value: 10, label: '10' }],
         },
         {
@@ -108,7 +110,8 @@ export default function Page() {
             max: 1,
             step: 0.01,
             onChange: setI0,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大入射光的强度，透过介质后的光强会按指数规律相应增大，整体亮度提升。',
+            tipDecrease: '调小入射光的强度，透过介质后的光强会按指数规律相应减小，整体亮度降低。',
             marks: [{ value: 0, label: '0' }, { value: 0.5, label: '0.5' }, { value: 1, label: '1.0' }],
         },
         {
@@ -120,7 +123,7 @@ export default function Page() {
             max: 700,
             step: 1,
             onChange: setLambdaNm,
-            valueLabelDisplay: 'auto',
+            
             marks: [{ value: 400, label: '400' }, { value: 550, label: '550' }, { value: 700, label: '700' }],
         },
     ];
@@ -204,9 +207,21 @@ export default function Page() {
             simulationParameters={parameterItems}
             simulationControlsFooter={controlsFooter}
             presets={[
-                { label: '标准', onClick: () => { setAlpha0(0.5); setThicknessCm(2); setI0(1); setLambdaNm(550); } },
-                { label: '强吸收', onClick: () => { setAlpha0(2.0); setThicknessCm(2); setI0(1); setLambdaNm(550); } },
-                { label: '厚介质', onClick: () => { setAlpha0(0.5); setThicknessCm(5); setI0(1); setLambdaNm(550); } },
+                {
+                    label: '🕶️墨镜滤光型',
+                    tip: '对应普通墨镜的滤光状态，介质的吸收系数适中，光在介质中发生中等程度的衰减，透过的光强适中，能有效过滤强光又不影响视线，是日常佩戴墨镜的效果。',
+                    onClick: () => { setAlpha0(0.5); setThicknessCm(2); setI0(1); setLambdaNm(550); }
+                },
+                {
+                    label: '🔴有色玻璃型',
+                    tip: '对应深色有色玻璃的遮光状态，介质的吸收系数大，光在介质中发生强烈衰减，透过的光强极弱，玻璃的遮光效果好，如同实验室的避光玻璃。',
+                    onClick: () => { setAlpha0(2.0); setThicknessCm(2); setI0(1); setLambdaNm(550); }
+                },
+                {
+                    label: '🪟厚玻璃透光型',
+                    tip: '对应厚普通玻璃的透光状态，介质的吸收系数适中，但传播厚度大，光在介质中随距离发生明显衰减，透过的光强比薄玻璃弱，类似阳台厚玻璃的透光效果。',
+                    onClick: () => { setAlpha0(0.5); setThicknessCm(5); setI0(1); setLambdaNm(550); }
+                },
             ]}
             hint={{
                 title: '光的吸收定律',

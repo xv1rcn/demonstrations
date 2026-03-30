@@ -44,7 +44,8 @@ export default function Page() {
             max: 2,
             step: 0.01,
             onChange: setAlpha,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光纤的损耗系数，光信号在传输过程中的能量衰减速度会变快，相同距离下输出的光功率会变得更小，通信质量降低。',
+            tipDecrease: '调小损耗系数，能量衰减速度变慢，相同距离下输出光功率更大，通信更稳定。',
             marks: [{ value: 0.1, label: '0.1' }, { value: 1, label: '1.0' }, { value: 2, label: '2.0' }],
         },
         {
@@ -56,7 +57,8 @@ export default function Page() {
             max: 100,
             step: 0.5,
             onChange: setDistanceKm,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光纤的传输距离，光信号的能量衰减程度会增加，输出的光功率会变小，距离过远可能出现信号中断。',
+            tipDecrease: '调小传输距离，能量衰减程度降低，输出光功率更大，信号更稳定。',
             marks: [{ value: 1, label: '1' }, { value: 20, label: '20' }, { value: 50, label: '50' }, { value: 100, label: '100' }],
         },
         {
@@ -68,7 +70,8 @@ export default function Page() {
             max: 1,
             step: 0.01,
             onChange: setPin,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大入射光的功率，相同损耗和距离下，输出的光功率会相应增大，信号的抗衰减能力更强。',
+            tipDecrease: '调小入射光功率，输出光功率更小，易出现信号衰减。',
             marks: [{ value: 0, label: '0' }, { value: 0.5, label: '0.5' }, { value: 1, label: '1.0' }],
         },
     ];
@@ -138,9 +141,21 @@ export default function Page() {
             simulationParameters={parameterItems}
             simulationControlsFooter={controlsFooter}
             presets={[
-                { label: '标准光纤', onClick: () => { setAlpha(0.2); setDistanceKm(20); setPin(1); } },
-                { label: '劣质光纤', onClick: () => { setAlpha(1.0); setDistanceKm(20); setPin(1); } },
-                { label: '长距离传输', onClick: () => { setAlpha(0.2); setDistanceKm(100); setPin(1); } },
+                {
+                    label: '🏠家用宽带型',
+                    tip: '对应家用光纤宽带的传输状态，光纤损耗低，传输距离适中，光信号在传输过程中能量损耗小，能保证家庭网络的稳定传输。',
+                    onClick: () => { setAlpha(0.2); setDistanceKm(20); setPin(1); }
+                },
+                {
+                    label: '🧵劣质光纤型',
+                    tip: '对应劣质光纤的传输状态，光纤损耗高，即使传输距离适中，光信号的能量也会快速衰减，出现网络卡顿、信号中断的情况。',
+                    onClick: () => { setAlpha(1.0); setDistanceKm(20); setPin(1); }
+                },
+                {
+                    label: '🌊海底光缆型',
+                    tip: '对应海底长距离光缆的传输状态，光纤损耗极低，传输距离极长，光信号能在海底实现数千公里的稳定传输，仅出现轻微的能量损耗。',
+                    onClick: () => { setAlpha(0.2); setDistanceKm(100); setPin(1); }
+                },
             ]}
             hint={{
                 title: '光纤损耗・长距离通信',

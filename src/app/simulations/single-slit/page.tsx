@@ -88,8 +88,9 @@ export default function Page() {
             min: 0.02,
             max: 0.5,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: setAMm,
+            tipIncrease: '调大单缝宽度，光的衍射效果会变弱，中央明纹变窄。',
+            tipDecrease: '调小单缝宽度，光的衍射效果会变强，中央明纹变宽。',
             marks: [{ value: 0.02, label: '0.02' }, { value: 0.5, label: '0.5' }],
         },
         {
@@ -100,8 +101,9 @@ export default function Page() {
             min: 400,
             max: 700,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setLambdaNm,
+            tipIncrease: '调大光的波长，衍射效果会增强，中央明纹和次明纹的间距变大。',
+            tipDecrease: '调小光的波长，衍射效果会减弱，中央明纹和次明纹的间距变小。',
             marks: [{ value: 400, label: '400' }, { value: 700, label: '700' }],
         },
         {
@@ -112,8 +114,9 @@ export default function Page() {
             min: 10,
             max: 50,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setFCm,
+            tipIncrease: '调大透镜焦距，会让衍射条纹的整体间距变大，条纹更舒展。',
+            tipDecrease: '调小透镜焦距，会让衍射条纹的整体间距变小，条纹更紧凑。',
             marks: [{ value: 10, label: '10' }, { value: 50, label: '50' }],
         },
     ];
@@ -192,7 +195,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认参数',
+                    label: '🔦日常灯光型',
+                    tip: '对应日常眯眼看到灯光周围射线的衍射效果，是最常见的单缝衍射现象，衍射条纹的亮度和宽度处于适中状态，贴近生活观察体验。',
                     onClick: () => {
                         setAMm(0.1);
                         setLambdaNm(550);
@@ -200,7 +204,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '强衍射',
+                    label: '🌈明显衍射型',
+                    tip: '衍射效果极强，中央明纹变得极宽且明亮，周围次明纹也清晰可见，类似刀片边缘对着强光时看到的明显衍射光斑，能清晰感知光的扩散特性。',
                     onClick: () => {
                         setAMm(0.02);
                         setLambdaNm(700);
@@ -208,7 +213,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '弱衍射',
+                    label: '📏微弱衍射型',
+                    tip: '衍射效果几乎不明显，中央明纹窄而亮，周围次明纹难以分辨，如同光透过较宽的缝隙后几乎沿直线传播，仅边缘有轻微衍射。',
                     onClick: () => {
                         setAMm(0.5);
                         setLambdaNm(400);

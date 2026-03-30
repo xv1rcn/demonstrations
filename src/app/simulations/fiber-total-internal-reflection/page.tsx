@@ -142,11 +142,12 @@ export default function Page() {
             min: 1.40,
             max: 1.60,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: (value) => {
                 setN1(value);
                 setN2((prev) => Math.min(prev, value));
             },
+            tipIncrease: '调大纤芯的折射率，纤芯与包层的折射率差变大，数值孔径变大，光的可入射范围更广，全反射更稳定，不易漏光。',
+            tipDecrease: '调小纤芯的折射率，折射率差变小，数值孔径变小，易漏光。',
             marks: [
                 { value: 1.40, label: '1.40' },
                 { value: 1.60, label: '1.60' },
@@ -160,8 +161,9 @@ export default function Page() {
             min: 1.30,
             max: n1,
             step: 0.001,
-            valueLabelDisplay: 'auto',
             onChange: (value) => setN2(Math.min(value, n1)),
+            tipIncrease: '调大包层的折射率，纤芯与包层的折射率差变小，数值孔径变小，光易发生漏光，传输不稳定。',
+            tipDecrease: '调小包层的折射率，折射率差变大，数值孔径变大，全反射更稳定。',
             marks: [
                 { value: 1.30, label: '1.30' },
                 { value: n1, label: n1.toFixed(3) },
@@ -175,8 +177,9 @@ export default function Page() {
             min: 0,
             max: 35,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setThetaIn,
+            tipIncrease: '调大光的入射角，当入射角超过临界范围时，光会从包层射出，发生漏光，传输效率降低。',
+            tipDecrease: '调小光的入射角，光在纤芯内的全反射更稳定，无漏光，传输效率高。',
             marks: [
                 { value: 0, label: '0' },
                 { value: 20, label: '20' },
@@ -319,7 +322,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '标准光纤',
+                    label: '🔌宽带传输型',
+                    tip: '对应家用光纤宽带的正常传输状态，光在光纤内稳定发生多次全反射，无漏光，传输效率高，是光纤通信的标准工作状态，能保证网络信号稳定。',
                     onClick: () => {
                         setN1(1.48);
                         setN2(1.46);
@@ -327,7 +331,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '易传输',
+                    label: '📡高效传输型',
+                    tip: '对应专业通信光纤的高效传输状态，纤芯和包层折射率差大，数值孔径大，光的入射角范围更广，全反射更稳定，传输过程中能量损耗极低，适合长距离通信。',
                     onClick: () => {
                         setN1(1.55);
                         setN2(1.40);
@@ -335,7 +340,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '易漏光',
+                    label: '📶信号衰减型',
+                    tip: '对应光纤弯折或劣质光纤的传输状态，纤芯和包层折射率差小，光的入射角过大，发生漏光现象，全反射被破坏，传输效率降低，出现信号衰减甚至中断。',
                     onClick: () => {
                         setN1(1.44);
                         setN2(1.43);

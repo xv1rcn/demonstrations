@@ -119,8 +119,9 @@ export default function Page() {
             min: 50,
             max: 220,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setFObj,
+            tipIncrease: '调大物镜的焦距，望远镜的放大倍率会提高，能观察到更远的物体且像更大，聚光能力也会增强，画面更明亮。',
+            tipDecrease: '调小物镜的焦距，放大倍率会降低，聚光能力减弱，视野范围变大。',
             marks: [{ value: 50, label: '50' }, { value: 100, label: '100' }, { value: 200, label: '200' }],
         },
         {
@@ -131,8 +132,9 @@ export default function Page() {
             min: 5,
             max: 20,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setFEye,
+            tipIncrease: '调大目镜的焦距，望远镜的放大倍率会降低，观察到的像更小，视野范围更大。',
+            tipDecrease: '调小目镜的焦距，放大倍率会提高，观察到的像更大，视野范围变小。',
             marks: [{ value: 5, label: '5' }, { value: 10, label: '10' }, { value: 15, label: '15' }, { value: 20, label: '20' }],
         },
     ];
@@ -159,7 +161,7 @@ export default function Page() {
             config={{ staticPlot: true }}
             data={traces}
             layout={{
-                width: 900,
+                width: 840,
                 height: 520,
                 margin: { t: 24, l: 24, r: 24, b: 24 },
                 xaxis: { range: [xMin, xMax], visible: false, fixedrange: true },
@@ -225,21 +227,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '标准',
+                    label: '🔭观鸟观景型',
+                    tip: '对应普通观鸟镜、观景望远镜的使用状态，放大倍率适中，视野范围较大，能清晰观察远处的鸟类、风景，手持使用也能保持画面稳定。',
                     onClick: () => {
                         setFObj(100);
                         setFEye(10);
                     },
                 },
                 {
-                    label: '高倍',
+                    label: '🌌天文观测型',
+                    tip: '对应专业天文望远镜的观测状态，物镜焦距极大，放大倍率极高，能清晰观察远处的天体，如月亮、行星等，适合天文爱好者的深空观测。',
                     onClick: () => {
                         setFObj(200);
                         setFEye(5);
                     },
                 },
                 {
-                    label: '低倍',
+                    label: '👀便携远望型',
+                    tip: '对应便携迷你望远镜的使用状态，放大倍率较低，物镜焦距较小，视野范围大，便于携带，适合日常户外的远距离粗略观察。',
                     onClick: () => {
                         setFObj(50);
                         setFEye(15);

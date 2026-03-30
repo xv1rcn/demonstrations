@@ -77,32 +77,35 @@ export default function Page() {
             min: 0,
             max: 90,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setTheta,
+            tipIncrease: '调大入射角，反射光的偏振化程度会逐渐提高，达到布儒斯特角时为纯线偏振光，超过后偏振化程度又逐渐降低。',
+            tipDecrease: '调小入射角，反射光的偏振化程度会变低，成为部分偏振光。',
             marks: [{ value: 0, label: '0' }, { value: 90, label: '90' }],
         },
         {
             key: 'n1',
-            label: <span>介质1折射率 <MathKatexInline math="n_1" fallback="n₁" /></span>,
+            label: <span>入射介质折射率 <MathKatexInline math="n_1" fallback="n₁" /></span>,
             type: 'slider',
             value: n1,
             min: 1,
             max: 1.6,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: setN1,
+            tipIncrease: '调大入射介质的折射率，布儒斯特角的角度值会变大，需要更大的入射角才能达到布儒斯特角状态。',
+            tipDecrease: '调小入射介质的折射率，布儒斯特角的角度值会变小。',
             marks: [{ value: 1, label: '1.0' }, { value: 1.6, label: '1.6' }],
         },
         {
             key: 'n2',
-            label: <span>介质2折射率 <MathKatexInline math="n_2" fallback="n₂" /></span>,
+            label: <span>折射介质折射率 <MathKatexInline math="n_2" fallback="n₂" /></span>,
             type: 'slider',
             value: n2,
             min: 1,
             max: 1.6,
             step: 0.01,
-            valueLabelDisplay: 'auto',
             onChange: setN2,
+            tipIncrease: '调大折射介质的折射率，布儒斯特角的角度值会变大，更易实现偏振反射。',
+            tipDecrease: '调小折射介质的折射率，布儒斯特角的角度值会变小，难实现偏振反射。',
             marks: [{ value: 1, label: '1.0' }, { value: 1.6, label: '1.6' }],
         },
     ];
@@ -206,7 +209,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认参数',
+                    label: '🌊水面反光型',
+                    tip: '对应日常看到的水面轻微反光状态，入射角较小，反射光为部分偏振光，折射光也为部分偏振光，和平时看平静水面的反光效果一致。',
                     onClick: () => {
                         setN1(1);
                         setN2(1.5);
@@ -214,7 +218,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '布儒斯特角',
+                    label: '🕶️眩光过滤型',
+                    tip: '对应偏振墨镜过滤水面眩光的最佳状态，入射角达到布儒斯特角，反射光为纯线偏振光，且 p 偏振分量无反射，能完美过滤水面的偏振眩光。',
                     onClick: () => {
                         setN1(1);
                         setN2(1.5);
@@ -222,7 +227,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '掠入射',
+                    label: '🔄掠射反光型',
+                    tip: '对应光线几乎贴着水面入射的状态，入射角极大，反射光变强，偏振特性减弱，折射光几乎沿水面传播，类似傍晚阳光贴近水面的反光效果。',
                     onClick: () => {
                         setN1(1);
                         setN2(1.5);

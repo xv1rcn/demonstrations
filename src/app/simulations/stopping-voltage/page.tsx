@@ -103,8 +103,9 @@ export default function Page() {
             min: 1,
             max: 4,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setWorkFunction,
+            tipIncrease: '调大金属的逸出功，相同频率下光电子的最大初动能会减小，所需的遏止电压也会变小。',
+            tipDecrease: '调小金属的逸出功，相同频率下光电子的最大初动能会增大，所需的遏止电压会变大。',
             marks: [{ value: 1, label: '1' }, { value: 2, label: '2' }, { value: 4, label: '4' }],
         },
         {
@@ -115,8 +116,9 @@ export default function Page() {
             min: nuMin,
             max: nuMax,
             step: 1e13,
-            valueLabelDisplay: 'auto',
             onChange: setFrequency,
+            tipIncrease: '调大入射光的频率，光电子的最大初动能会增大，所需的遏止电压也会随之增大。',
+            tipDecrease: '调小入射光的频率，光电子的最大初动能会减小，所需的遏止电压也会随之减小。',
             marks: [{ value: 4.5e14, label: '4.5e14' }, { value: 6e14, label: '6e14' }, { value: 8e14, label: '8e14' }],
         },
     ];
@@ -174,21 +176,24 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '标准',
+                    label: '📊标准测光型',
+                    tip: '对应测光仪的标准测光状态，入射光频率适中，遏止电压处于常规范围，能准确测量光电子的动能，是光电效应实验的标准测试状态。',
                     onClick: () => {
                         setWorkFunction(2);
                         setFrequency(6e14);
                     },
                 },
                 {
-                    label: '低频',
+                    label: '📉弱光测光型',
+                    tip: '对应测光仪在弱光下的测量状态，入射光频率较低，遏止电压较小，光电子的动能低，测光仪的测量信号较弱，需要更高的灵敏度才能检测。',
                     onClick: () => {
                         setWorkFunction(2);
                         setFrequency(4.5e14);
                     },
                 },
                 {
-                    label: '高频',
+                    label: '📈强光测光型',
+                    tip: '对应测光仪在强光下的测量状态，入射光频率较高，遏止电压较大，光电子的动能高，测光仪的测量信号强，能清晰检测到光电流的变化。',
                     onClick: () => {
                         setWorkFunction(2);
                         setFrequency(8e14);

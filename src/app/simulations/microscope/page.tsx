@@ -198,8 +198,9 @@ export default function Page() {
             min: 2,
             max: 10,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setFObj,
+            tipIncrease: '调大物镜的焦距，物镜的放大倍率会降低，显微镜的总放大倍率也会降低，视野范围变大。',
+            tipDecrease: '调小物镜的焦距，物镜的放大倍率会提高，显微镜的总放大倍率也会提高，视野范围变小。',
             marks: [{ value: 2, label: '2' }, { value: 4, label: '4' }, { value: 10, label: '10' }],
         },
         {
@@ -210,8 +211,9 @@ export default function Page() {
             min: 5,
             max: 25,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setFEye,
+            tipIncrease: '调大目镜的焦距，目镜的放大倍率会降低，显微镜的总放大倍率也会降低，观察到的像更柔和。',
+            tipDecrease: '调小目镜的焦距，目镜的放大倍率会提高，显微镜的总放大倍率也会提高，观察到的像更清晰。',
             marks: [{ value: 5, label: '5' }, { value: 10, label: '10' }, { value: 25, label: '25' }],
         },
         {
@@ -222,8 +224,9 @@ export default function Page() {
             min: uMin,
             max: uMax,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setUObj,
+            tipIncrease: '调大物距，物镜成的实像会变小，显微镜的整体放大效果会减弱。',
+            tipDecrease: '调小物距，在物镜的成像范围内，成的实像会变大，显微镜的整体放大效果会增强。',
             marks: [{ value: uMin, label: `${uMin}` }, { value: uMax, label: `${uMax}` }],
         },
     ];
@@ -250,7 +253,7 @@ export default function Page() {
             config={{ staticPlot: true }}
             data={traces}
             layout={{
-                width: 920,
+                width: 840,
                 height: 540,
                 margin: { t: 24, l: 28, r: 24, b: 24 },
                 xaxis: { range: [xMin, xMax], visible: false, fixedrange: true },
@@ -316,7 +319,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '标准',
+                    label: '🔬生物观察型',
+                    tip: '对应实验室普通生物显微镜的成像状态，放大倍率适中，能清晰观察细胞、微生物等标本，是日常生物实验的标准显微镜使用效果。',
                     onClick: () => {
                         setFObj(4);
                         setFEye(10);
@@ -324,7 +328,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '高倍',
+                    label: '🧫高倍观察型',
+                    tip: '对应专业高倍显微镜的成像状态，物镜焦距极小，放大倍率极高，能观察到细胞的精细结构，如细胞核、细胞器等，适合精密的生物病理检测。',
                     onClick: () => {
                         setFObj(2);
                         setFEye(10);
@@ -332,7 +337,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '低倍',
+                    label: '👀低倍观察型',
+                    tip: '对应显微镜的低倍观察状态，物镜焦距较大，放大倍率较低，能观察到标本的整体形态，视野范围大，适合快速定位标本的观察位置。',
                     onClick: () => {
                         setFObj(10);
                         setFEye(25);

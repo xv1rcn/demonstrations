@@ -82,7 +82,8 @@ export default function Page() {
             max: 3000,
             step: 10,
             onChange: setSpeedKmS,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光源靠近观测者的速度，光的蓝移效果会更明显，波长变得更短、频率变得更高；调大光源远离观测者的速度，光的红移效果会更明显，波长变得更长、频率变得更低。',
+            tipDecrease: '调小光源速度，光的多普勒偏移减小，波长与频率更接近原始值。',
             marks: [{ value: 0, label: '0' }, { value: 1500, label: '1500' }, { value: 3000, label: '3000' }],
         },
         {
@@ -94,7 +95,8 @@ export default function Page() {
             max: 700,
             step: 1,
             onChange: setLambdaNm,
-            valueLabelDisplay: 'auto',
+            tipIncrease: '调大光的原波长，在相同相对速度下，波长的偏移量绝对值会变大，频率偏移的相对值不变。',
+            tipDecrease: '调小光的原波长，波长偏移量绝对值会变小，频率偏移相对值仍不变。',
             marks: [{ value: 400, label: '400' }, { value: 550, label: '550' }, { value: 700, label: '700' }],
         },
         {
@@ -106,7 +108,7 @@ export default function Page() {
             max: 1,
             step: 2,
             onChange: setDirection,
-            valueLabelDisplay: 'auto',
+            
             marks: [{ value: -1, label: '靠近' }, { value: 1, label: '远离' }],
         },
     ];
@@ -184,9 +186,21 @@ export default function Page() {
             simulationParameters={parameterItems}
             simulationControlsFooter={controlsFooter}
             presets={[
-                { label: '静止光源', onClick: () => { setSpeedKmS(0); setLambdaNm(550); setDirection(1); } },
-                { label: '光源靠近', onClick: () => { setSpeedKmS(1000); setLambdaNm(550); setDirection(-1); } },
-                { label: '光源远离', onClick: () => { setSpeedKmS(1000); setLambdaNm(550); setDirection(1); } },
+                {
+                    label: '✨静止光源型',
+                    tip: '对应日常看到的固定光源的发光状态，光源与观测者无相对运动，光的波长和频率无偏移，光线颜色保持原本状态，如固定的路灯、台灯的发光效果。',
+                    onClick: () => { setSpeedKmS(0); setLambdaNm(550); setDirection(1); }
+                },
+                {
+                    label: '🔵光源靠近型',
+                    tip: '对应激光雷达测速时目标靠近的状态，光源向观测者运动，光发生蓝移，波长变短、频率变高，光线颜色向蓝紫色偏移。',
+                    onClick: () => { setSpeedKmS(1000); setLambdaNm(550); setDirection(-1); }
+                },
+                {
+                    label: '🔴光源远离型',
+                    tip: '对应宇宙星系红移的观测状态，光源远离观测者运动，光发生红移，波长变长、频率变低，光线颜色向红色偏移，是测量宇宙膨胀的重要依据。',
+                    onClick: () => { setSpeedKmS(1000); setLambdaNm(550); setDirection(1); }
+                },
             ]}
             hint={{
                 title: '光的多普勒效应',

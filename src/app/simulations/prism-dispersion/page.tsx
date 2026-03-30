@@ -295,8 +295,9 @@ export default function Page() {
             min: 30,
             max: 70,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setApex,
+            tipIncrease: '调大三棱镜的顶角，光在棱镜内的折射次数和折射角度变大，色散效果会增强。',
+            tipDecrease: '调小三棱镜的顶角，色散效果会减弱，偏折差异更小。',
             marks: [{ value: 30, label: '30' }, { value: 60, label: '60' }, { value: 70, label: '70' }],
         },
         {
@@ -307,8 +308,9 @@ export default function Page() {
             min: 400,
             max: 700,
             step: 1,
-            valueLabelDisplay: 'auto',
             onChange: setLambda,
+            tipIncrease: '调大光的波长，光的折射率会变小，通过三棱镜后的偏折程度会降低。',
+            tipDecrease: '调小光的波长，光的折射率会变大，通过三棱镜后的偏折程度会提高。',
             marks: [{ value: 400, label: '400' }, { value: 700, label: '700' }],
         },
         {
@@ -319,8 +321,9 @@ export default function Page() {
             min: 0,
             max: 60,
             step: 0.1,
-            valueLabelDisplay: 'auto',
             onChange: setIncidence,
+            tipIncrease: '调大光线入射角，光在三棱镜内的折射路径改变，整体偏折角度会变大，色散色带更舒展。',
+            tipDecrease: '调小光线入射角，整体偏折角度会变小，色散色带更紧凑。',
             marks: [{ value: 0, label: '0' }, { value: 30, label: '30' }, { value: 60, label: '60' }],
         },
     ];
@@ -399,7 +402,8 @@ export default function Page() {
             simulationControlsFooter={controlsFooter}
             presets={[
                 {
-                    label: '默认',
+                    label: '🌈彩虹形成型',
+                    tip: '对应三棱镜分解白光形成彩虹的经典状态，三棱镜角度适中，白光被分解为清晰的七色光，色带间距适中，和雨后彩虹的色彩分布规律一致。',
                     onClick: () => {
                         setApex(60);
                         setLambda(550);
@@ -407,7 +411,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '强色散',
+                    label: '🎨浓彩色散型',
+                    tip: '对应三棱镜强色散的效果，短波光的偏折程度极大，七色光的色带间距大，色彩对比强烈，类似分光镜的专业色散效果。',
                     onClick: () => {
                         setApex(60);
                         setLambda(400);
@@ -415,7 +420,8 @@ export default function Page() {
                     },
                 },
                 {
-                    label: '弱色散',
+                    label: '🧩淡彩色散型',
+                    tip: '对应三棱镜弱色散的效果，光的偏折程度小，七色光的色带密集且间距小，色彩对比柔和，类似小角度三棱镜的色散效果。',
                     onClick: () => {
                         setApex(30);
                         setLambda(700);
