@@ -232,10 +232,12 @@ export default function Page() {
                 title: '平面光栅衍射',
                 content: (
                     <span>
+                        同学们好，欢迎来到平面光栅衍射实验。<br />
                         CD光盘反光的彩色纹路、手机光谱仪的分光效果，核心是光栅衍射。调节光栅常数
                         <MathKatexInline math="d" fallback="d" />、入射光波长
                         <MathKatexInline math="\lambda" fallback="λ" />，可看到光谱的色散变化：光栅越密（
-                        <MathKatexInline math="d" fallback="d" /> 越小）、波长越长，衍射角越大，色散效果越强，能直观看到白光被分解为七色光谱的过程。
+                        <MathKatexInline math="d" fallback="d" /> 越小）、波长越长，衍射角越大，色散效果越强，能直观看到白光被分解为七色光谱的过程。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

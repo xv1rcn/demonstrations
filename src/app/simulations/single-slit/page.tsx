@@ -220,10 +220,12 @@ export default function Page() {
                 title: '单缝衍射',
                 content: (
                     <span>
+                        同学们好，欢迎来到单缝衍射实验。<br />
                         眯眼看向灯光时看到的射线、刀片边缘的光影模糊，都是单缝衍射的效果。调节缝宽
                         <MathKatexInline math="a" fallback="a" />、光的波长
                         <MathKatexInline math="\lambda" fallback="λ" />、透镜焦距
-                        <MathKatexInline math="f" fallback="f" />，能清晰观察衍射强弱：缝越窄、波长越长、焦距越大，衍射现象越明显，中央明纹也会越宽越亮，还能看到暗纹出现的规律。
+                        <MathKatexInline math="f" fallback="f" />，能清晰观察衍射强弱：缝越窄、波长越长、焦距越大，衍射现象越明显，中央明纹也会越宽越亮，还能看到暗纹出现的规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

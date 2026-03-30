@@ -140,10 +140,12 @@ export default function Page() {
                 title: '劈尖干涉',
                 content: (
                     <span>
+                        同学们好，欢迎来到劈尖干涉实验。<br />
                         两块玻璃夹出微小楔角时出现的平行明暗条纹、精密光学检验中的平面度判断，都是劈尖干涉的典型应用。调节入射波长
                         <MathKatexInline math="\lambda" fallback="λ" />、楔角
                         <MathKatexInline math="\theta" fallback="θ" />、介质折射率
-                        <MathKatexInline math="n" fallback="n" />，能看到条纹疏密变化：楔角越大或折射率越高，条纹越密；波长越长，条纹越疏，直观理解薄膜厚度线性变化导致的干涉规律。
+                        <MathKatexInline math="n" fallback="n" />，能看到条纹疏密变化：楔角越大或折射率越高，条纹越密；波长越长，条纹越疏，直观理解薄膜厚度线性变化导致的干涉规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

@@ -180,10 +180,12 @@ export default function Page() {
                 title: '偏振片・马吕斯定律',
                 content: (
                     <span>
+                        同学们好，欢迎来到偏振片・马吕斯定律实验。<br />
                         偏振太阳镜过滤强光、手机屏幕的偏振显示，都遵循马吕斯定律。调节两个偏振片的夹角
                         <MathKatexInline math="\Delta\theta" fallback="Δθ" />、入射光强
                         <MathKatexInline math="I_0" fallback="I₀" />，能看到出射光强的变化：偏振片平行时光强最强，垂直时完全消光，夹角
-                        <MathKatexInline math="45^\circ" fallback="45°" /> 时光强为原来的一半，理解偏振光的传播规律。
+                        <MathKatexInline math="45^\circ" fallback="45°" /> 时光强为原来的一半，理解偏振光的传播规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

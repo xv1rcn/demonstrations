@@ -214,10 +214,12 @@ export default function Page() {
                 title: '杨氏双缝干涉',
                 content: (
                     <span>
+                        同学们好，欢迎来到杨氏双缝干涉实验。<br />
                         吹肥皂泡看到的彩色纹路、水面油膜的炫彩反光，都是光的双缝干涉现象。调节双缝间距
                         <MathKatexInline math="d" fallback="d" />、入射光波长
                         <MathKatexInline math="\lambda" fallback="λ" />、缝到屏的距离
-                        <MathKatexInline math="D" fallback="D" />，就能看到干涉条纹的疏密变化：波长越长、双缝越窄、距离越远，条纹越稀疏；反之则越密集，直观感受相干光叠加的明暗规律。
+                        <MathKatexInline math="D" fallback="D" />，就能看到干涉条纹的疏密变化：波长越长、双缝越窄、距离越远，条纹越稀疏；反之则越密集，直观感受相干光叠加的明暗规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

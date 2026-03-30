@@ -199,11 +199,13 @@ export default function Page() {
                 title: '遏止电压',
                 content: (
                     <span>
+                        同学们好，欢迎来到遏止电压实验。<br />
                         光电管的工作、测光仪的检测，都会用到遏止电压。调节入射光频率
                         <MathKatexInline math="\nu" fallback="ν" />、金属逸出功
                         <MathKatexInline math="W" fallback="W" />，能看到遏止电压
                         <MathKatexInline math="U_c" fallback="Uc" /> 的变化：频率越高，遏止电压越大，二者成线性关系，还能通过该实验测量普朗克常数
-                        <MathKatexInline math="h" fallback="h" />。
+                        <MathKatexInline math="h" fallback="h" />。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

@@ -205,13 +205,13 @@ export default function Page() {
             hint={{
                 title: '激光谐振腔纵模',
                 content: (
-                    <Stack spacing={1}>
-                        <span>
-                            光纤通信的单纵模激光器、激光笔的多纵模发光，都与激光谐振腔纵模有关。调节谐振腔腔长
-                            <MathKatexInline math="L" fallback="L" />、激光波长
-                            <MathKatexInline math="\\lambda" fallback="λ" />，可以看到纵模间隔的变化：腔长越长，纵模间隔越小；腔长越短，越容易实现单纵模（单色性更好），这是理解激光单色性的核心因素之一。
-                        </span>
-                    </Stack>
+                    <span>
+                        同学们好，欢迎来到激光谐振腔纵模实验。<br />
+                        光纤通信的单纵模激光器、激光笔的多纵模发光，都与激光谐振腔纵模有关。调节谐振腔腔长
+                        <MathKatexInline math="L" fallback="L" />、激光波长
+                        <MathKatexInline math="\\lambda" fallback="λ" />，可以看到纵模间隔的变化：腔长越长，纵模间隔越小；腔长越短，越容易实现单纵模（单色性更好），这是理解激光单色性的核心因素之一。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
+                    </span>
                 ),
             }}
             simulationVisualization={visualization}

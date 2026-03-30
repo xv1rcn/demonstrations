@@ -427,10 +427,12 @@ export default function Page() {
                 title: '三棱镜色散',
                 content: (
                     <span>
+                        同学们好，欢迎来到三棱镜色散实验。<br />
                         雨后的彩虹、钻石的多彩火彩，都是光的三棱镜色散效果。调节三棱镜顶角
                         <MathKatexInline math="A" fallback="A" />、入射光波长
                         <MathKatexInline math="\lambda" fallback="λ" />、入射角度
-                        <MathKatexInline math="\theta_1" fallback="θ1" />，能看到光的偏折变化：波长越短（紫光）、顶角越大，偏折越明显，清晰看到白光分解为七色光的色散规律。
+                        <MathKatexInline math="\theta_1" fallback="θ1" />，能看到光的偏折变化：波长越短（紫光）、顶角越大，偏折越明显，清晰看到白光分解为七色光的色散规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

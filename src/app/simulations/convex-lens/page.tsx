@@ -359,12 +359,14 @@ export default function Page() {
                 title: '凸透镜成像',
                 content: (
                     <span>
+                        同学们好，欢迎来到凸透镜成像实验。<br />
                         人眼的视物、照相机的拍照、放大镜的放大，都遵循凸透镜成像规律。调节物距
                         <MathKatexInline math="u" fallback="u" />、焦距
                         <MathKatexInline math="f" fallback="f" />，能看到成像的虚实、大小变化：
                         <MathKatexInline math="u>2f" fallback="u>2f" /> 成倒立缩小实像，
                         <MathKatexInline math="f<u<2f" fallback="f<u<2f" /> 成倒立放大实像，
-                        <MathKatexInline math="u<f" fallback="u<f" /> 成正立放大虚像，贴合生活的成像场景一目了然。
+                        <MathKatexInline math="u<f" fallback="u<f" /> 成正立放大虚像，贴合生活的成像场景一目了然。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

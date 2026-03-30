@@ -278,9 +278,11 @@ export default function Page() {
                 title: '水中气泡全反射',
                 content: (
                     <span>
+                        同学们好，欢迎来到水中气泡全反射实验。<br />
                         水下气泡的发亮反光、喷泉中的水珠闪光，都是水中气泡的全反射现象。调节入射光角度
                         <MathKatexInline math="\theta" fallback="θ" />（水的折射率固定1.33），当角度超过
-                        <MathKatexInline math="48.8^\circ" fallback="48.8°" /> 的临界角时，气泡会像小镜子一样全反射发光，直观感受生活中常见的全反射场景。
+                        <MathKatexInline math="48.8^\circ" fallback="48.8°" /> 的临界角时，气泡会像小镜子一样全反射发光，直观感受生活中常见的全反射场景。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

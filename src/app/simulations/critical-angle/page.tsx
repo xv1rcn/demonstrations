@@ -277,9 +277,11 @@ export default function Page() {
                 title: '全反射临界角',
                 content: (
                     <span>
+                        同学们好，欢迎来到全反射临界角实验。<br />
                         光纤通信的光传输、钻石的璀璨闪光，核心是光的全反射。调节两种介质的折射率
                         <MathKatexInline math="n_1/n_2" fallback="n1/n2" />（光密→光疏）、入射光角度
-                        <MathKatexInline math="\theta" fallback="θ" />，当角度超过临界角时，光会全部反射无折射，能精准找到不同介质的全反射临界角，感受全反射的产生条件。
+                        <MathKatexInline math="\theta" fallback="θ" />，当角度超过临界角时，光会全部反射无折射，能精准找到不同介质的全反射临界角，感受全反射的产生条件。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

@@ -212,9 +212,11 @@ export default function Page() {
                 title: '光电效应・光电子动能',
                 content: (
                     <span>
+                        同学们好，欢迎来到光电效应・光电子动能实验。<br />
                         光控开关的自动感应、太阳能电池的发电，都基于光电效应。调节入射光频率
                         <MathKatexInline math="\nu" fallback="ν" />、金属逸出功
-                        <MathKatexInline math="W" fallback="W" />，能看到光电子的产生与否：频率高于临界值才有光电子，与光强无关，直观证明光的粒子性。
+                        <MathKatexInline math="W" fallback="W" />，能看到光电子的产生与否：频率高于临界值才有光电子，与光强无关，直观证明光的粒子性。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

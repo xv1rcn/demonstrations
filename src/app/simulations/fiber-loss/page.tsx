@@ -146,13 +146,15 @@ export default function Page() {
                 title: '光纤损耗・长距离通信',
                 content: (
                     <span>
+                        同学们好，欢迎来到光纤损耗・长距离通信实验。<br />
                         光纤宽带、海底光缆与光纤传感系统都需要进行链路损耗评估。调节损耗系数
                         <MathKatexInline math="\\alpha" fallback="α" />（dB/km）与传输距离
                         <MathKatexInline math="L" fallback="L" />，可以观察输出光功率
                         <MathKatexInline math="P_{out}" fallback="Pout" /> 的变化规律：
                         <MathKatexInline math="\\alpha" fallback="α" /> 越大或
                         <MathKatexInline math="L" fallback="L" /> 越长，功率衰减越明显。工程上常选 1550nm 波段进行长距离传输，
-                        因其损耗更低、传输更稳定。
+                        因其损耗更低、传输更稳定。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

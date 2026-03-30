@@ -212,10 +212,12 @@ export default function Page() {
                 title: '光的吸收定律',
                 content: (
                     <span>
+                        同学们好，欢迎来到光的吸收定律实验。<br />
                         墨镜的滤光、水质浊度的检测，都遵循朗伯-比尔定律。调节介质吸收系数
                         <MathKatexInline math="\\alpha" fallback="α" />、介质厚度
                         <MathKatexInline math="d" fallback="d" />，能看到透射光强的变化：吸收系数越大、介质越厚，
-                        光的衰减越快，透射光强越小，理解光在介质中的指数衰减规律。
+                        光的衰减越快，透射光强越小，理解光在介质中的指数衰减规律。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

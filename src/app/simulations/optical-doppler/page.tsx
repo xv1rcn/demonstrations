@@ -192,9 +192,11 @@ export default function Page() {
                 title: '光的多普勒效应',
                 content: (
                     <span>
+                        同学们好，欢迎来到光的多普勒效应实验。<br />
                         宇宙星系的红移现象、交通的激光雷达测速，都是光学多普勒效应的应用。调节光源运动速度
                         <MathKatexInline math="v" fallback="v" />、原波长
-                        <MathKatexInline math="\\lambda_0" fallback="λ₀" />，能看到光的频率偏移：光源靠近出现蓝移（波长变短），远离出现红移（波长变长），感受光波与声波多普勒效应的区别。
+                        <MathKatexInline math="\\lambda_0" fallback="λ₀" />，能看到光的频率偏移：光源靠近出现蓝移（波长变短），远离出现红移（波长变长），感受光波与声波多普勒效应的区别。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}

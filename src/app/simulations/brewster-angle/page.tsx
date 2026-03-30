@@ -234,9 +234,11 @@ export default function Page() {
                 title: '布儒斯特角・反射偏振',
                 content: (
                     <span>
+                        同学们好，欢迎来到布儒斯特角・反射偏振实验。<br />
                         开车时过滤水面的眩光、激光偏振器的偏振光获取，都用到了布儒斯特角。调节两种介质的折射率
                         <MathKatexInline math="n_1/n_2" fallback="n1/n2" />、入射光角度
-                        <MathKatexInline math="\theta" fallback="θ" />，当角度达到布儒斯特角时，反射光会变成纯线偏振光，且反射光与折射光相互垂直，清晰看到偏振光的产生条件。
+                        <MathKatexInline math="\theta" fallback="θ" />，当角度达到布儒斯特角时，反射光会变成纯线偏振光，且反射光与折射光相互垂直，清晰看到偏振光的产生条件。<br />
+                        请根据“生活场景切入→参数可视化探究→知识问答巩固→实际应用关联”的顺序进行学习。
                     </span>
                 ),
             }}
