@@ -11,9 +11,11 @@ import {
     DialogContent,
     DialogTitle,
     Chip,
+    Collapse,
     Divider,
     FormControlLabel,
     IconButton,
+    Paper,
     Radio,
     RadioGroup,
     Stack,
@@ -22,12 +24,16 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
 import { ParameterControls, type ParameterItem } from '@/components/parameter-controls';
 
 export type SimulationPreset = {
     label: React.ReactNode;
     onClick: () => void;
+    tip?: React.ReactNode;
 };
 
 export type SimulationHint = {
@@ -94,6 +100,7 @@ export function SimulationPageTemplate({
     summaryItems,
     applicationItems,
 }: SimulationPageTemplateProps) {
+    const fallbackPresetTip = '试着自由探索参数，看看会发生什么变化。';
     const [tab, setTab] = React.useState<'simulation' | 'knowledge'>('simulation');
     const [multiAnswers, setMultiAnswers] = React.useState<Record<string, number[]>>({});
     const [singleAnswers, setSingleAnswers] = React.useState<Record<string, number>>({});
@@ -102,6 +109,22 @@ export function SimulationPageTemplate({
     const [submitted, setSubmitted] = React.useState(false);
     const [isHintOpen, setIsHintOpen] = React.useState(false);
     const [hasAutoOpenedHint, setHasAutoOpenedHint] = React.useState(false);
+    const [isPresetTipExpanded, setIsPresetTipExpanded] = React.useState(false);
+    const [presetTip, setPresetTip] = React.useState<React.ReactNode>(fallbackPresetTip);
+    const [autoExpandedPresetIndexes, setAutoExpandedPresetIndexes] = React.useState<number[]>([]);
+    const [activePresetIndex, setActivePresetIndex] = React.useState<number | null>(null);
+    const [activePresetLabelText, setActivePresetLabelText] = React.useState<string>('无');
+    const [isPresetSynced, setIsPresetSynced] = React.useState(false);
+    const [presetSnapshotSignature, setPresetSnapshotSignature] = React.useState<string | null>(null);
+    const [isWaitingSnapshot, setIsWaitingSnapshot] = React.useState(false);
+    const [presetTipArrowLeft, setPresetTipArrowLeft] = React.useState<number>(28);
+    const presetButtonsRef = React.useRef<Array<HTMLButtonElement | null>>([]);
+    const presetButtonsGroupRef = React.useRef<HTMLDivElement | null>(null);
+
+    const parameterSignature = React.useMemo(
+        () => JSON.stringify(simulationParameters.map((item) => ({ key: item.key, value: item.value }))),
+        [simulationParameters],
+    );
 
     React.useEffect(() => {
         if (!hint || hasAutoOpenedHint) return;
@@ -148,6 +171,88 @@ export function SimulationPageTemplate({
         return Object.values(results).filter((item) => item === true).length;
     }, [results, submitted]);
 
+    const updatePresetTipArrowPosition = React.useCallback((index: number | null) => {
+        const groupEl = presetButtonsGroupRef.current;
+        if (!groupEl) return;
+
+        const groupRect = groupEl.getBoundingClientRect();
+        if (index === null) {
+            setPresetTipArrowLeft(Math.max(16, groupRect.width / 2));
+            return;
+        }
+
+        const buttonEl = presetButtonsRef.current[index];
+        if (!buttonEl) {
+            setPresetTipArrowLeft(Math.max(16, groupRect.width / 2));
+            return;
+        }
+
+        const buttonRect = buttonEl.getBoundingClientRect();
+        const anchorX = buttonRect.left - groupRect.left + buttonRect.width / 2;
+        setPresetTipArrowLeft(Math.max(16, Math.min(anchorX, groupRect.width - 16)));
+    }, []);
+
+    const handlePresetClick = React.useCallback((preset: SimulationPreset, index: number) => {
+        preset.onClick();
+        setPresetTip(preset.tip ?? fallbackPresetTip);
+        setActivePresetIndex(index);
+        setIsPresetSynced(true);
+        setPresetSnapshotSignature(null);
+        setIsWaitingSnapshot(true);
+
+        if (typeof preset.label === 'string') {
+            setActivePresetLabelText(preset.label);
+        } else {
+            setActivePresetLabelText(`预设 ${index + 1}`);
+        }
+
+        if (!autoExpandedPresetIndexes.includes(index)) {
+            setIsPresetTipExpanded(true);
+            setAutoExpandedPresetIndexes((prev) => [...prev, index]);
+        }
+    }, [autoExpandedPresetIndexes]);
+
+    React.useEffect(() => {
+        if (!isWaitingSnapshot) return;
+
+        let raf1 = 0;
+        let raf2 = 0;
+        raf1 = window.requestAnimationFrame(() => {
+            raf2 = window.requestAnimationFrame(() => {
+                setPresetSnapshotSignature(parameterSignature);
+                setIsWaitingSnapshot(false);
+            });
+        });
+
+        return () => {
+            window.cancelAnimationFrame(raf1);
+            window.cancelAnimationFrame(raf2);
+        };
+    }, [isWaitingSnapshot, parameterSignature]);
+
+    React.useEffect(() => {
+        if (isWaitingSnapshot) return;
+        if (!isPresetSynced || !presetSnapshotSignature) return;
+        if (parameterSignature === presetSnapshotSignature) return;
+
+        setIsPresetSynced(false);
+        setActivePresetIndex(null);
+        setActivePresetLabelText('无');
+        setPresetTip(fallbackPresetTip);
+    }, [isWaitingSnapshot, isPresetSynced, parameterSignature, presetSnapshotSignature]);
+
+    React.useEffect(() => {
+        if (!isPresetTipExpanded) return;
+        updatePresetTipArrowPosition(activePresetIndex);
+    }, [isPresetTipExpanded, activePresetIndex, updatePresetTipArrowPosition]);
+
+    React.useEffect(() => {
+        if (!isPresetTipExpanded) return;
+        const onResize = () => updatePresetTipArrowPosition(activePresetIndex);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [isPresetTipExpanded, activePresetIndex, updatePresetTipArrowPosition]);
+
     return (
         <Box className="min-h-screen h-full w-full flex flex-col">
             <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 2, pt: 1 }}>
@@ -175,23 +280,122 @@ export function SimulationPageTemplate({
                         <Box className="flex flex-row w-full">
                             <Stack spacing={4} direction="column" className="justify-center w-[31rem] mr-6">
                                 {(presets.length > 0 || hint) && (
-                                    <Stack spacing={1} direction="row" className="items-center justify-between">
-                                        <Stack spacing={1} direction="row" className="flex-wrap">
-                                            {presets.map((preset, index) => (
-                                                <Button key={`preset-${index}`} size="small" variant="outlined" onClick={preset.onClick}>
-                                                    {preset.label}
-                                                </Button>
-                                            ))}
-                                        </Stack>
-                                        {hint && (
-                                            <IconButton
-                                                size="small"
-                                                color="primary"
-                                                aria-label={hint.buttonAriaLabel ?? '查看实验提示'}
-                                                onClick={() => setIsHintOpen(true)}
+                                    <Stack spacing={1.25}>
+                                        <Stack spacing={1} direction="row" className="items-center justify-between">
+                                            <Stack
+                                                spacing={1}
+                                                direction="row"
+                                                className="flex-wrap"
+                                                ref={presetButtonsGroupRef}
                                             >
-                                                <HelpOutlineIcon fontSize="small" />
-                                            </IconButton>
+                                                {presets.map((preset, index) => (
+                                                    <Button
+                                                        key={`preset-${index}`}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        ref={(el) => {
+                                                            presetButtonsRef.current[index] = el;
+                                                        }}
+                                                        onClick={() => handlePresetClick(preset, index)}
+                                                    >
+                                                        {preset.label}
+                                                    </Button>
+                                                ))}
+                                            </Stack>
+                                            {(presets.length > 0 || hint) && (
+                                                <Stack spacing={0.5} direction="row" className="items-center">
+                                                    {presets.length > 0 && (
+                                                        <IconButton
+                                                            size="small"
+                                                            color="primary"
+                                                            aria-label={isPresetTipExpanded ? '收起预设提示' : '展开预设提示'}
+                                                            onClick={() => setIsPresetTipExpanded((prev) => !prev)}
+                                                        >
+                                                            {isPresetTipExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                                                        </IconButton>
+                                                    )}
+                                                    {hint && (
+                                                        <IconButton
+                                                            size="small"
+                                                            color="primary"
+                                                            aria-label={hint.buttonAriaLabel ?? '查看实验提示'}
+                                                            onClick={() => setIsHintOpen(true)}
+                                                        >
+                                                            <HelpOutlineIcon fontSize="small" />
+                                                        </IconButton>
+                                                    )}
+                                                </Stack>
+                                            )}
+                                        </Stack>
+
+                                        {presets.length > 0 && (
+                                            <Collapse in={isPresetTipExpanded} timeout={220} unmountOnExit>
+                                                <Paper
+                                                    elevation={0}
+                                                    sx={{
+                                                        position: 'relative',
+                                                        border: '1px solid',
+                                                        borderColor: 'primary.main',
+                                                        borderRadius: 2,
+                                                        px: 1.5,
+                                                        py: 1.25,
+                                                        overflow: 'visible',
+                                                        background: 'linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(59,130,246,0.05) 100%)',
+                                                        boxShadow: '0 8px 18px rgba(59,130,246,0.14)',
+                                                        ...(isPresetSynced && {
+                                                            '&::before': {
+                                                                content: '""',
+                                                                position: 'absolute',
+                                                                top: -8,
+                                                                left: `${presetTipArrowLeft - 6}px`,
+                                                                width: 0,
+                                                                height: 0,
+                                                                borderLeft: '6px solid transparent',
+                                                                borderRight: '6px solid transparent',
+                                                                borderBottom: '8px solid',
+                                                                borderBottomColor: 'primary.main',
+                                                            },
+                                                            '&::after': {
+                                                                content: '""',
+                                                                position: 'absolute',
+                                                                top: -6,
+                                                                left: `${presetTipArrowLeft - 5}px`,
+                                                                width: 0,
+                                                                height: 0,
+                                                                borderLeft: '5px solid transparent',
+                                                                borderRight: '5px solid transparent',
+                                                                borderBottom: '7px solid rgba(59,130,246,0.16)',
+                                                            },
+                                                        }),
+                                                    }}
+                                                >
+                                                    <Stack spacing={1} direction="row" alignItems="flex-start">
+                                                        <TipsAndUpdatesOutlinedIcon
+                                                            sx={{
+                                                                mt: '2px',
+                                                                color: 'primary.main',
+                                                                fontSize: 18,
+                                                            }}
+                                                        />
+                                                        <Stack spacing={0.35}>
+                                                            <Typography
+                                                                component="div"
+                                                                variant="caption"
+                                                                sx={{
+                                                                    fontSize: 12,
+                                                                    color: isPresetSynced ? 'primary.dark' : 'text.secondary',
+                                                                    fontWeight: isPresetSynced ? 700 : 500,
+                                                                }}
+                                                            >
+                                                                当前预设：{activePresetLabelText}
+                                                            </Typography>
+                                                            <Typography component="div" variant="body2" sx={{ fontSize: 14, lineHeight: 1.6 }}>
+                                                                {presetTip}
+                                                            </Typography>
+                                                        </Stack>
+                                                    </Stack>
+                                                </Paper>
+                                            </Collapse>
                                         )}
                                     </Stack>
                                 )}
