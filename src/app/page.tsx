@@ -18,12 +18,12 @@ import {
     SIMULATIONS_ROUTE,
 } from "@/lib/routes";
 
-type WorkspaceTab = {
-    id: string;
-    type: "dashboard" | "nav" | "experiment" | "lesson" | "lessonVideo";
-    title: string;
-    href?: string;
-};
+type WorkspaceTab =
+    | { id: string; type: "dashboard"; title: string }
+    | { id: string; type: "nav"; title: string }
+    | { id: string; type: "experiment"; title: string; href: string }
+    | { id: string; type: "lesson"; title: string }
+    | { id: string; type: "lessonVideo"; title: string; href: string };
 
 type ExperimentTabLabelProps = {
     tab: WorkspaceTab;
