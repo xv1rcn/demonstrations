@@ -5,6 +5,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Tab, Tabs } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
 import type { SimulationNavItem } from "@/lib/simulations-nav";
+import {
+    addRecentSimulationHref,
+    getRecentSimulationHrefs,
+    RECENT_SIMULATION_HREFS_KEY,
+} from "@/lib/simulation-history";
 
 type WorkspaceTab = {
     id: string;
@@ -23,8 +28,6 @@ type ExperimentTabLabelProps = {
 const DASHBOARD_TAB_ID = "dashboard-home";
 const NAV_TAB_ID = "nav-home";
 const LESSON_TAB_ID = "lesson-home";
-const RECENT_HREFS_KEY = "recent_simulation_hrefs";
-
 const TAB_BAR_SX: SxProps<Theme> = {
     minHeight: 48,
     "& .MuiTab-root": {
@@ -136,58 +139,22 @@ export default function Page() {
     ]);
     const [activeTabId, setActiveTabId] = React.useState<string>(DASHBOARD_TAB_ID);
     const dragTabIdRef = React.useRef<string | null>(null);
-    const [recentHrefList, setRecentHrefList] = React.useState<string[]>([]);
+    const [, setRecentHrefList] = React.useState<string[]>([]);
 
     React.useEffect(() => {
-        const stored = window.localStorage.getItem(RECENT_HREFS_KEY);
-        if (!stored) return;
-        try {
-            const parsed = JSON.parse(stored) as unknown;
-            if (!Array.isArray(parsed)) return;
-            const safe = parsed.filter((item): item is string => typeof item === "string");
-            setRecentHrefList(safe.slice(0, 8));
-        } catch {
-            // Ignore corrupted local cache and use empty default.
-        }
+        setRecentHrefList(getRecentSimulationHrefs());
     }, []);
 
     // Keep in sync when other windows (or an embedded iframe) update the recent list.
     React.useEffect(() => {
         const onStorage = (event: StorageEvent) => {
-            if (event.key !== RECENT_HREFS_KEY) return;
-            try {
-                if (!event.newValue) {
-                    setRecentHrefList([]);
-                    return;
-                }
-                const parsed = JSON.parse(event.newValue) as unknown;
-                if (!Array.isArray(parsed)) return;
-                const safe = parsed.filter((item): item is string => typeof item === "string");
-                setRecentHrefList(safe.slice(0, 8));
-            } catch {
-                // ignore
-            }
+            if (event.key !== RECENT_SIMULATION_HREFS_KEY) return;
+            setRecentHrefList(getRecentSimulationHrefs());
         };
 
         window.addEventListener("storage", onStorage);
         return () => window.removeEventListener("storage", onStorage);
     }, []);
-
-    React.useEffect(() => {
-        try {
-            const existing = window.localStorage.getItem(RECENT_HREFS_KEY);
-            const existingParsed = existing ? JSON.parse(existing) : null;
-            // Only write if different to avoid clobbering changes from other windows.
-            const isSame = Array.isArray(existingParsed) &&
-                existingParsed.length === recentHrefList.length &&
-                existingParsed.every((v: unknown, i: number) => v === recentHrefList[i]);
-            if (!isSame) {
-                window.localStorage.setItem(RECENT_HREFS_KEY, JSON.stringify(recentHrefList));
-            }
-        } catch {
-            // ignore
-        }
-    }, [recentHrefList]);
 
     const openNavTab = React.useCallback(() => {
         setTabs((prev) => {
@@ -224,10 +191,7 @@ export default function Page() {
             setActiveTabId(id);
             return [...prev, { id, type: "experiment", title: item.label, href: item.href }];
         });
-        setRecentHrefList((prev) => {
-            const next = [item.href, ...prev.filter((href) => href !== item.href)];
-            return next.slice(0, 8);
-        });
+        setRecentHrefList(addRecentSimulationHref(item.href));
     }, []);
 
     const openLessonVideoTab = React.useCallback((item: SimulationNavItem) => {

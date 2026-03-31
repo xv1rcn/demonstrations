@@ -12,11 +12,18 @@ import { Box, ButtonBase } from "@mui/material";
 import { type Source } from "plyr";
 import "plyr/dist/plyr.css";
 import { openSimulation, type SimulationNavItem } from "@/lib/simulations-nav";
+import { addRecentLessonVideo } from "@/lib/lesson-video-history";
 
 export type LessonExperimentItem = SimulationNavItem;
 
-export type LessonPageTemplateProps = {
+export type LessonVideoMeta = {
+    href: string;
+    label: string;
     videoUrl: string;
+};
+
+export type LessonPageTemplateProps = {
+    video: LessonVideoMeta;
     experiments: LessonExperimentItem[];
 };
 
@@ -88,9 +95,10 @@ const experimentButtonSx = {
     },
 };
 
-export default function LessonPageTemplate({ videoUrl, experiments }: LessonPageTemplateProps) {
+export default function LessonPageTemplate({ video, experiments }: LessonPageTemplateProps) {
     const playerRef = React.useRef<InstanceType<typeof import("plyr").default> | null>(null);
     const videoElRef = React.useRef<HTMLVideoElement | null>(null);
+    const videoUrl = video.videoUrl;
 
     React.useEffect(() => {
         if (!videoElRef.current) return;
@@ -133,6 +141,11 @@ export default function LessonPageTemplate({ videoUrl, experiments }: LessonPage
             }
         };
     }, []);
+
+    React.useEffect(() => {
+        if (!video.href || !video.label) return;
+        addRecentLessonVideo({ href: video.href, label: video.label });
+    }, [video.href, video.label]);
 
     React.useEffect(() => {
         const src = videoUrl;

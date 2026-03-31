@@ -3,8 +3,17 @@
 import * as React from "react";
 import { Avatar, Box, ButtonBase, Button, Chip, Typography } from "@mui/material";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
-
-const RECENT_HREFS_KEY = "recent_simulation_hrefs";
+import {
+    getRecentLessonVideos,
+    removeRecentLessonVideo,
+    type RecentLessonVideoItem,
+    RECENT_LESSON_VIDEO_STORAGE_KEY,
+} from "@/lib/lesson-video-history";
+import {
+    getRecentSimulationHrefs,
+    RECENT_SIMULATION_HREFS_KEY,
+    removeRecentSimulationHref,
+} from "@/lib/simulation-history";
 
 type RecentExperimentItem = {
     href: string;
@@ -38,6 +47,17 @@ function openExperimentFromDashboard(item: RecentExperimentItem) {
     window.location.assign(`/simulations/${item.href}`);
 }
 
+function openLessonVideoFromDashboard(item: RecentLessonVideoItem) {
+    if (window.parent !== window) {
+        window.parent.postMessage(
+            { type: "lesson:open", href: item.href, label: item.label },
+            window.location.origin
+        );
+        return;
+    }
+    window.location.assign(item.href);
+}
+
 export default function DashboardPage() {
     const [embedMode, setEmbedMode] = React.useState(false);
     React.useEffect(() => {
@@ -58,47 +78,43 @@ export default function DashboardPage() {
     }, []);
 
     const [recentHrefList, setRecentHrefList] = React.useState<string[]>([]);
+    const [recentLessonVideos, setRecentLessonVideos] = React.useState<RecentLessonVideoItem[]>([]);
 
     const removeRecentHref = React.useCallback((hrefToRemove: string) => {
-        try {
-            const stored = window.localStorage.getItem(RECENT_HREFS_KEY);
-            if (!stored) return;
-            const parsed = JSON.parse(stored) as unknown;
-            if (!Array.isArray(parsed)) return;
-            const filtered = (parsed as string[]).filter((h) => h !== hrefToRemove);
-            window.localStorage.setItem(RECENT_HREFS_KEY, JSON.stringify(filtered));
-            setRecentHrefList(filtered.slice(0, 8));
-        } catch {
-            // ignore
-        }
+        setRecentHrefList(removeRecentSimulationHref(hrefToRemove));
     }, []);
 
-    
+    const removeRecentLessonVideoCallback = React.useCallback((hrefToRemove: string) => {
+        setRecentLessonVideos(removeRecentLessonVideo(hrefToRemove));
+    }, []);
+
 
     React.useEffect(() => {
         const loadRecent = () => {
-            const stored = window.localStorage.getItem(RECENT_HREFS_KEY);
-            if (!stored) {
-                setRecentHrefList([]);
-                return;
-            }
-            try {
-                const parsed = JSON.parse(stored) as unknown;
-                if (!Array.isArray(parsed)) {
-                    setRecentHrefList([]);
-                    return;
-                }
-                const safe = parsed.filter((item): item is string => typeof item === "string");
-                setRecentHrefList(safe.slice(0, 8));
-            } catch {
-                setRecentHrefList([]);
-            }
+            setRecentHrefList(getRecentSimulationHrefs());
         };
 
         loadRecent();
         const onStorage = (event: StorageEvent) => {
-            if (event.key !== RECENT_HREFS_KEY) return;
+            if (event.key !== RECENT_SIMULATION_HREFS_KEY) return;
             loadRecent();
+        };
+
+        window.addEventListener("storage", onStorage);
+        return () => {
+            window.removeEventListener("storage", onStorage);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        const loadRecentVideos = () => {
+            setRecentLessonVideos(getRecentLessonVideos());
+        };
+
+        loadRecentVideos();
+        const onStorage = (event: StorageEvent) => {
+            if (event.key !== RECENT_LESSON_VIDEO_STORAGE_KEY) return;
+            loadRecentVideos();
         };
 
         window.addEventListener("storage", onStorage);
@@ -160,26 +176,77 @@ export default function DashboardPage() {
                         p: 2,
                     }}
                 >
-                    <Typography variant="subtitle2" color="text.secondary">
-                        快速入口
-                    </Typography>
-
-                    <ButtonBase
-                        onClick={openLessonFromDashboard}
+                    <Box
                         sx={{
-                            mt: 1,
-                            width: "100%",
-                            border: "1px solid",
-                            borderColor: "divider",
-                            borderRadius: 1,
-                            px: 1.5,
-                            py: 1,
-                            justifyContent: "flex-start",
-                            "&:hover": { backgroundColor: "action.hover" },
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            mb: 1.25,
                         }}
                     >
-                        打开科普视频列表
-                    </ButtonBase>
+                        <Typography variant="h6">最近查看的科普视频</Typography>
+                        <Typography
+                            onClick={openLessonFromDashboard}
+                            variant="body2"
+                            sx={{
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: 1,
+                                color: "primary.main",
+                                cursor: "pointer",
+                                fontWeight: 500,
+                                "&:hover": { textDecoration: "underline", backgroundColor: "action.hover" },
+                            }}
+                        >
+                            打开科普视频列表
+                        </Typography>
+                    </Box>
+                    {recentLessonVideos.length === 0 && (
+                        <Typography variant="body2" color="text.secondary">
+                            暂无最近查看的科普视频，先打开科普视频列表看看吧。
+                        </Typography>
+                    )}
+                    {recentLessonVideos.map((item) => (
+                        <Box
+                            key={item.href}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
+                                borderRadius: 1,
+                                px: 1,
+                                py: 0.5,
+                                mb: 0.5,
+                                "&:hover .label": { textDecoration: "underline" },
+                            }}
+                        >
+                            <ButtonBase
+                                className="label"
+                                onClick={() => openLessonVideoFromDashboard(item)}
+                                sx={{
+                                    textAlign: "left",
+                                    justifyContent: "flex-start",
+                                    flex: 1,
+                                    px: 1,
+                                    py: 0.5,
+                                }}
+                            >
+                                <Typography variant="body2">{item.label}</Typography>
+                            </ButtonBase>
+
+                            <Box sx={{ display: "flex", gap: 1, ml: 1 }}>
+                                <Button
+                                    size="small"
+                                    color="error"
+                                    variant="text"
+                                    onClick={() => removeRecentLessonVideoCallback(item.href)}
+                                >
+                                    删除
+                                </Button>
+                            </Box>
+                        </Box>
+                    ))}
                 </Box>
 
                 <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1.5, p: 2 }}>
@@ -209,7 +276,9 @@ export default function DashboardPage() {
                         </Typography>
                     </Box>
                     {recentHrefList.length === 0 && (
-                        <Typography variant="body2" color="text.secondary">暂无历史记录，先去打开一个仿真实验。</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            暂无最近查看的仿真实验，先打开仿真实验列表看看吧。
+                        </Typography>
                     )}
                     {recentHrefList.map((href) => (
                         <Box
