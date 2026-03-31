@@ -266,6 +266,10 @@ export default function Page() {
     }, []);
 
     const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
+    React.useEffect(() => {
+        if (!activeTab) return;
+        document.title = `${activeTab.title} | ruyugao`;
+    }, [activeTab]);
 
     const handleDropReorder = React.useCallback((toId: string) => {
         const fromId = dragTabIdRef.current;
