@@ -105,6 +105,17 @@ export default function Page() {
             yaxis: 'y',
             name: 'Pout(L)',
         },
+        // 垂直线指示当前传输距离
+        {
+            type: 'scatter',
+            mode: 'lines',
+            x: [distanceKm, distanceKm],
+            y: [0, pin * Math.pow(10, -alpha * distanceKm / 10)],
+            line: { color: '#f59e42', width: 2, dash: 'dash' },
+            name: '当前距离',
+            showlegend: false,
+            hoverinfo: 'skip',
+        },
     ];
 
     const visualization = (
@@ -128,6 +139,21 @@ export default function Page() {
                         bgcolor: 'rgba(255,255,255,0.85)',
                         bordercolor: '#cbd5e1',
                         borderwidth: 1,
+                    },
+                    {
+                        x: distanceKm,
+                        y: pin * Math.pow(10, -alpha * distanceKm / 10),
+                        xref: 'x',
+                        yref: 'y',
+                        text: `L=${distanceKm} km`,
+                        showarrow: true,
+                        arrowhead: 6,
+                        ax: 0,
+                        ay: -60,
+                        bgcolor: '#fffbe7',
+                        bordercolor: '#f59e42',
+                        borderwidth: 1,
+                        font: { color: '#b45309', size: 13 },
                     },
                 ],
                 showlegend: true,
