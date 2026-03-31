@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/polarization",
+    href: "/lessons/polarization",
     label: "❷ 光的偏振",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光的偏振.mp4")}`,
 };

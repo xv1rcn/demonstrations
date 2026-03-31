@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/photoelectric",
+    href: "/lessons/photoelectric",
     label: "❻ 光电效应",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光电效应.mp4")}`,
 };

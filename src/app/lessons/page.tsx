@@ -7,27 +7,27 @@ import { useRouter } from "next/navigation";
 
 const VIDEO_LIST = [
     {
-        href: "/lesson/interference",
+        href: "/lessons/interference",
         label: "❶ 光的干涉和衍射",
     },
     {
-        href: "/lesson/polarization",
+        href: "/lessons/polarization",
         label: "❷ 光的偏振",
     },
     {
-        href: "/lesson/critical-angle-measurement",
+        href: "/lessons/critical-angle-measurement",
         label: "❸ 全反射角的测量",
     },
     {
-        href: "/lesson/dispersion",
+        href: "/lessons/dispersion",
         label: "❹ 光的色散",
     },
     {
-        href: "/lesson/optical-instruments",
+        href: "/lessons/optical-instruments",
         label: "❺ 光学仪嚣",
     },
     {
-        href: "/lesson/photoelectric",
+        href: "/lessons/photoelectric",
         label: "❻ 光电效应",
     },
 ];

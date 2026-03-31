@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/dispersion",
+    href: "/lessons/dispersion",
     label: "❹ 光的色散",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光的色散.mp4")}`,
 };

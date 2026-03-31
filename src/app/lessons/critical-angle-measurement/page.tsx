@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/critical-angle-measurement",
+    href: "/lessons/critical-angle-measurement",
     label: "❸ 全反射角的测量",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光的全反射.mp4")}`,
 };

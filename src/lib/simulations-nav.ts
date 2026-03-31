@@ -1,3 +1,5 @@
+import { buildSimulationUrl } from "@/lib/routes";
+
 export type SimulationNavItem = {
     href: string;
     label: string;
@@ -65,5 +67,5 @@ export function openSimulation(item: SimulationNavItem) {
         window.parent.postMessage(payload, window.location.origin);
         return;
     }
-    window.location.assign(`/simulations/${item.href}`);
+    window.location.assign(buildSimulationUrl(item.href));
 }

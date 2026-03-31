@@ -10,6 +10,13 @@ import {
     getRecentSimulationHrefs,
     RECENT_SIMULATION_HREFS_KEY,
 } from "@/lib/simulation-history";
+import {
+    buildEmbedUrl,
+    buildSimulationUrl,
+    DASHBOARD_ROUTE,
+    LESSONS_ROUTE,
+    SIMULATIONS_ROUTE,
+} from "@/lib/routes";
 
 type WorkspaceTab = {
     id: string;
@@ -48,10 +55,7 @@ const WORKSPACE_PANEL_SX: SxProps<Theme> = {
 };
 
 function buildLessonIframeSrc(href: string) {
-    if (href.includes("?")) {
-        return `${href}&embed=1`;
-    }
-    return `${href}?embed=1`;
+    return buildEmbedUrl(href);
 }
 
 function ExperimentTabLabel({ tab, onClose, onDropReorder, onDragStart }: ExperimentTabLabelProps) {
@@ -303,7 +307,7 @@ export default function Page() {
                 {activeTab.type === "dashboard" && (
                     <Box
                         component="iframe"
-                        src="/dashboard?embed=1"
+                        src={buildEmbedUrl(DASHBOARD_ROUTE)}
                         title="仪表盘"
                         sx={WORKSPACE_PANEL_SX}
                     />
@@ -312,7 +316,7 @@ export default function Page() {
                 {activeTab.type === "nav" && (
                     <Box
                         component="iframe"
-                        src="/simulations?embed=1"
+                        src={buildEmbedUrl(SIMULATIONS_ROUTE)}
                         title="仿真实验列表"
                         sx={WORKSPACE_PANEL_SX}
                     />
@@ -321,7 +325,7 @@ export default function Page() {
                 {activeTab.type === "lesson" && (
                     <Box
                         component="iframe"
-                        src="/lesson?embed=1"
+                        src={buildEmbedUrl(LESSONS_ROUTE)}
                         title="科普视频列表"
                         sx={WORKSPACE_PANEL_SX}
                     />
@@ -331,12 +335,12 @@ export default function Page() {
                     .filter((tab) => tab.type === "experiment")
                     .map((tab) => (
                         <Box key={tab.id} sx={{ display: activeTabId === tab.id ? "block" : "none" }}>
-                            <Box
-                                component="iframe"
-                                src={`/simulations/${tab.href}`}
-                                title={tab.title}
-                                sx={WORKSPACE_PANEL_SX}
-                            />
+                                <Box
+                                    component="iframe"
+                                    src={buildSimulationUrl(tab.href)}
+                                    title={tab.title}
+                                    sx={WORKSPACE_PANEL_SX}
+                                />
                         </Box>
                     ))}
                 {tabs

@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/optical-instruments",
+    href: "/lessons/optical-instruments",
     label: "❺ 光学仪嚣",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光学仪器.mp4")}`,
 };

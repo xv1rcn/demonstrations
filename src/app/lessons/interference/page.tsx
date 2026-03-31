@@ -7,7 +7,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
 const LESSON_VIDEO_META: LessonVideoMeta = {
-    href: "/lesson/interference",
+    href: "/lessons/interference",
     label: "❶ 光的干涉和衍射",
     videoUrl: `${VIDEO_BASE}${encodeURIComponent("光的干涉与衍射.mp4")}`,
 };

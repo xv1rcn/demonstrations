@@ -14,6 +14,7 @@ import {
     RECENT_SIMULATION_HREFS_KEY,
     removeRecentSimulationHref,
 } from "@/lib/simulation-history";
+import { LESSONS_ROUTE, SIMULATIONS_ROUTE, buildSimulationUrl } from "@/lib/routes";
 
 type RecentExperimentItem = {
     href: string;
@@ -25,7 +26,7 @@ function openNavFromDashboard() {
         window.parent.postMessage({ type: "dashboard:open-nav" }, window.location.origin);
         return;
     }
-    window.location.assign("/");
+    window.location.assign(SIMULATIONS_ROUTE);
 }
 
 function openLessonFromDashboard() {
@@ -33,7 +34,7 @@ function openLessonFromDashboard() {
         window.parent.postMessage({ type: "dashboard:open-lesson" }, window.location.origin);
         return;
     }
-    window.location.assign("/lesson");
+    window.location.assign(LESSONS_ROUTE);
 }
 
 function openExperimentFromDashboard(item: RecentExperimentItem) {
@@ -44,7 +45,7 @@ function openExperimentFromDashboard(item: RecentExperimentItem) {
         );
         return;
     }
-    window.location.assign(`/simulations/${item.href}`);
+    window.location.assign(buildSimulationUrl(item.href));
 }
 
 function openLessonVideoFromDashboard(item: RecentLessonVideoItem) {
