@@ -14,6 +14,14 @@ const VIDEO_LIST = [
         href: "/lesson/polarization",
         label: "❷ 光的偏振",
     },
+    {
+        href: "/lesson/critical-angle-measurement",
+        label: "❸ 全反射角的测量",
+    },
+    {
+        href: "/lesson/dispersion",
+        label: "❹ 光的色散",
+    },
 ];
 
 type NavLabelParts = {
