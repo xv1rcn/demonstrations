@@ -182,8 +182,8 @@ export default function LessonPageTemplate({ video, experiments }: LessonPageTem
             <Box
                 sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) 240px" },
-                    gap: { xs: 2, md: 3 },
+                    gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) 280px" },
+                    gap: { xs: 2, md: 2 },
                     alignItems: "stretch",
                 }}
             >
@@ -223,7 +223,7 @@ export default function LessonPageTemplate({ video, experiments }: LessonPageTem
                         borderRadius: 2,
                         backgroundColor: "background.paper",
                         boxShadow: 2,
-                        p: { xs: 2, md: 2.5 },
+                        p: { xs: 1.5, md: 1.5 },
                         display: "flex",
                         flexDirection: "column",
                         gap: 1.25,

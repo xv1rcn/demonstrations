@@ -10,6 +10,10 @@ const VIDEO_LIST = [
         href: "/lesson/interference",
         label: "❶ 光的干涉和衍射",
     },
+    {
+        href: "/lesson/polarization",
+        label: "❷ 光的偏振",
+    },
 ];
 
 type NavLabelParts = {
