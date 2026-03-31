@@ -22,6 +22,10 @@ const VIDEO_LIST = [
         href: "/lesson/dispersion",
         label: "❹ 光的色散",
     },
+    {
+        href: "/lesson/optical-instruments",
+        label: "❺ 光学仪嚣",
+    },
 ];
 
 type NavLabelParts = {
