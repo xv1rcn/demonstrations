@@ -4,7 +4,7 @@ import * as React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Tab, Tabs } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
-import type { SimulationNavItem } from "@/lib/simulations-nav";
+import type { SimulationNavItem } from "../lib/simulations-nav";
 
 type WorkspaceTab = {
     id: string;

@@ -3,7 +3,7 @@
 import * as React from "react";
 export const dynamic = 'force-dynamic';
 import { Avatar, Box, ButtonBase, Chip, LinearProgress, Typography } from "@mui/material";
-import { NAV_GROUPS } from "@/lib/simulations-nav";
+import { NAV_GROUPS } from "../../lib/simulations-nav";
 
 const RECENT_HREFS_KEY = "recent_simulation_hrefs";
 
