@@ -19,6 +19,14 @@ function openNavFromDashboard() {
     window.location.assign("/");
 }
 
+function openLessonFromDashboard() {
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: "dashboard:open-lesson" }, window.location.origin);
+        return;
+    }
+    window.location.assign("/lesson");
+}
+
 function openExperimentFromDashboard(item: RecentExperimentItem) {
     if (window.parent !== window) {
         window.parent.postMessage(
@@ -170,6 +178,23 @@ export default function DashboardPage() {
                         }}
                     >
                         打开仿真实验列表
+                    </ButtonBase>
+
+                    <ButtonBase
+                        onClick={openLessonFromDashboard}
+                        sx={{
+                            mt: 1,
+                            width: "100%",
+                            border: "1px solid",
+                            borderColor: "divider",
+                            borderRadius: 1,
+                            px: 1.5,
+                            py: 1,
+                            justifyContent: "flex-start",
+                            "&:hover": { backgroundColor: "action.hover" },
+                        }}
+                    >
+                        打开 Lesson 播放器
                     </ButtonBase>
                 </Box>
 

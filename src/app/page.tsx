@@ -8,7 +8,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 type WorkspaceTab = {
     id: string;
-    type: "dashboard" | "nav" | "experiment";
+    type: "dashboard" | "nav" | "experiment" | "lesson";
     title: string;
     href?: string;
 };
@@ -22,6 +22,7 @@ type ExperimentTabLabelProps = {
 
 const DASHBOARD_TAB_ID = "dashboard-home";
 const NAV_TAB_ID = "nav-home";
+const LESSON_TAB_ID = "lesson-home";
 const RECENT_HREFS_KEY = "recent_simulation_hrefs";
 
 const TAB_BAR_SX: SxProps<Theme> = {
@@ -104,12 +105,14 @@ function ExperimentTabLabel({ tab, onClose, onDropReorder, onDragStart }: Experi
 
 type WorkspaceMessage =
     | { type: "simulation:open"; href: string; label: string }
-    | { type: "dashboard:open-nav" };
+    | { type: "dashboard:open-nav" }
+    | { type: "dashboard:open-lesson" };
 
 function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
     if (!data || typeof data !== "object") return null;
     const payload = data as { type?: unknown; href?: unknown; label?: unknown };
     if (payload.type === "dashboard:open-nav") return { type: "dashboard:open-nav" };
+    if (payload.type === "dashboard:open-lesson") return { type: "dashboard:open-lesson" };
     if (payload.type !== "simulation:open") return null;
     if (typeof payload.href !== "string" || typeof payload.label !== "string") return null;
     return { type: "simulation:open", href: payload.href, label: payload.label };
@@ -186,6 +189,18 @@ export default function Page() {
         });
     }, []);
 
+    const openLessonTab = React.useCallback(() => {
+        setTabs((prev) => {
+            const existed = prev.find((tab) => tab.type === "lesson");
+            if (existed) {
+                setActiveTabId(existed.id);
+                return prev;
+            }
+            setActiveTabId(LESSON_TAB_ID);
+            return [...prev, { id: LESSON_TAB_ID, type: "lesson", title: "科普视频" }];
+        });
+    }, []);
+
     const openExperimentTab = React.useCallback((item: SimulationNavItem) => {
         setTabs((prev) => {
             const existed = prev.find((tab) => tab.type === "experiment" && tab.href === item.href);
@@ -212,6 +227,10 @@ export default function Page() {
                 openNavTab();
                 return;
             }
+            if (message.type === "dashboard:open-lesson") {
+                openLessonTab();
+                return;
+            }
             openExperimentTab({ href: message.href, label: message.label });
         };
 
@@ -219,7 +238,7 @@ export default function Page() {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [openExperimentTab, openNavTab]);
+    }, [openExperimentTab, openNavTab, openLessonTab]);
 
     const closeTab = React.useCallback((tabId: string) => {
         setTabs((prev) => {
@@ -302,6 +321,15 @@ export default function Page() {
                         component="iframe"
                         src="/simulations?embed=1"
                         title="仿真实验列表"
+                        sx={WORKSPACE_PANEL_SX}
+                    />
+                )}
+
+                {activeTab.type === "lesson" && (
+                    <Box
+                        component="iframe"
+                        src="/lesson?embed=1"
+                        title="Lesson 播放器"
                         sx={WORKSPACE_PANEL_SX}
                     />
                 )}
