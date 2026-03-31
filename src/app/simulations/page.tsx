@@ -10,7 +10,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import WavesIcon from "@mui/icons-material/Waves";
 import { Box, ButtonBase, Divider, Typography } from "@mui/material";
 import { /* useSearchParams */ } from "next/navigation";
-import { NAV_GROUPS, type SimulationNavItem } from "../../lib/simulations-nav";
+import { NAV_GROUPS, type SimulationNavItem } from "@/lib/simulations-nav";
 
 export const dynamic = 'force-dynamic';
 
