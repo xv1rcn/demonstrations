@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+export const dynamic = 'force-dynamic';
 import { Avatar, Box, ButtonBase, Chip, LinearProgress, Typography } from "@mui/material";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
 
@@ -32,8 +32,15 @@ function openExperimentFromDashboard(item: RecentExperimentItem) {
 }
 
 export default function DashboardPage() {
-    const searchParams = useSearchParams();
-    const embedMode = searchParams.get("embed") === "1";
+    const [embedMode, setEmbedMode] = React.useState(false);
+    React.useEffect(() => {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            setEmbedMode(sp.get("embed") === "1");
+        } catch {
+            setEmbedMode(false);
+        }
+    }, []);
 
     const labelByHref = React.useMemo(() => {
         const allItems = NAV_GROUPS.flatMap((group) => group.members);

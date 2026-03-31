@@ -9,8 +9,10 @@ import ScienceIcon from "@mui/icons-material/Science";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WavesIcon from "@mui/icons-material/Waves";
 import { Box, ButtonBase, Divider, Typography } from "@mui/material";
-import { useSearchParams } from "next/navigation";
+import { /* useSearchParams */ } from "next/navigation";
 import { NAV_GROUPS, type SimulationNavItem } from "@/lib/simulations-nav";
+
+export const dynamic = 'force-dynamic';
 
 type NavLabelParts = {
     indexText: string;
@@ -57,8 +59,15 @@ function openExperiment(item: SimulationNavItem) {
 }
 
 export default function SimulationsPage() {
-    const searchParams = useSearchParams();
-    const embedMode = searchParams.get("embed") === "1";
+    const [embedMode, setEmbedMode] = React.useState(false);
+    React.useEffect(() => {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            setEmbedMode(sp.get("embed") === "1");
+        } catch {
+            setEmbedMode(false);
+        }
+    }, []);
 
     const [expandedGroupTitles, setExpandedGroupTitles] = React.useState<string[]>(
         NAV_GROUPS.map((group) => group.title)

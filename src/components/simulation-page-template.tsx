@@ -60,7 +60,7 @@ export function SimulationPageTemplate({
     const [presetTip, setPresetTip] = React.useState<React.ReactNode>(fallbackPresetTip);
     const [autoExpandedPresetIndexes, setAutoExpandedPresetIndexes] = React.useState<number[]>([]);
     const [autoExpandedParameterDirections, setAutoExpandedParameterDirections] = React.useState<string[]>([]);
-    const [activePresetIndex, setActivePresetIndex] = React.useState<number | null>(null);
+    const [, setActivePresetIndex] = React.useState<number | null>(null);
     const [activePresetLabelText, setActivePresetLabelText] = React.useState<string>('无');
     const [isPresetSynced, setIsPresetSynced] = React.useState(false);
     const [presetSnapshotSignature, setPresetSnapshotSignature] = React.useState<string | null>(null);

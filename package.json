@@ -1,17 +1,15 @@
 {
-  "name": "project",
+  "name": "demonstrations",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k -n web,api -c cyan,green \"npm:dev:web\" \"npm:dev:api\"",
-    "dev:web": "next dev --turbopack",
-    "dev:api": "uv run --project backend backend/main.py",
-    "build": "npm run build:web && npm run build:api",
-    "build:web": "next build",
-    "build:api": "echo \"Flask backend has no build step\"",
-    "start": "concurrently -k -n web,api -c cyan,green \"npm:start:web\" \"npm:start:api\"",
-    "start:web": "next start",
-    "start:api": "uv run --project backend backend/main.py",
+    "dev": "concurrently -k -n frontend,backend -c cyan,green \"npm:dev:frontend\" \"npm:dev:backend\"",
+    "dev:frontend": "next dev --turbopack",
+    "dev:backend": "uv run --project backend backend/main.py",
+    "build": "next build",
+    "start": "concurrently -k -n frontend,backend -c cyan,green \"npm:start:frontend\" \"npm:start:backend\"",
+    "start:frontend": "next start",
+    "start:backend": "uv run --project backend backend/main.py",
     "lint": "next lint"
   },
   "dependencies": {
