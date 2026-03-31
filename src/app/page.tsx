@@ -8,7 +8,7 @@ import type { SimulationNavItem } from "@/lib/simulations-nav";
 
 type WorkspaceTab = {
     id: string;
-    type: "dashboard" | "nav" | "experiment" | "lesson";
+    type: "dashboard" | "nav" | "experiment" | "lesson" | "lessonVideo";
     title: string;
     href?: string;
 };
@@ -43,6 +43,13 @@ const WORKSPACE_PANEL_SX: SxProps<Theme> = {
     borderRadius: 1,
     backgroundColor: "background.paper",
 };
+
+function buildLessonIframeSrc(href: string) {
+    if (href.includes("?")) {
+        return `${href}&embed=1`;
+    }
+    return `${href}?embed=1`;
+}
 
 function ExperimentTabLabel({ tab, onClose, onDropReorder, onDragStart }: ExperimentTabLabelProps) {
     return (
@@ -105,6 +112,7 @@ function ExperimentTabLabel({ tab, onClose, onDropReorder, onDragStart }: Experi
 
 type WorkspaceMessage =
     | { type: "simulation:open"; href: string; label: string }
+    | { type: "lesson:open"; href: string; label: string }
     | { type: "dashboard:open-nav" }
     | { type: "dashboard:open-lesson" };
 
@@ -113,6 +121,10 @@ function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
     const payload = data as { type?: unknown; href?: unknown; label?: unknown };
     if (payload.type === "dashboard:open-nav") return { type: "dashboard:open-nav" };
     if (payload.type === "dashboard:open-lesson") return { type: "dashboard:open-lesson" };
+    if (payload.type === "lesson:open") {
+        if (typeof payload.href !== "string" || typeof payload.label !== "string") return null;
+        return { type: "lesson:open", href: payload.href, label: payload.label };
+    }
     if (payload.type !== "simulation:open") return null;
     if (typeof payload.href !== "string" || typeof payload.label !== "string") return null;
     return { type: "simulation:open", href: payload.href, label: payload.label };
@@ -197,7 +209,7 @@ export default function Page() {
                 return prev;
             }
             setActiveTabId(LESSON_TAB_ID);
-            return [...prev, { id: LESSON_TAB_ID, type: "lesson", title: "科普视频" }];
+            return [...prev, { id: LESSON_TAB_ID, type: "lesson", title: "科普视频列表" }];
         });
     }, []);
 
@@ -218,6 +230,19 @@ export default function Page() {
         });
     }, []);
 
+    const openLessonVideoTab = React.useCallback((item: SimulationNavItem) => {
+        setTabs((prev) => {
+            const existed = prev.find((tab) => tab.type === "lessonVideo" && tab.href === item.href);
+            if (existed) {
+                setActiveTabId(existed.id);
+                return prev;
+            }
+            const id = `lesson-video-${item.href}`;
+            setActiveTabId(id);
+            return [...prev, { id, type: "lessonVideo", title: item.label, href: item.href }];
+        });
+    }, []);
+
     React.useEffect(() => {
         const onMessage = (event: MessageEvent) => {
             if (event.origin !== window.location.origin) return;
@@ -231,6 +256,10 @@ export default function Page() {
                 openLessonTab();
                 return;
             }
+            if (message.type === "lesson:open") {
+                openLessonVideoTab({ href: message.href, label: message.label });
+                return;
+            }
             openExperimentTab({ href: message.href, label: message.label });
         };
 
@@ -238,7 +267,7 @@ export default function Page() {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [openExperimentTab, openNavTab, openLessonTab]);
+    }, [openExperimentTab, openLessonTab, openLessonVideoTab, openNavTab]);
 
     const closeTab = React.useCallback((tabId: string) => {
         setTabs((prev) => {
@@ -329,7 +358,7 @@ export default function Page() {
                     <Box
                         component="iframe"
                         src="/lesson?embed=1"
-                        title="Lesson 播放器"
+                        title="科普视频列表"
                         sx={WORKSPACE_PANEL_SX}
                     />
                 )}
@@ -341,6 +370,18 @@ export default function Page() {
                             <Box
                                 component="iframe"
                                 src={`/simulations/${tab.href}`}
+                                title={tab.title}
+                                sx={WORKSPACE_PANEL_SX}
+                            />
+                        </Box>
+                    ))}
+                {tabs
+                    .filter((tab) => tab.type === "lessonVideo")
+                    .map((tab) => (
+                        <Box key={tab.id} sx={{ display: activeTabId === tab.id ? "block" : "none" }}>
+                            <Box
+                                component="iframe"
+                                src={tab.href ? buildLessonIframeSrc(tab.href) : ""}
                                 title={tab.title}
                                 sx={WORKSPACE_PANEL_SX}
                             />

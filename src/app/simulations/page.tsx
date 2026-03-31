@@ -10,7 +10,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import WavesIcon from "@mui/icons-material/Waves";
 import { Box, ButtonBase, Divider, Typography } from "@mui/material";
 import { /* useSearchParams */ } from "next/navigation";
-import { NAV_GROUPS, type SimulationNavItem } from "@/lib/simulations-nav";
+import { NAV_GROUPS, openSimulation } from "@/lib/simulations-nav";
 
 type NavLabelParts = {
     indexText: string;
@@ -46,14 +46,6 @@ function getNavIcon(href: string) {
         return <ScienceIcon sx={iconSx} />;
     }
     return <LightModeIcon sx={iconSx} />;
-}
-
-function openExperiment(item: SimulationNavItem) {
-    if (window.parent !== window) {
-        window.parent.postMessage({ type: "simulation:open", href: item.href, label: item.label }, window.location.origin);
-        return;
-    }
-    window.location.assign(`/simulations/${item.href}`);
 }
 
 export default function SimulationsPage() {
@@ -127,7 +119,7 @@ export default function SimulationsPage() {
                                         return (
                                             <ButtonBase
                                                 key={item.href}
-                                                onClick={() => openExperiment(item)}
+                                                onClick={() => openSimulation(item)}
                                                 sx={{
                                                     height: 96,
                                                     width: "100%",

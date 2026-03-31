@@ -194,7 +194,7 @@ export default function DashboardPage() {
                             "&:hover": { backgroundColor: "action.hover" },
                         }}
                     >
-                        打开 Lesson 播放器
+                        打开科普视频列表
                     </ButtonBase>
                 </Box>
 

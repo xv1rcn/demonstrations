@@ -55,3 +55,15 @@ export const NAV_GROUPS: SimulationNavGroup[] = [
         ],
     },
 ];
+
+export function openSimulation(item: SimulationNavItem) {
+    if (typeof window === "undefined") {
+        return;
+    }
+    const payload = { type: "simulation:open", href: item.href, label: item.label };
+    if (window.parent !== window) {
+        window.parent.postMessage(payload, window.location.origin);
+        return;
+    }
+    window.location.assign(`/simulations/${item.href}`);
+}

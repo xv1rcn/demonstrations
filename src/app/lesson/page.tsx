@@ -1,118 +1,152 @@
 "use client";
 
 import * as React from "react";
-import Script from "next/script";
-import { Box, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Box, ButtonBase, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-const VIDEO_BASE = "https://ruyugao.cn/static/videos/";
-
-const SAMPLE_VIDEOS = [
-    "光学仪器.mp4",
-    "光电效应.mp4",
-    "光的偏振.mp4",
-    "光的全反射.mp4",
-    "光的干涉与衍射.mp4",
-    "光的色散.mp4",
+const VIDEO_LIST = [
+    {
+        href: "/lesson/interference",
+        label: "❶ 光的干涉和衍射",
+    },
 ];
 
-const PLYR_SCRIPT_SRC = "https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js";
-const PLYR_STYLE_HREF = "https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css";
+type NavLabelParts = {
+    indexText: string;
+    titleText: string;
+};
 
-declare global {
-    interface Window {
-        Plyr?: new (el: Element, options?: Record<string, unknown>) => PlyrInstance;
-    }
+function splitNavLabel(label: string): NavLabelParts {
+    const [indexText, ...rest] = label.trim().split(/\s+/);
+    return {
+        indexText: indexText ?? "",
+        titleText: rest.join(" ") || label,
+    };
 }
 
-interface PlyrSource {
-    type: string;
-    sources: Array<{ src: string; type: string }>;
-}
-
-interface PlyrInstance {
-    destroy?: () => void;
-    source?: PlyrSource;
-    play?: () => Promise<void>;
+function getVideoIcon() {
+    return <VisibilityIcon sx={{ fontSize: 18 }} />;
 }
 
 export default function LessonPage() {
-    const [selected, setSelected] = React.useState<string>(SAMPLE_VIDEOS[0]);
-    const [scriptReady, setScriptReady] = React.useState(false);
-    const playerRef = React.useRef<PlyrInstance | null>(null);
-    const videoElRef = React.useRef<HTMLVideoElement | null>(null);
+    const [embedMode, setEmbedMode] = React.useState(false);
+    const router = useRouter();
 
-    const handleSelect = (e: SelectChangeEvent<string>) => {
-        setSelected(e.target.value as string);
-    };
-
-    const src = VIDEO_BASE + encodeURIComponent(selected);
-
-    React.useEffect(() => {
-        if (!scriptReady || !window.Plyr) return;
-
-        try {
-            playerRef.current?.destroy?.();
-        } catch {}
-
-        if (videoElRef.current) {
-            playerRef.current = new window.Plyr(videoElRef.current, {
-                controls: ["play-large", "play", "progress", "current-time", "mute", "volume", "settings", "fullscreen"],
-                seekTime: 5,
-            });
-        }
-
-        return () => {
-            try {
-                playerRef.current?.destroy?.();
-                playerRef.current = null;
-            } catch {}
-        };
-    }, [scriptReady]);
-
-    React.useEffect(() => {
-        const p = playerRef.current;
-        if (p && typeof p.source !== "undefined") {
-            try {
-                p.source = { type: "video", sources: [{ src, type: "video/mp4" }] };
-                p.play?.().catch(() => {});
-            } catch {
-                if (videoElRef.current) {
-                    videoElRef.current.src = src;
-                    videoElRef.current.load();
-                    videoElRef.current.play().catch(() => {});
-                }
+    const handleVideoClick = React.useCallback(
+        (item: { href: string; label: string }) => {
+            if (typeof window !== "undefined" && window.parent !== window) {
+                window.parent.postMessage(
+                    { type: "lesson:open", href: item.href, label: item.label },
+                    window.location.origin
+                );
+                return;
             }
-        } else if (videoElRef.current) {
-            videoElRef.current.src = src;
-            videoElRef.current.load();
-            videoElRef.current.play().catch(() => {});
+            router.push(item.href);
+        },
+        [router]
+    );
+
+    React.useEffect(() => {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            setEmbedMode(sp.get("embed") === "1");
+        } catch {
+            setEmbedMode(false);
         }
-    }, [src]);
+    }, []);
 
     return (
-        <Box sx={{ p: 3 }}>
-            <link rel="stylesheet" href={PLYR_STYLE_HREF} />
-            <Script src={PLYR_SCRIPT_SRC} strategy="afterInteractive" onLoad={() => setScriptReady(true)} />
+        <Box sx={{ width: "100%", height: "100%", px: embedMode ? 0 : 2, py: embedMode ? 0 : 2 }}>
+            <Box sx={{ width: "100%", height: "100%", borderRadius: 1, overflow: "hidden" }}>
+                <Box sx={{ height: "100%", overflowY: "auto", pr: 1, py: 1 }}>
+                    {!embedMode && (
+                        <Typography variant="h5" sx={{ px: 2, pb: 1.5, fontWeight: 700 }}>
+                            科普视频列表
+                        </Typography>
+                    )}
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))",
+                            gap: 1.5,
+                            px: 1.5,
+                            pb: 1,
+                        }}
+                    >
+                        {VIDEO_LIST.map((item) => {
+                            const { indexText, titleText } = splitNavLabel(item.label);
+                            const navIcon = getVideoIcon();
+                            return (
+                                <ButtonBase
+                                    key={item.href}
+                                    onClick={() => handleVideoClick(item)}
+                                    sx={{
+                                        height: 96,
+                                        width: "100%",
+                                        border: "1px solid",
+                                        borderColor: "divider",
+                                        borderRadius: 1.5,
+                                        px: 1.25,
+                                        py: 1.25,
+                                        alignItems: "stretch",
+                                        justifyContent: "stretch",
+                                        textAlign: "left",
+                                        backgroundColor: "background.paper",
+                                        transition: "all 0.18s ease",
+                                        "&:hover": {
+                                            borderColor: "primary.main",
+                                            backgroundColor: "action.hover",
+                                            transform: "translateY(-1px)",
+                                        },
+                                    }}
+                                >
+                                    <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                position: "absolute",
+                                                left: -2,
+                                                top: 0,
+                                                minWidth: 28,
+                                                height: 24,
+                                                px: 0.75,
+                                                borderRadius: 1,
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                gap: 0.5,
+                                                fontSize: 16,
+                                                fontWeight: 600,
+                                                color: "primary.main",
+                                            }}
+                                        >
+                                            {navIcon}
+                                            {indexText}
+                                        </Box>
 
-            <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1, p: 1 }}>
-                <video
-                    ref={videoElRef}
-                    id="lesson-player"
-                    controls
-                    playsInline
-                    style={{ width: "100%", maxHeight: 640, backgroundColor: "#000" }}
-                >
-                    <source src={src} type="video/mp4" />
-                    您的浏览器不支持 video 标签。
-                </video>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center", mt: 2, flexWrap: "wrap" }}>
-                <Select value={selected} onChange={handleSelect} size="small" sx={{ minWidth: 220 }}>
-                    {SAMPLE_VIDEOS.map((v) => (
-                        <MenuItem key={v} value={v}>{v}</MenuItem>
-                    ))}
-                </Select>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                position: "absolute",
+                                                right: 0,
+                                                bottom: 0,
+                                                fontSize: 15,
+                                                fontWeight: 500,
+                                                color: "text.primary",
+                                                lineHeight: 1.35,
+                                                maxWidth: "88%",
+                                                textAlign: "right",
+                                            }}
+                                        >
+                                            {titleText}
+                                        </Typography>
+                                    </Box>
+                                </ButtonBase>
+                            );
+                        })}
+                    </Box>
+                </Box>
             </Box>
         </Box>
     );
