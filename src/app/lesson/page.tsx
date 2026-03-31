@@ -26,6 +26,10 @@ const VIDEO_LIST = [
         href: "/lesson/optical-instruments",
         label: "❺ 光学仪嚣",
     },
+    {
+        href: "/lesson/photoelectric",
+        label: "❻ 光电效应",
+    },
 ];
 
 type NavLabelParts = {
