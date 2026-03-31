@@ -136,8 +136,42 @@ export default function Page() {
         }
     }, []);
 
+    // Keep in sync when other windows (or an embedded iframe) update the recent list.
     React.useEffect(() => {
-        window.localStorage.setItem(RECENT_HREFS_KEY, JSON.stringify(recentHrefList));
+        const onStorage = (event: StorageEvent) => {
+            if (event.key !== RECENT_HREFS_KEY) return;
+            try {
+                if (!event.newValue) {
+                    setRecentHrefList([]);
+                    return;
+                }
+                const parsed = JSON.parse(event.newValue) as unknown;
+                if (!Array.isArray(parsed)) return;
+                const safe = parsed.filter((item): item is string => typeof item === "string");
+                setRecentHrefList(safe.slice(0, 8));
+            } catch {
+                // ignore
+            }
+        };
+
+        window.addEventListener("storage", onStorage);
+        return () => window.removeEventListener("storage", onStorage);
+    }, []);
+
+    React.useEffect(() => {
+        try {
+            const existing = window.localStorage.getItem(RECENT_HREFS_KEY);
+            const existingParsed = existing ? JSON.parse(existing) : null;
+            // Only write if different to avoid clobbering changes from other windows.
+            const isSame = Array.isArray(existingParsed) &&
+                existingParsed.length === recentHrefList.length &&
+                existingParsed.every((v: unknown, i: number) => v === recentHrefList[i]);
+            if (!isSame) {
+                window.localStorage.setItem(RECENT_HREFS_KEY, JSON.stringify(recentHrefList));
+            }
+        } catch {
+            // ignore
+        }
     }, [recentHrefList]);
 
     const openNavTab = React.useCallback(() => {

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Avatar, Box, ButtonBase, Chip, LinearProgress, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, Button, Chip, Typography } from "@mui/material";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
 
 const RECENT_HREFS_KEY = "recent_simulation_hrefs";
@@ -51,6 +51,22 @@ export default function DashboardPage() {
 
     const [recentHrefList, setRecentHrefList] = React.useState<string[]>([]);
 
+    const removeRecentHref = React.useCallback((hrefToRemove: string) => {
+        try {
+            const stored = window.localStorage.getItem(RECENT_HREFS_KEY);
+            if (!stored) return;
+            const parsed = JSON.parse(stored) as unknown;
+            if (!Array.isArray(parsed)) return;
+            const filtered = (parsed as string[]).filter((h) => h !== hrefToRemove);
+            window.localStorage.setItem(RECENT_HREFS_KEY, JSON.stringify(filtered));
+            setRecentHrefList(filtered.slice(0, 8));
+        } catch {
+            // ignore
+        }
+    }, []);
+
+    
+
     React.useEffect(() => {
         const loadRecent = () => {
             const stored = window.localStorage.getItem(RECENT_HREFS_KEY);
@@ -88,9 +104,13 @@ export default function DashboardPage() {
             <Box
                 sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                    gridTemplateColumns: "repeat(3, 1fr)",
                     gap: 1.5,
                     mb: 2,
+                    alignItems: "start",
+                    "@media (max-width: 980px)": {
+                        gridTemplateColumns: "1fr",
+                    },
                 }}
             >
                 <Box
@@ -117,33 +137,11 @@ export default function DashboardPage() {
                             </Typography>
                         </Box>
                     </Box>
-                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                        <Chip size="small" label="普通会员" color="primary" variant="outlined" />
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                         <Chip size="small" label="已登录" color="success" variant="outlined" />
+                        <Chip size="small" label="学生" color="primary" variant="outlined" />
                     </Box>
-                    <Box>
-                        <Typography variant="caption" color="text.secondary">
-                            资料完整度
-                        </Typography>
-                        <LinearProgress variant="determinate" value={62} sx={{ mt: 0.8, borderRadius: 999 }} />
-                    </Box>
-                </Box>
-
-                <Box
-                    sx={{
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 1.5,
-                        p: 2,
-                    }}
-                >
-                    <Typography variant="subtitle2" color="text.secondary">
-                        最近打开实验数
-                    </Typography>
-                    <Typography variant="h4" sx={{ mt: 1 }}>{recentHrefList.length}</Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
-                        最近 7 天活跃模拟学习记录
-                    </Typography>
+                    
                 </Box>
 
                 <Box
@@ -174,59 +172,64 @@ export default function DashboardPage() {
                         打开仿真实验列表
                     </ButtonBase>
                 </Box>
-            </Box>
 
-            <Box
-                sx={{
-                    display: "grid",
-                    gridTemplateColumns: "minmax(320px, 2fr) minmax(260px, 1fr)",
-                    gap: 1.5,
-                    alignItems: "start",
-                    "@media (max-width: 980px)": {
-                        gridTemplateColumns: "1fr",
-                    },
-                }}
-            >
                 <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1.5, p: 2 }}>
                     <Typography variant="h6" sx={{ mb: 1.25 }}>最近打开的实验</Typography>
                     {recentHrefList.length === 0 && (
                         <Typography variant="body2" color="text.secondary">暂无历史记录，先去打开一个仿真实验。</Typography>
                     )}
                     {recentHrefList.map((href) => (
-                        <ButtonBase
+                        <Box
                             key={href}
-                            onClick={() => openExperimentFromDashboard({ href, label: labelByHref[href] ?? href })}
                             sx={{
-                                display: "block",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
                                 width: "100%",
-                                textAlign: "left",
                                 borderRadius: 1,
                                 px: 1,
-                                py: 0.8,
-                                "&:hover": { backgroundColor: "action.hover" },
+                                py: 0.5,
+                                mb: 0.5,
+                                "&:hover .label": { textDecoration: "underline" },
+                                backgroundColor: "transparent",
                             }}
                         >
-                            <Typography variant="body2">{labelByHref[href] ?? href}</Typography>
-                        </ButtonBase>
+                            <ButtonBase
+                                className="label"
+                                onClick={() => openExperimentFromDashboard({ href, label: labelByHref[href] ?? href })}
+                                sx={{
+                                    textAlign: "left",
+                                    justifyContent: "flex-start",
+                                    flex: 1,
+                                    px: 1,
+                                    py: 0.5,
+                                }}
+                            >
+                                <Typography variant="body2">{labelByHref[href] ?? href}</Typography>
+                            </ButtonBase>
+
+                            <Box sx={{ display: "flex", gap: 1, ml: 1 }}>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() => openExperimentFromDashboard({ href, label: labelByHref[href] ?? href })}
+                                >
+                                    进入实验
+                                </Button>
+                                <Button
+                                    size="small"
+                                    color="error"
+                                    variant="text"
+                                    onClick={() => removeRecentHref(href)}
+                                >
+                                    删除
+                                </Button>
+                            </Box>
+                        </Box>
                     ))}
                 </Box>
-
-                <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1.5, p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1.25 }}>学习概览</Typography>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", py: 0.5 }}>
-                        <Typography variant="body2" color="text.secondary">完成实验</Typography>
-                        <Typography variant="body2" fontWeight={600}>8</Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", py: 0.5 }}>
-                        <Typography variant="body2" color="text.secondary">本周学习时长</Typography>
-                        <Typography variant="body2" fontWeight={600}>3.6 小时</Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", py: 0.5 }}>
-                        <Typography variant="body2" color="text.secondary">收藏实验</Typography>
-                        <Typography variant="body2" fontWeight={600}>2</Typography>
-                    </Box>
-                </Box>
             </Box>
+            
         </Box>
     );
 }
