@@ -163,22 +163,6 @@ export default function DashboardPage() {
                     <Typography variant="subtitle2" color="text.secondary">
                         快速入口
                     </Typography>
-                    <ButtonBase
-                        onClick={openNavFromDashboard}
-                        sx={{
-                            mt: 1,
-                            width: "100%",
-                            border: "1px solid",
-                            borderColor: "divider",
-                            borderRadius: 1,
-                            px: 1.5,
-                            py: 1,
-                            justifyContent: "flex-start",
-                            "&:hover": { backgroundColor: "action.hover" },
-                        }}
-                    >
-                        打开仿真实验列表
-                    </ButtonBase>
 
                     <ButtonBase
                         onClick={openLessonFromDashboard}
@@ -199,7 +183,31 @@ export default function DashboardPage() {
                 </Box>
 
                 <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 1.5, p: 2 }}>
-                    <Typography variant="h6" sx={{ mb: 1.25 }}>最近打开的实验</Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            mb: 1.25,
+                        }}
+                    >
+                        <Typography variant="h6">最近查看的仿真实验</Typography>
+                        <Typography
+                            onClick={openNavFromDashboard}
+                            variant="body2"
+                            sx={{
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: 1,
+                                color: "primary.main",
+                                cursor: "pointer",
+                                "&:hover": { textDecoration: "underline", backgroundColor: "action.hover" },
+                                fontWeight: 500,
+                            }}
+                        >
+                            打开仿真实验列表
+                        </Typography>
+                    </Box>
                     {recentHrefList.length === 0 && (
                         <Typography variant="body2" color="text.secondary">暂无历史记录，先去打开一个仿真实验。</Typography>
                     )}
@@ -234,13 +242,6 @@ export default function DashboardPage() {
                             </ButtonBase>
 
                             <Box sx={{ display: "flex", gap: 1, ml: 1 }}>
-                                <Button
-                                    size="small"
-                                    variant="outlined"
-                                    onClick={() => openExperimentFromDashboard({ href, label: labelByHref[href] ?? href })}
-                                >
-                                    进入实验
-                                </Button>
                                 <Button
                                     size="small"
                                     color="error"
