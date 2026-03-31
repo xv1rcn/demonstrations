@@ -12,8 +12,6 @@ import { Box, ButtonBase, Divider, Typography } from "@mui/material";
 import { /* useSearchParams */ } from "next/navigation";
 import { NAV_GROUPS, type SimulationNavItem } from "@/lib/simulations-nav";
 
-export const dynamic = 'force-dynamic';
-
 type NavLabelParts = {
     indexText: string;
     titleText: string;
