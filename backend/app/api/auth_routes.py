@@ -5,6 +5,7 @@ from typing import Any
 from flask import Blueprint, jsonify, request
 
 from app.auth import require_current_user
+from app.config import AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME
 from app.db import get_db_connection
 from app.repositories.user_repository import user_to_public_dict
 from app.services.user_service import authenticate_user, create_student_user
@@ -38,7 +39,7 @@ def auth_register() -> tuple[Any, int]:
 
 
 @auth_bp.post("/api/auth/login")
-def auth_login() -> tuple[dict[str, Any], int]:
+def auth_login() -> Any:
     payload = request.get_json(silent=True) or {}
     username_or_email = str(payload.get("username", "")).strip() or str(payload.get("email", "")).strip()
     password = str(payload.get("password", ""))
@@ -50,7 +51,22 @@ def auth_login() -> tuple[dict[str, Any], int]:
     if err is not None:
         return err
 
-    return {"ok": True, "user": user}, 200
+    response = jsonify({"ok": True, "user": user})
+    response.set_cookie(
+        AUTH_COOKIE_NAME,
+        "authenticated",
+        max_age=60 * 60 * 8,
+        httponly=True,
+        samesite="Lax",
+    )
+    response.set_cookie(
+        AUTH_USER_ID_COOKIE_NAME,
+        str(user["id"]),
+        max_age=60 * 60 * 8,
+        httponly=True,
+        samesite="Lax",
+    )
+    return response
 
 
 @auth_bp.get("/api/auth/me")
