@@ -4,6 +4,7 @@ import * as React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Tab, Tabs } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
+import { AuthDialog } from "@/components/auth-dialog";
 import type { SimulationNavItem } from "@/lib/simulations-nav";
 import {
     addRecentSimulationHref,
@@ -121,13 +122,17 @@ type WorkspaceMessage =
     | { type: "simulation:open"; href: string; label: string }
     | { type: "lesson:open"; href: string; label: string }
     | { type: "dashboard:open-nav" }
-    | { type: "dashboard:open-lesson" };
+    | { type: "dashboard:open-lesson" }
+    | { type: "auth:open" }
+    | { type: "auth:changed" };
 
 function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
     if (!data || typeof data !== "object") return null;
     const payload = data as { type?: unknown; href?: unknown; label?: unknown };
     if (payload.type === "dashboard:open-nav") return { type: "dashboard:open-nav" };
     if (payload.type === "dashboard:open-lesson") return { type: "dashboard:open-lesson" };
+    if (payload.type === "auth:open") return { type: "auth:open" };
+    if (payload.type === "auth:changed") return { type: "auth:changed" };
     if (payload.type === "lesson:open") {
         if (typeof payload.href !== "string" || typeof payload.label !== "string") return null;
         return { type: "lesson:open", href: payload.href, label: payload.label };
@@ -138,6 +143,15 @@ function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
 }
 
 export default function Page() {
+    const [isGlobalAuthDialogOpen, setIsGlobalAuthDialogOpen] = React.useState(false);
+
+    const broadcastAuthChanged = React.useCallback(() => {
+        const iframes = Array.from(document.querySelectorAll("iframe"));
+        iframes.forEach((frame) => {
+            frame.contentWindow?.postMessage({ type: "auth:changed" }, window.location.origin);
+        });
+    }, []);
+
     const [tabs, setTabs] = React.useState<WorkspaceTab[]>([
         { id: DASHBOARD_TAB_ID, type: "dashboard", title: "仪表盘" },
     ]);
@@ -224,6 +238,14 @@ export default function Page() {
                 openLessonTab();
                 return;
             }
+            if (message.type === "auth:open") {
+                setIsGlobalAuthDialogOpen(true);
+                return;
+            }
+            if (message.type === "auth:changed") {
+                broadcastAuthChanged();
+                return;
+            }
             if (message.type === "lesson:open") {
                 openLessonVideoTab({ href: message.href, label: message.label });
                 return;
@@ -235,7 +257,7 @@ export default function Page() {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [openExperimentTab, openLessonTab, openLessonVideoTab, openNavTab]);
+    }, [broadcastAuthChanged, openExperimentTab, openLessonTab, openLessonVideoTab, openNavTab]);
 
     const closeTab = React.useCallback((tabId: string) => {
         setTabs((prev) => {
@@ -360,6 +382,14 @@ export default function Page() {
                         </Box>
                     ))}
             </Box>
+
+            <AuthDialog
+                open={isGlobalAuthDialogOpen}
+                onClose={() => setIsGlobalAuthDialogOpen(false)}
+                onAuthed={() => {
+                    broadcastAuthChanged();
+                }}
+            />
         </Box>
     );
 }
