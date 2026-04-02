@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 
-EMAIL_RE = re.compile(r"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 def utc_now_iso() -> str:
