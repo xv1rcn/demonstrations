@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
-import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME } from '@/lib/auth';
+import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME, getBackendBaseUrl } from '@/lib/auth';
 
 export async function POST() {
+    await fetch(`${getBackendBaseUrl()}/api/auth/logout`, {
+        method: 'POST',
+        cache: 'no-store',
+    }).catch(() => null);
+
     const response = NextResponse.json({ ok: true });
     response.cookies.set({
         name: AUTH_COOKIE_NAME,
