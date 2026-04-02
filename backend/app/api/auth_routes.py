@@ -76,3 +76,23 @@ def auth_me() -> tuple[dict[str, Any], int]:
         if err is not None:
             return err
     return user_to_public_dict(me), 200
+
+
+@auth_bp.post("/api/auth/logout")
+def auth_logout() -> Any:
+    response = jsonify({"ok": True})
+    response.set_cookie(
+        AUTH_COOKIE_NAME,
+        "",
+        max_age=0,
+        httponly=True,
+        samesite="Lax",
+    )
+    response.set_cookie(
+        AUTH_USER_ID_COOKIE_NAME,
+        "",
+        max_age=0,
+        httponly=True,
+        samesite="Lax",
+    )
+    return response
