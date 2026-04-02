@@ -212,7 +212,7 @@ export function ProfileDialog({ open, user = null, onClose, onUpdated, onDeleted
             const formData = new FormData();
             formData.append('avatar', avatarFile, avatarFile.name);
 
-            const avatarResponse = await fetch('/api/auth/avatar', {
+            const avatarResponse = await fetch('/api/users/me/avatar', {
                 method: 'POST',
                 body: formData,
             }).catch(() => null);
