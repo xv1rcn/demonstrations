@@ -1,7 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { Avatar, Box, ButtonBase, Button, Chip, Typography } from "@mui/material";
+import {
+    Alert,
+    Avatar,
+    Box,
+    Button,
+    ButtonBase,
+    Chip,
+    CircularProgress,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Stack,
+    Tab,
+    Tabs,
+    TextField,
+    Typography,
+} from "@mui/material";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import CloseIcon from "@mui/icons-material/Close";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
 import {
     getRecentLessonVideos,
@@ -20,6 +40,33 @@ type RecentExperimentItem = {
     href: string;
     label: string;
 };
+
+type AuthUser = {
+    id: number;
+    username: string;
+    email: string;
+    nickname: string;
+    avatar_url: string | null;
+    role: "student" | "teacher" | "admin";
+    status: "active" | "disabled";
+};
+
+type ApiResult<T> = {
+    ok: boolean;
+    data?: T;
+    message?: string;
+};
+
+async function parseResponse<T>(response: Response): Promise<ApiResult<T>> {
+    const body = (await response.json().catch(() => null)) as (T & { message?: string }) | null;
+    if (!response.ok) {
+        return {
+            ok: false,
+            message: body?.message ?? "请求失败，请稍后重试",
+        };
+    }
+    return { ok: true, data: body as T };
+}
 
 function openNavFromDashboard() {
     if (window.parent !== window) {
@@ -60,6 +107,21 @@ function openLessonVideoFromDashboard(item: RecentLessonVideoItem) {
 }
 
 export default function DashboardPage() {
+    const [isAuthBootstrapping, setIsAuthBootstrapping] = React.useState(true);
+    const [user, setUser] = React.useState<AuthUser | null>(null);
+    const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
+    const [authTab, setAuthTab] = React.useState<"login" | "register">("login");
+    const [authError, setAuthError] = React.useState("");
+    const [authLoading, setAuthLoading] = React.useState(false);
+
+    const [loginUsername, setLoginUsername] = React.useState("");
+    const [loginPassword, setLoginPassword] = React.useState("");
+
+    const [registerUsername, setRegisterUsername] = React.useState("");
+    const [registerEmail, setRegisterEmail] = React.useState("");
+    const [registerNickname, setRegisterNickname] = React.useState("");
+    const [registerPassword, setRegisterPassword] = React.useState("");
+
     const [embedMode, setEmbedMode] = React.useState(false);
     React.useEffect(() => {
         try {
@@ -88,6 +150,105 @@ export default function DashboardPage() {
     const removeRecentLessonVideoCallback = React.useCallback((hrefToRemove: string) => {
         setRecentLessonVideos(removeRecentLessonVideo(hrefToRemove));
     }, []);
+
+    React.useEffect(() => {
+        let isMounted = true;
+        (async () => {
+            const response = await fetch("/api/auth/me", { cache: "no-store" }).catch(() => null);
+            if (!isMounted) return;
+            if (!response) {
+                setUser(null);
+                setIsAuthBootstrapping(false);
+                return;
+            }
+            const result = await parseResponse<AuthUser>(response);
+            setUser(result.ok ? (result.data ?? null) : null);
+            setIsAuthBootstrapping(false);
+        })();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const handleLogin = React.useCallback(async () => {
+        setAuthError("");
+        setAuthLoading(true);
+
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username: loginUsername.trim(), password: loginPassword }),
+        }).catch(() => null);
+
+        if (!response) {
+            setAuthError("登录服务暂不可用，请稍后重试");
+            setAuthLoading(false);
+            return;
+        }
+
+        const result = await parseResponse<{ ok: boolean; user?: AuthUser }>(response);
+        if (!result.ok || !result.data?.user) {
+            setAuthError(result.message ?? "登录失败");
+            setAuthLoading(false);
+            return;
+        }
+
+        setUser(result.data.user);
+        setAuthDialogOpen(false);
+        setLoginPassword("");
+        setAuthLoading(false);
+    }, [loginUsername, loginPassword]);
+
+    const handleRegister = React.useCallback(async () => {
+        setAuthError("");
+        setAuthLoading(true);
+
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: registerUsername.trim(),
+                email: registerEmail.trim(),
+                nickname: registerNickname.trim(),
+                password: registerPassword,
+            }),
+        }).catch(() => null);
+
+        if (!response) {
+            setAuthError("注册服务暂不可用，请稍后重试");
+            setAuthLoading(false);
+            return;
+        }
+
+        const result = await parseResponse<{ username: string }>(response);
+        if (!result.ok) {
+            setAuthError(result.message ?? "注册失败");
+            setAuthLoading(false);
+            return;
+        }
+
+        setAuthTab("login");
+        setLoginUsername(registerUsername.trim());
+        setRegisterPassword("");
+        setAuthError("注册成功，请登录");
+        setAuthLoading(false);
+    }, [registerUsername, registerEmail, registerNickname, registerPassword]);
+
+    const handleAuthIconClick = React.useCallback(async () => {
+        if (!user) {
+            setAuthError("");
+            setAuthDialogOpen(true);
+            return;
+        }
+
+        await fetch("/api/auth/logout", { method: "POST" }).catch(() => null);
+        setUser(null);
+    }, [user]);
 
 
     React.useEffect(() => {
@@ -150,21 +311,46 @@ export default function DashboardPage() {
                     }}
                 >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                        <Avatar sx={{ width: 52, height: 52, bgcolor: "primary.main", fontSize: 22 }}>
-                            D
+                        <Avatar
+                            src={user?.avatar_url ?? undefined}
+                            sx={{ width: 52, height: 52, bgcolor: "primary.main", fontSize: 22 }}
+                        >
+                            {user?.nickname?.[0]?.toUpperCase() ?? "G"}
                         </Avatar>
                         <Box>
                             <Typography variant="h6" sx={{ lineHeight: 1.2 }}>
-                                Demo User
+                                {user?.nickname ?? "游客"}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                demo.user@example.com
+                                {user?.email ?? "未登录"}
                             </Typography>
                         </Box>
+                        <Box sx={{ flex: 1 }} />
+                        {isAuthBootstrapping ? (
+                            <CircularProgress size={22} />
+                        ) : (
+                            <IconButton
+                                color={user ? "error" : "primary"}
+                                aria-label={user ? "退出登录" : "打开登录"}
+                                onClick={handleAuthIconClick}
+                            >
+                                {user ? <LogoutIcon /> : <LoginIcon />}
+                            </IconButton>
+                        )}
                     </Box>
                     <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                        <Chip size="small" label="已登录" color="success" variant="outlined" />
-                        <Chip size="small" label="学生" color="primary" variant="outlined" />
+                        <Chip
+                            size="small"
+                            label={user ? "已登录" : "未登录"}
+                            color={user ? "success" : "default"}
+                            variant="outlined"
+                        />
+                        <Chip
+                            size="small"
+                            label={user ? (user.role === "admin" ? "管理员" : user.role === "teacher" ? "教师" : "学生") : "游客"}
+                            color="primary"
+                            variant="outlined"
+                        />
                     </Box>
                     
                 </Box>
@@ -325,6 +511,92 @@ export default function DashboardPage() {
                     ))}
                 </Box>
             </Box>
+
+            <Dialog
+                open={authDialogOpen}
+                onClose={() => setAuthDialogOpen(false)}
+                fullWidth
+                maxWidth="xs"
+                slotProps={{
+                    backdrop: {
+                        sx: {
+                            backdropFilter: "blur(2px)",
+                            backgroundColor: "rgba(15, 23, 42, 0.58)",
+                        },
+                    },
+                }}
+            >
+                <DialogTitle className="flex items-center justify-between">
+                    用户登录
+                    <IconButton onClick={() => setAuthDialogOpen(false)}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Tabs value={authTab} onChange={(_event, value) => setAuthTab(value)}>
+                        <Tab value="login" label="登录" />
+                        <Tab value="register" label="注册" />
+                    </Tabs>
+
+                    <Stack spacing={2.5} sx={{ mt: 2 }}>
+                        {authError && <Alert severity={authError.includes("成功") ? "success" : "error"}>{authError}</Alert>}
+
+                        {authTab === "login" && (
+                            <>
+                                <TextField
+                                    label="用户名或邮箱"
+                                    value={loginUsername}
+                                    onChange={(event) => setLoginUsername(event.target.value)}
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="密码"
+                                    type="password"
+                                    value={loginPassword}
+                                    onChange={(event) => setLoginPassword(event.target.value)}
+                                    fullWidth
+                                />
+                                <Button variant="contained" disabled={authLoading} onClick={handleLogin}>
+                                    {authLoading ? "登录中..." : "登录"}
+                                </Button>
+                            </>
+                        )}
+
+                        {authTab === "register" && (
+                            <>
+                                <TextField
+                                    label="用户名"
+                                    value={registerUsername}
+                                    onChange={(event) => setRegisterUsername(event.target.value)}
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="邮箱"
+                                    value={registerEmail}
+                                    onChange={(event) => setRegisterEmail(event.target.value)}
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="昵称"
+                                    value={registerNickname}
+                                    onChange={(event) => setRegisterNickname(event.target.value)}
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="密码"
+                                    type="password"
+                                    value={registerPassword}
+                                    onChange={(event) => setRegisterPassword(event.target.value)}
+                                    fullWidth
+                                />
+                                <Button variant="contained" disabled={authLoading} onClick={handleRegister}>
+                                    {authLoading ? "注册中..." : "注册"}
+                                </Button>
+                            </>
+                        )}
+                    </Stack>
+                </DialogContent>
+            </Dialog>
             
         </Box>
     );
