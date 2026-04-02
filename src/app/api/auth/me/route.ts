@@ -61,3 +61,52 @@ export async function PATCH(request: Request) {
     const data = (await upstream.json().catch(() => null)) as unknown;
     return NextResponse.json(data, { status: upstream.status });
 }
+
+export async function DELETE(request: Request) {
+    const cookieStore = await cookies();
+    const userId = getAuthUserId(cookieStore);
+    if (!userId) {
+        return NextResponse.json({ message: '未登录' }, { status: 401 });
+    }
+
+    const body = await request.json().catch(() => null);
+    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-User-Id': userId,
+        },
+        body: JSON.stringify(body ?? {}),
+        cache: 'no-store',
+    }).catch(() => null);
+
+    if (!upstream) {
+        return NextResponse.json({ message: '用户服务暂不可用' }, { status: 503 });
+    }
+
+    const data = (await upstream.json().catch(() => null)) as unknown;
+    const response = NextResponse.json(data, { status: upstream.status });
+
+    if (upstream.ok) {
+        response.cookies.set({
+            name: AUTH_COOKIE_NAME,
+            value: '',
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            maxAge: 0,
+        });
+        response.cookies.set({
+            name: AUTH_USER_ID_COOKIE_NAME,
+            value: '',
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            maxAge: 0,
+        });
+    }
+
+    return response;
+}

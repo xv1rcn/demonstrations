@@ -147,6 +147,35 @@ def change_my_password() -> tuple[dict[str, str], int]:
     return {"message": "密码修改成功"}, 200
 
 
+@user_bp.delete("/api/users/me")
+def delete_my_account() -> tuple[dict[str, Any], int]:
+    payload = request.get_json(silent=True) or {}
+    password = str(payload.get("password", ""))
+
+    if not password:
+        return {"message": "password 不能为空"}, 400
+
+    with get_db_connection() as connection:
+        me, err = require_current_user(connection)
+        if err is not None:
+            return err
+
+        if not check_password_hash(str(me["password_hash"]), password):
+            return {"message": "密码错误"}, 401
+
+        connection.execute(
+            """
+            UPDATE users
+            SET status = 'disabled', deleted_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (me["id"],),
+        )
+        connection.commit()
+
+    return {"ok": True}, 200
+
+
 @user_bp.post("/api/users/me/avatar")
 def upload_my_avatar() -> tuple[dict[str, Any], int]:
     with get_db_connection() as connection:

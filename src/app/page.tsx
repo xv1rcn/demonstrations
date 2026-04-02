@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Tab, Tabs } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { AuthDialog } from "@/components/auth-dialog";
+import { ProfileDialog } from "@/components/profile-dialog";
 import type { SimulationNavItem } from "@/lib/simulations-nav";
 import {
     addRecentSimulationHref,
@@ -124,6 +125,7 @@ type WorkspaceMessage =
     | { type: "dashboard:open-nav" }
     | { type: "dashboard:open-lesson" }
     | { type: "auth:open" }
+    | { type: "profile:open" }
     | { type: "auth:changed" };
 
 function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
@@ -132,6 +134,7 @@ function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
     if (payload.type === "dashboard:open-nav") return { type: "dashboard:open-nav" };
     if (payload.type === "dashboard:open-lesson") return { type: "dashboard:open-lesson" };
     if (payload.type === "auth:open") return { type: "auth:open" };
+    if (payload.type === "profile:open") return { type: "profile:open" };
     if (payload.type === "auth:changed") return { type: "auth:changed" };
     if (payload.type === "lesson:open") {
         if (typeof payload.href !== "string" || typeof payload.label !== "string") return null;
@@ -144,6 +147,7 @@ function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
 
 export default function Page() {
     const [isGlobalAuthDialogOpen, setIsGlobalAuthDialogOpen] = React.useState(false);
+    const [isGlobalProfileDialogOpen, setIsGlobalProfileDialogOpen] = React.useState(false);
 
     const broadcastAuthChanged = React.useCallback(() => {
         const iframes = Array.from(document.querySelectorAll("iframe"));
@@ -240,6 +244,10 @@ export default function Page() {
             }
             if (message.type === "auth:open") {
                 setIsGlobalAuthDialogOpen(true);
+                return;
+            }
+            if (message.type === "profile:open") {
+                setIsGlobalProfileDialogOpen(true);
                 return;
             }
             if (message.type === "auth:changed") {
@@ -387,6 +395,19 @@ export default function Page() {
                 open={isGlobalAuthDialogOpen}
                 onClose={() => setIsGlobalAuthDialogOpen(false)}
                 onAuthed={() => {
+                    broadcastAuthChanged();
+                }}
+            />
+
+            <ProfileDialog
+                open={isGlobalProfileDialogOpen}
+                user={null}
+                onClose={() => setIsGlobalProfileDialogOpen(false)}
+                onUpdated={() => {
+                    broadcastAuthChanged();
+                }}
+                onDeleted={() => {
+                    setIsGlobalProfileDialogOpen(false);
                     broadcastAuthChanged();
                 }}
             />

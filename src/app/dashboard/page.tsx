@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { ProfileDialog } from "@/components/profile-dialog";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
 import {
     getRecentLessonVideos,
@@ -101,6 +103,7 @@ export default function DashboardPage() {
     const [isAuthBootstrapping, setIsAuthBootstrapping] = React.useState(true);
     const [user, setUser] = React.useState<AuthUser | null>(null);
     const [authSyncTick, setAuthSyncTick] = React.useState(0);
+    const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
 
     const [embedMode, setEmbedMode] = React.useState(false);
     React.useEffect(() => {
@@ -167,6 +170,15 @@ export default function DashboardPage() {
         if (window.parent !== window) {
             window.parent.postMessage({ type: "auth:changed" }, window.location.origin);
         }
+    }, [user]);
+
+    const handleProfileIconClick = React.useCallback(() => {
+        if (!user) return;
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: "profile:open" }, window.location.origin);
+            return;
+        }
+        setProfileDialogOpen(true);
     }, [user]);
 
 
@@ -262,13 +274,24 @@ export default function DashboardPage() {
                         {isAuthBootstrapping ? (
                             <CircularProgress size={22} />
                         ) : (
-                            <IconButton
-                                color={user ? "error" : "primary"}
-                                aria-label={user ? "退出登录" : "打开登录"}
-                                onClick={handleAuthIconClick}
-                            >
-                                {user ? <LogoutIcon /> : <LoginIcon />}
-                            </IconButton>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                                {user && (
+                                    <IconButton
+                                        color="primary"
+                                        aria-label="编辑个人资料"
+                                        onClick={handleProfileIconClick}
+                                    >
+                                        <ManageAccountsIcon />
+                                    </IconButton>
+                                )}
+                                <IconButton
+                                    color={user ? "error" : "primary"}
+                                    aria-label={user ? "退出登录" : "打开登录"}
+                                    onClick={handleAuthIconClick}
+                                >
+                                    {user ? <LogoutIcon /> : <LoginIcon />}
+                                </IconButton>
+                            </Box>
                         )}
                     </Box>
                     <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -445,7 +468,20 @@ export default function DashboardPage() {
                 </Box>
             </Box>
 
-
+            {!embedMode && (
+                <ProfileDialog
+                    open={profileDialogOpen && Boolean(user)}
+                    user={user}
+                    onClose={() => setProfileDialogOpen(false)}
+                    onUpdated={(updatedUser) => {
+                        setUser(updatedUser);
+                    }}
+                    onDeleted={() => {
+                        setUser(null);
+                        setProfileDialogOpen(false);
+                    }}
+                />
+            )}
         </Box>
     );
 }
