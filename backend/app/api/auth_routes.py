@@ -4,6 +4,9 @@ from typing import Any
 
 from flask import Blueprint, jsonify, request
 
+from app.auth import require_current_user
+from app.db import get_db_connection
+from app.repositories.user_repository import user_to_public_dict
 from app.services.user_service import authenticate_user, create_student_user
 from app.utils import is_valid_email, normalize_email
 
@@ -48,3 +51,12 @@ def auth_login() -> tuple[dict[str, Any], int]:
         return err
 
     return {"ok": True, "user": user}, 200
+
+
+@auth_bp.get("/api/auth/me")
+def auth_me() -> tuple[dict[str, Any], int]:
+    with get_db_connection() as connection:
+        me, err = require_current_user(connection)
+        if err is not None:
+            return err
+    return user_to_public_dict(me), 200
