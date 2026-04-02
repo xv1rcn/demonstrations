@@ -6,7 +6,7 @@ from typing import Any
 
 def user_to_public_dict(row: sqlite3.Row) -> dict[str, Any]:
     avatar_filename = row["avatar_filename"]
-    avatar_url = f"/uploads/avatars/{avatar_filename}" if avatar_filename else None
+    avatar_url = f"/api/uploads/avatars/{avatar_filename}" if avatar_filename else None
     return {
         "id": row["id"],
         "username": row["username"],

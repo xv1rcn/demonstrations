@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getBackendBaseUrl } from '@/lib/auth';
+import { getBackendApiUrl } from '@/lib/auth';
 
 export async function POST(request: Request) {
     const body = await request.json().catch(() => null);
 
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/auth/register`, {
+    const upstream = await fetch(getBackendApiUrl('/auth/register'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import {
     AUTH_COOKIE_NAME,
     AUTH_USER_ID_COOKIE_NAME,
-    getBackendBaseUrl,
+    getBackendApiUrl,
 } from '@/lib/auth';
 
 export async function PUT(request: Request) {
@@ -16,7 +16,7 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json().catch(() => null);
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me/password`, {
+    const upstream = await fetch(getBackendApiUrl('/users/me/password'), {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

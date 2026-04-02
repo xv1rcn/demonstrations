@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import {
     AUTH_COOKIE_NAME,
     AUTH_USER_ID_COOKIE_NAME,
-    getBackendBaseUrl,
+    getBackendApiUrl,
 } from '@/lib/auth';
 
 function getAuthUserId(cookieStore: Awaited<ReturnType<typeof cookies>>): string | null {
@@ -20,7 +20,7 @@ export async function GET() {
         return NextResponse.json({ message: '未登录' }, { status: 401 });
     }
 
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me`, {
+    const upstream = await fetch(getBackendApiUrl('/users/me'), {
         method: 'GET',
         headers: {
             'X-User-Id': userId,
@@ -44,7 +44,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json().catch(() => null);
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me`, {
+    const upstream = await fetch(getBackendApiUrl('/users/me'), {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export async function DELETE(request: Request) {
     }
 
     const body = await request.json().catch(() => null);
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me`, {
+    const upstream = await fetch(getBackendApiUrl('/users/me'), {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

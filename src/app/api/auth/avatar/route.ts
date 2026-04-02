@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import {
     AUTH_COOKIE_NAME,
     AUTH_USER_ID_COOKIE_NAME,
-    getBackendBaseUrl,
+    getBackendApiUrl,
 } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const upstreamForm = new FormData();
     upstreamForm.append('avatar', avatar, avatar.name);
 
-    const upstream = await fetch(`${getBackendBaseUrl()}/api/users/me/avatar`, {
+    const upstream = await fetch(getBackendApiUrl('/users/me/avatar'), {
         method: 'POST',
         headers: {
             'X-User-Id': userId,

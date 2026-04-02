@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME, getBackendBaseUrl } from '@/lib/auth';
+import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME, getBackendApiUrl } from '@/lib/auth';
 
 export async function POST(request: Request) {
     const body = await request.json().catch(() => null);
@@ -11,9 +11,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: '用户名或密码错误' }, { status: 401 });
     }
 
-    const backendBaseUrl = getBackendBaseUrl();
-
-    const upstream = await fetch(`${backendBaseUrl}/api/auth/login`, {
+    const upstream = await fetch(getBackendApiUrl('/auth/login'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

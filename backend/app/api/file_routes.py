@@ -10,3 +10,8 @@ file_bp = Blueprint("files", __name__)
 @file_bp.get("/uploads/avatars/<path:filename>")
 def get_avatar(filename: str):
     return send_from_directory(AVATAR_DIR, filename)
+
+
+@file_bp.get("/api/uploads/avatars/<path:filename>")
+def get_avatar_api(filename: str):
+    return send_from_directory(AVATAR_DIR, filename)

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME, getBackendBaseUrl } from '@/lib/auth';
+import { AUTH_COOKIE_NAME, AUTH_USER_ID_COOKIE_NAME, getBackendApiUrl } from '@/lib/auth';
 
 export async function POST() {
-    await fetch(`${getBackendBaseUrl()}/api/auth/logout`, {
+    await fetch(getBackendApiUrl('/auth/logout'), {
         method: 'POST',
         cache: 'no-store',
     }).catch(() => null);
