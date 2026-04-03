@@ -14,6 +14,7 @@ import {
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { ProfileDialog } from "@/components/profile-dialog";
 import { NAV_GROUPS } from "@/lib/simulations-nav";
 import {
@@ -27,7 +28,7 @@ import {
     RECENT_SIMULATION_HREFS_KEY,
     removeRecentSimulationHref,
 } from "@/lib/simulation-history";
-import { LESSONS_ROUTE, SIMULATIONS_ROUTE, buildSimulationUrl } from "@/lib/routes";
+import { LESSONS_ROUTE, SIMULATIONS_ROUTE, ADMIN_ROUTE, buildSimulationUrl } from "@/lib/routes";
 
 type RecentExperimentItem = {
     href: string;
@@ -308,6 +309,17 @@ export default function DashboardPage() {
                             variant="outlined"
                         />
                     </Box>
+                    {user?.role === "admin" && (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            startIcon={<AdminPanelSettingsIcon />}
+                            onClick={() => window.location.assign(ADMIN_ROUTE)}
+                            fullWidth
+                        >
+                            打开管理员面板
+                        </Button>
+                    )}
                     
                 </Box>
 

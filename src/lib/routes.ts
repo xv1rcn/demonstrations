@@ -1,4 +1,5 @@
 export const DASHBOARD_ROUTE = "/dashboard";
+export const ADMIN_ROUTE = "/admin";
 export const SIMULATIONS_ROUTE = "/simulations";
 export const LESSONS_ROUTE = "/lessons";
 
