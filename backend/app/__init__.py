@@ -4,6 +4,7 @@ from flask import Flask
 
 from app.api.admin_routes import admin_bp
 from app.api.auth_routes import auth_bp
+from app.api.comment_routes import comment_bp
 from app.api.file_routes import file_bp
 from app.api.system_routes import system_bp
 from app.api.user_routes import user_bp
@@ -18,6 +19,7 @@ def create_app() -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(comment_bp)
 
     init_db()
     return app

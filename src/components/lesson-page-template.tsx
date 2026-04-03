@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import BlurOnIcon from "@mui/icons-material/BlurOn";
 import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
 import FlareIcon from "@mui/icons-material/Flare";
@@ -8,9 +9,10 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import ScienceIcon from "@mui/icons-material/Science";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WavesIcon from "@mui/icons-material/Waves";
-import { Box, ButtonBase } from "@mui/material";
+import { Box, ButtonBase, Tab, Tabs } from "@mui/material";
 import { type Source } from "plyr";
 import "plyr/dist/plyr.css";
+import { CommentsPanel } from "@/components/comments-panel";
 import { openSimulation, type SimulationNavItem } from "@/lib/simulations-nav";
 import { addRecentLessonVideo } from "@/lib/lesson-video-history";
 
@@ -96,9 +98,11 @@ const experimentButtonSx = {
 };
 
 export default function LessonPageTemplate({ video, experiments }: LessonPageTemplateProps) {
+    const pathname = usePathname();
     const playerRef = React.useRef<InstanceType<typeof import("plyr").default> | null>(null);
     const videoElRef = React.useRef<HTMLVideoElement | null>(null);
     const videoUrl = video.videoUrl;
+    const [tab, setTab] = React.useState<"video" | "comments">("video");
 
     React.useEffect(() => {
         if (!videoElRef.current) return;
@@ -172,118 +176,148 @@ export default function LessonPageTemplate({ video, experiments }: LessonPageTem
 
     return (
         <Box
-            className="min-h-screen w-full"
+            className="min-h-screen h-full w-full flex flex-col"
             sx={{
-                px: { xs: 2, md: 3 },
-                py: { xs: 2, md: 3 },
                 backgroundColor: "background.default",
             }}
         >
-            <Box
-                sx={{
-                    display: "grid",
-                    gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) 280px" },
-                    gap: { xs: 2, md: 2 },
-                    alignItems: "stretch",
-                }}
-            >
-                <Box
+            <Box sx={{ borderBottom: 1, borderColor: "divider", px: 2, pt: 1 }}>
+                <Tabs
+                    value={tab}
+                    onChange={(_event, value) => setTab(value)}
+                    aria-label="科普视频页面标签页"
                     sx={{
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 2,
-                        backgroundColor: "background.paper",
-                        boxShadow: 2,
-                        overflow: "hidden",
-                        p: { xs: 1, md: 1.5 },
+                        minHeight: 48,
+                        '& .MuiTab-root': {
+                            fontSize: 16,
+                            minHeight: 48,
+                            textTransform: 'none',
+                        },
                     }}
                 >
-                    <Box
-                        sx={{
-                            width: "100%",
-                            backgroundColor: "#000",
-                        }}
-                    >
-                        <video
-                            ref={videoElRef}
-                            controls
-                            playsInline
-                            style={{ width: "100%", maxHeight: 640, backgroundColor: "#000" }}
+                    <Tab value="video" label="科普视频" />
+                    <Tab value="comments" label="讨论区" />
+                </Tabs>
+            </Box>
+
+            {tab === "video" && (
+                <Box className="flex-1 min-h-0 overflow-auto px-6 py-4">
+                    <Box className="min-h-full flex items-center">
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) 280px" },
+                                gap: { xs: 2, md: 2 },
+                                alignItems: "stretch",
+                                width: "100%",
+                            }}
                         >
-                            <source src={videoUrl} type="video/mp4" />
-                            您的浏览器不支持 video 标签。
-                        </video>
+                            <Box
+                                sx={{
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                    borderRadius: 2,
+                                    backgroundColor: "background.paper",
+                                    boxShadow: 2,
+                                    overflow: "hidden",
+                                    p: { xs: 1, md: 1.5 },
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: "100%",
+                                        backgroundColor: "#000",
+                                    }}
+                                >
+                                    <video
+                                        ref={videoElRef}
+                                        controls
+                                        playsInline
+                                        style={{ width: "100%", maxHeight: 640, backgroundColor: "#000" }}
+                                    >
+                                        <source src={videoUrl} type="video/mp4" />
+                                        您的浏览器不支持 video 标签。
+                                    </video>
+                                </Box>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                    borderRadius: 2,
+                                    backgroundColor: "background.paper",
+                                    boxShadow: 2,
+                                    p: { xs: 1.5, md: 1.5 },
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 1.25,
+                                }}
+                            >
+                                <Box sx={{ fontWeight: 600, fontSize: 16 }}>相关仿真实验</Box>
+                                {experiments.map((item) => {
+                                    const { indexText, titleText } = splitNavLabel(item.label);
+                                    const navIcon = getNavIcon(item.href);
+                                    return (
+                                        <ButtonBase
+                                            key={item.href}
+                                            onClick={() => openSimulation(item)}
+                                            sx={experimentButtonSx}
+                                            aria-label={`打开 ${item.label}`}
+                                        >
+                                            <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        position: "absolute",
+                                                        left: -2,
+                                                        top: 0,
+                                                        minWidth: 30,
+                                                        height: 26,
+                                                        px: 1,
+                                                        borderRadius: 1,
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        gap: 0.5,
+                                                        fontSize: 15,
+                                                        fontWeight: 600,
+                                                        color: "primary.main",
+                                                    }}
+                                                >
+                                                    {navIcon}
+                                                    {indexText}
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        position: "absolute",
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        fontSize: 15,
+                                                        fontWeight: 600,
+                                                        color: "text.primary",
+                                                        lineHeight: 1.4,
+                                                        maxWidth: "88%",
+                                                        textAlign: "right",
+                                                    }}
+                                                >
+                                                    {titleText}
+                                                </Box>
+                                            </Box>
+                                        </ButtonBase>
+                                    );
+                                })}
+                            </Box>
+                        </Box>
                     </Box>
                 </Box>
+            )}
 
-                <Box
-                    sx={{
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 2,
-                        backgroundColor: "background.paper",
-                        boxShadow: 2,
-                        p: { xs: 1.5, md: 1.5 },
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1.25,
-                    }}
-                >
-                    <Box sx={{ fontWeight: 600, fontSize: 16 }}>相关仿真实验</Box>
-                    {experiments.map((item) => {
-                        const { indexText, titleText } = splitNavLabel(item.label);
-                        const navIcon = getNavIcon(item.href);
-                        return (
-                            <ButtonBase
-                                key={item.href}
-                                onClick={() => openSimulation(item)}
-                                sx={experimentButtonSx}
-                                aria-label={`打开 ${item.label}`}
-                            >
-                                <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-                                    <Box
-                                        component="span"
-                                        sx={{
-                                            position: "absolute",
-                                            left: -2,
-                                            top: 0,
-                                            minWidth: 30,
-                                            height: 26,
-                                            px: 1,
-                                            borderRadius: 1,
-                                            display: "inline-flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            gap: 0.5,
-                                            fontSize: 15,
-                                            fontWeight: 600,
-                                            color: "primary.main",
-                                        }}
-                                    >
-                                        {navIcon}
-                                        {indexText}
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            position: "absolute",
-                                            right: 0,
-                                            bottom: 0,
-                                            fontSize: 15,
-                                            fontWeight: 600,
-                                            color: "text.primary",
-                                            lineHeight: 1.4,
-                                            maxWidth: "88%",
-                                            textAlign: "right",
-                                        }}
-                                    >
-                                        {titleText}
-                                    </Box>
-                                </Box>
-                            </ButtonBase>
-                        );
-                    })}
+            {tab === "comments" && (
+                <Box className="flex-1 min-h-0 overflow-auto px-6 py-4">
+                    <CommentsPanel targetType="lesson" targetTitle={video.label || pathname} />
                 </Box>
-            </Box>
+            )}
         </Box>
     );
 }

@@ -11,6 +11,7 @@ import {
     Tab,
     Tabs,
 } from '@mui/material';
+import { usePathname } from 'next/navigation';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -18,6 +19,7 @@ import { ParameterControls, type ParameterItem } from '@/components/parameter-co
 import { SimulationTipBubble } from '@/components/simulation-tip-bubble';
 import { SimulationKnowledgePanel } from '@/components/simulation-knowledge-panel';
 import { SimulationHintDialog } from '@/components/simulation-hint-dialog';
+import { CommentsPanel } from '@/components/comments-panel';
 import type { KnowledgeQuestion, SimulationHint, SimulationPreset } from '@/components/simulation-types';
 
 export type {
@@ -52,8 +54,9 @@ export function SimulationPageTemplate({
     summaryItems,
     applicationItems,
 }: SimulationPageTemplateProps) {
+    const pathname = usePathname();
     const fallbackPresetTip = '试着自由探索参数，看看会发生什么变化。';
-    const [tab, setTab] = React.useState<'simulation' | 'knowledge'>('simulation');
+    const [tab, setTab] = React.useState<'simulation' | 'knowledge' | 'comments'>('simulation');
     const [isHintOpen, setIsHintOpen] = React.useState(false);
     const [hasAutoOpenedHint, setHasAutoOpenedHint] = React.useState(false);
     const [isPresetTipExpanded, setIsPresetTipExpanded] = React.useState(false);
@@ -168,6 +171,11 @@ export function SimulationPageTemplate({
         setPresetTip(fallbackPresetTip);
     }, [isWaitingSnapshot, isPresetSynced, parameterSignature, presetSnapshotSignature]);
 
+    const targetTitle = React.useMemo(() => {
+        const key = pathname.split('/').filter(Boolean).pop() ?? 'simulation';
+        return key.replace(/-/g, ' ');
+    }, [pathname]);
+
     return (
         <Box className="min-h-screen h-full w-full flex flex-col">
             <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 2, pt: 1 }}>
@@ -186,6 +194,7 @@ export function SimulationPageTemplate({
                 >
                     <Tab value="simulation" label="模拟仿真" />
                     <Tab value="knowledge" label="知识学习" />
+                    <Tab value="comments" label="讨论区" />
                 </Tabs>
             </Box>
 
@@ -200,6 +209,7 @@ export function SimulationPageTemplate({
                                             <Stack
                                                 spacing={1}
                                                 direction="row"
+                                                useFlexGap
                                                 className="flex-wrap"
                                             >
                                                 {presets.map((preset, index) => (
@@ -208,6 +218,7 @@ export function SimulationPageTemplate({
                                                         size="small"
                                                         variant="outlined"
                                                         onClick={() => handlePresetClick(preset, index)}
+                                                        sx={{ flexShrink: 0 }}
                                                     >
                                                         {preset.label}
                                                     </Button>
@@ -272,6 +283,12 @@ export function SimulationPageTemplate({
                     summaryItems={summaryItems}
                     applicationItems={applicationItems}
                 />
+            )}
+
+            {tab === 'comments' && (
+                <Box className="flex-1 min-h-0 overflow-auto px-6 py-4">
+                    <CommentsPanel targetType="simulation" targetTitle={targetTitle} />
+                </Box>
             )}
 
             {hint && (

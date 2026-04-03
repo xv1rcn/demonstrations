@@ -28,7 +28,7 @@ import {
     RECENT_SIMULATION_HREFS_KEY,
     removeRecentSimulationHref,
 } from "@/lib/simulation-history";
-import { LESSONS_ROUTE, SIMULATIONS_ROUTE, ADMIN_ROUTE, buildSimulationUrl } from "@/lib/routes";
+import { LESSONS_ROUTE, SIMULATIONS_ROUTE, ADMIN_ROUTE, COMMENTS_ROUTE, buildSimulationUrl } from "@/lib/routes";
 
 type RecentExperimentItem = {
     href: string;
@@ -98,6 +98,14 @@ function openLessonVideoFromDashboard(item: RecentLessonVideoItem) {
         return;
     }
     window.location.assign(item.href);
+}
+
+function openMessageBoardFromDashboard() {
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: "dashboard:open-comments" }, window.location.origin);
+        return;
+    }
+    window.location.assign(COMMENTS_ROUTE);
 }
 
 export default function DashboardPage() {
@@ -320,6 +328,14 @@ export default function DashboardPage() {
                             打开管理员面板
                         </Button>
                     )}
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={openMessageBoardFromDashboard}
+                        fullWidth
+                    >
+                        打开留言板
+                    </Button>
                     
                 </Box>
 
@@ -478,6 +494,7 @@ export default function DashboardPage() {
                         </Box>
                     ))}
                 </Box>
+
             </Box>
 
             {!embedMode && (

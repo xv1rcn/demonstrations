@@ -15,6 +15,7 @@ import {
 import {
     buildEmbedUrl,
     buildSimulationUrl,
+    COMMENTS_ROUTE,
     DASHBOARD_ROUTE,
     LESSONS_ROUTE,
     SIMULATIONS_ROUTE,
@@ -25,7 +26,8 @@ type WorkspaceTab =
     | { id: string; type: "nav"; title: string }
     | { id: string; type: "experiment"; title: string; href: string }
     | { id: string; type: "lesson"; title: string }
-    | { id: string; type: "lessonVideo"; title: string; href: string };
+    | { id: string; type: "lessonVideo"; title: string; href: string }
+    | { id: string; type: "messageBoard"; title: string };
 
 type ExperimentTabLabelProps = {
     tab: WorkspaceTab;
@@ -37,6 +39,7 @@ type ExperimentTabLabelProps = {
 const DASHBOARD_TAB_ID = "dashboard-home";
 const NAV_TAB_ID = "nav-home";
 const LESSON_TAB_ID = "lesson-home";
+const MESSAGE_BOARD_TAB_ID = "message-board-home";
 const TAB_BAR_SX: SxProps<Theme> = {
     minHeight: 48,
     "& .MuiTab-root": {
@@ -124,6 +127,7 @@ type WorkspaceMessage =
     | { type: "lesson:open"; href: string; label: string }
     | { type: "dashboard:open-nav" }
     | { type: "dashboard:open-lesson" }
+    | { type: "dashboard:open-comments" }
     | { type: "auth:open" }
     | { type: "profile:open" }
     | { type: "auth:changed" };
@@ -133,6 +137,7 @@ function parseWorkspaceMessage(data: unknown): WorkspaceMessage | null {
     const payload = data as { type?: unknown; href?: unknown; label?: unknown };
     if (payload.type === "dashboard:open-nav") return { type: "dashboard:open-nav" };
     if (payload.type === "dashboard:open-lesson") return { type: "dashboard:open-lesson" };
+    if (payload.type === "dashboard:open-comments") return { type: "dashboard:open-comments" };
     if (payload.type === "auth:open") return { type: "auth:open" };
     if (payload.type === "profile:open") return { type: "profile:open" };
     if (payload.type === "auth:changed") return { type: "auth:changed" };
@@ -202,6 +207,18 @@ export default function Page() {
         });
     }, []);
 
+    const openMessageBoardTab = React.useCallback(() => {
+        setTabs((prev) => {
+            const existed = prev.find((tab) => tab.type === "messageBoard");
+            if (existed) {
+                setActiveTabId(existed.id);
+                return prev;
+            }
+            setActiveTabId(MESSAGE_BOARD_TAB_ID);
+            return [...prev, { id: MESSAGE_BOARD_TAB_ID, type: "messageBoard", title: "留言板" }];
+        });
+    }, []);
+
     const openExperimentTab = React.useCallback((item: SimulationNavItem) => {
         setTabs((prev) => {
             const existed = prev.find((tab) => tab.type === "experiment" && tab.href === item.href);
@@ -242,6 +259,10 @@ export default function Page() {
                 openLessonTab();
                 return;
             }
+            if (message.type === "dashboard:open-comments") {
+                openMessageBoardTab();
+                return;
+            }
             if (message.type === "auth:open") {
                 setIsGlobalAuthDialogOpen(true);
                 return;
@@ -265,7 +286,7 @@ export default function Page() {
         return () => {
             window.removeEventListener("message", onMessage);
         };
-    }, [broadcastAuthChanged, openExperimentTab, openLessonTab, openLessonVideoTab, openNavTab]);
+    }, [broadcastAuthChanged, openExperimentTab, openLessonTab, openLessonVideoTab, openMessageBoardTab, openNavTab]);
 
     const closeTab = React.useCallback((tabId: string) => {
         setTabs((prev) => {
@@ -361,6 +382,15 @@ export default function Page() {
                         component="iframe"
                         src={buildEmbedUrl(LESSONS_ROUTE)}
                         title="科普视频列表"
+                        sx={WORKSPACE_PANEL_SX}
+                    />
+                )}
+
+                {activeTab.type === "messageBoard" && (
+                    <Box
+                        component="iframe"
+                        src={buildEmbedUrl(COMMENTS_ROUTE)}
+                        title="留言板"
                         sx={WORKSPACE_PANEL_SX}
                     />
                 )}
