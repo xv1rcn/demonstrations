@@ -9,15 +9,19 @@ import {
     Chip,
     CircularProgress,
     Divider,
+    IconButton,
     Paper,
     Stack,
     TextField,
+    Tooltip,
     Typography,
 } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { usePathname } from 'next/navigation';
 import {
     CommentItem,
     createComment,
+    deleteComment,
     fetchTargetComments,
     moderateComment,
 } from '@/lib/comments-api';
@@ -41,13 +45,13 @@ function roleLabel(role: AuthUser['role']): string {
 
 function statusLabel(status: CommentItem['status']): string {
     if (status === 'approved') return '已通过';
-    if (status === 'rejected') return '已驳回';
+    if (status === 'deleted') return '已删除';
     return '待审核';
 }
 
 function statusColor(status: CommentItem['status']): 'success' | 'error' | 'warning' {
     if (status === 'approved') return 'success';
-    if (status === 'rejected') return 'error';
+    if (status === 'deleted') return 'error';
     return 'warning';
 }
 
@@ -61,6 +65,7 @@ export function CommentsPanel({ targetType, targetTitle }: CommentsPanelProps) {
     const [feedback, setFeedback] = React.useState<{ type: 'success' | 'error'; message: string } | null>(null);
     const [draft, setDraft] = React.useState('');
     const [saving, setSaving] = React.useState(false);
+    const [deletingCommentId, setDeletingCommentId] = React.useState<number | null>(null);
 
     const [replyDraft, setReplyDraft] = React.useState<Record<number, string>>({});
     const [replyOpenFor, setReplyOpenFor] = React.useState<number | null>(null);
@@ -146,13 +151,33 @@ export function CommentsPanel({ targetType, targetTitle }: CommentsPanelProps) {
                 setFeedback({ type: 'error', message: result.message || '审核失败' });
                 return;
             }
-            setFeedback({ type: 'success', message: action === 'approve' ? '审核通过' : '已驳回' });
+            setFeedback({ type: 'success', message: action === 'approve' ? '审核通过' : '已删除' });
+            await loadComments();
+        },
+        [loadComments],
+    );
+
+    const handleDelete = React.useCallback(
+        async (commentId: number) => {
+            setDeletingCommentId(commentId);
+            const result = await deleteComment(commentId);
+            setDeletingCommentId(null);
+
+            if (!result.ok) {
+                setFeedback({ type: 'error', message: result.message || '删除失败' });
+                return;
+            }
+
+            setFeedback({ type: 'success', message: '评论已删除' });
             await loadComments();
         },
         [loadComments],
     );
 
     const renderComment = (comment: CommentItem, depth: number = 0) => {
+        const canDelete = Boolean(currentUser && (isModerator || currentUser.id === comment.author.id));
+        const shouldShowStatus = isModerator || comment.status !== 'approved';
+
         return (
             <Box key={comment.id} sx={{ ml: depth > 0 ? 3 : 0, mt: 1.25 }}>
                 <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 1.5 }}>
@@ -162,12 +187,14 @@ export function CommentsPanel({ targetType, targetTitle }: CommentsPanelProps) {
                         </Avatar>
                         <Typography variant="subtitle2">{comment.author.nickname}</Typography>
                         <Chip size="small" label={roleLabel(comment.author.role)} variant="outlined" />
-                        <Chip
-                            size="small"
-                            label={statusLabel(comment.status)}
-                            color={statusColor(comment.status)}
-                            variant="outlined"
-                        />
+                        {shouldShowStatus && (
+                            <Chip
+                                size="small"
+                                label={statusLabel(comment.status)}
+                                color={statusColor(comment.status)}
+                                variant="outlined"
+                            />
+                        )}
                         <Box sx={{ flex: 1 }} />
                         <Typography variant="caption" color="text.secondary">
                             {new Date(comment.created_at).toLocaleString('zh-CN')}
@@ -190,9 +217,22 @@ export function CommentsPanel({ targetType, targetTitle }: CommentsPanelProps) {
                                     通过
                                 </Button>
                                 <Button size="small" color="error" onClick={() => handleModerate(comment.id, 'reject')}>
-                                    驳回
+                                    驳回并删除
                                 </Button>
                             </>
+                        )}
+                        {canDelete && (
+                            <Tooltip title="删除评论">
+                                <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleDelete(comment.id)}
+                                    disabled={deletingCommentId === comment.id}
+                                    aria-label="删除评论"
+                                >
+                                    <DeleteOutlineIcon fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
                         )}
                     </Stack>
 

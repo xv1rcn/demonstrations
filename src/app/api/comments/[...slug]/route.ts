@@ -85,3 +85,32 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     const data = (await upstream.json().catch(() => null)) as unknown;
     return NextResponse.json(data, { status: upstream.status });
 }
+
+export async function DELETE(_request: Request, { params }: RouteParams) {
+    const { slug } = await params;
+    if (slug.length !== 1 || !/^\d+$/.test(slug[0])) {
+        return NextResponse.json({ message: '不存在的路由' }, { status: 404 });
+    }
+
+    const cookieStore = await cookies();
+    const userId = getAuthUserId(cookieStore);
+    if (!userId) {
+        return NextResponse.json({ message: '未登录' }, { status: 401 });
+    }
+
+    const commentId = slug[0];
+    const upstream = await fetch(getBackendApiUrl(`/comments/${commentId}`), {
+        method: 'DELETE',
+        headers: {
+            'X-User-Id': userId,
+        },
+        cache: 'no-store',
+    }).catch(() => null);
+
+    if (!upstream) {
+        return NextResponse.json({ message: '评论服务暂不可用' }, { status: 503 });
+    }
+
+    const data = (await upstream.json().catch(() => null)) as unknown;
+    return NextResponse.json(data, { status: upstream.status });
+}

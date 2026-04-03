@@ -11,9 +11,32 @@ from app.db import get_db_connection
 comment_bp = Blueprint("comments", __name__)
 
 COMMENT_TARGET_TYPES = {"simulation", "lesson", "feedback"}
-COMMENT_STATUSES = {"pending", "approved", "rejected"}
+COMMENT_STATUSES = {"pending", "approved", "deleted"}
 MODERATOR_ROLES = {"teacher", "admin"}
 MAX_COMMENT_LENGTH = 500
+
+
+def _soft_delete_comment_tree(connection: sqlite3.Connection, root_comment_id: int) -> None:
+    connection.execute(
+        """
+        WITH RECURSIVE subtree(id) AS (
+            SELECT id
+            FROM comments
+            WHERE id = ? AND deleted_at IS NULL
+            UNION ALL
+            SELECT c.id
+            FROM comments AS c
+            JOIN subtree AS s ON c.parent_id = s.id
+            WHERE c.deleted_at IS NULL
+        )
+        UPDATE comments
+        SET status = 'deleted',
+            deleted_at = CURRENT_TIMESTAMP,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id IN (SELECT id FROM subtree)
+        """,
+        (root_comment_id,),
+    )
 
 
 def _to_public_comment_dict(row: sqlite3.Row) -> dict[str, Any]:
@@ -269,8 +292,6 @@ def moderate_comment(comment_id: int) -> tuple[dict[str, Any], int]:
     if action not in {"approve", "reject"}:
         return {"message": "action 必须是 approve/reject"}, 400
 
-    next_status = "approved" if action == "approve" else "rejected"
-
     with get_db_connection() as connection:
         me, err = require_current_user(connection)
         if err is not None:
@@ -285,21 +306,67 @@ def moderate_comment(comment_id: int) -> tuple[dict[str, Any], int]:
         if existing is None:
             return {"message": "评论不存在"}, 404
 
+        if action == "approve":
+            connection.execute(
+                """
+                UPDATE comments
+                SET status = 'approved',
+                    reviewed_by = ?,
+                    reviewed_at = CURRENT_TIMESTAMP,
+                    deleted_at = NULL,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (me["id"], comment_id),
+            )
+            connection.commit()
+
+            row = _query_comment_rows(
+                connection,
+                "c.id = ?",
+                (comment_id,),
+                "ORDER BY c.id ASC",
+            )[0]
+            return {"item": _to_public_comment_dict(row)}, 200
+
+        _soft_delete_comment_tree(connection, comment_id)
         connection.execute(
             """
             UPDATE comments
-            SET status = ?, reviewed_by = ?, reviewed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+            SET reviewed_by = ?,
+                reviewed_at = CURRENT_TIMESTAMP,
+                updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
             """,
-            (next_status, me["id"], comment_id),
+            (me["id"], comment_id),
         )
         connection.commit()
 
-        row = _query_comment_rows(
-            connection,
-            "c.id = ?",
-            (comment_id,),
-            "ORDER BY c.id ASC",
-        )[0]
+    return {"ok": True, "status": "deleted"}, 200
 
-    return {"item": _to_public_comment_dict(row)}, 200
+
+@comment_bp.delete("/api/comments/<int:comment_id>")
+def delete_comment(comment_id: int) -> tuple[dict[str, Any], int]:
+    with get_db_connection() as connection:
+        me, err = require_current_user(connection)
+        if err is not None:
+            return err
+
+        row = connection.execute(
+            """
+            SELECT id, user_id
+            FROM comments
+            WHERE id = ? AND deleted_at IS NULL
+            """,
+            (comment_id,),
+        ).fetchone()
+        if row is None:
+            return {"message": "评论不存在或已删除"}, 404
+
+        if me["role"] not in MODERATOR_ROLES and int(row["user_id"]) != int(me["id"]):
+            return {"message": "只能删除自己的评论"}, 403
+
+        _soft_delete_comment_tree(connection, comment_id)
+        connection.commit()
+
+    return {"ok": True}, 200

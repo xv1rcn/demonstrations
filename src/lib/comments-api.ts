@@ -12,7 +12,7 @@ export type CommentItem = {
     target_key: string;
     target_title: string;
     content: string;
-    status: 'pending' | 'approved' | 'rejected';
+    status: 'pending' | 'approved' | 'deleted';
     created_at: string;
     updated_at: string;
     reviewed_at: string | null;
@@ -103,7 +103,7 @@ export async function fetchPendingComments(): Promise<ApiResult<{ items: Comment
 export async function moderateComment(
     commentId: number,
     action: 'approve' | 'reject',
-): Promise<ApiResult<{ item: CommentItem }>> {
+): Promise<ApiResult<{ item?: CommentItem; status?: 'deleted' }>> {
     const response = await fetch(`/api/comments/${commentId}/moderation`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -114,5 +114,17 @@ export async function moderateComment(
     if (!response) {
         return { ok: false, message: '评论服务暂不可用' };
     }
-    return parseResponse<{ item: CommentItem }>(response);
+    return parseResponse<{ item?: CommentItem; status?: 'deleted' }>(response);
+}
+
+export async function deleteComment(commentId: number): Promise<ApiResult<{ ok: boolean }>> {
+    const response = await fetch(`/api/comments/${commentId}`, {
+        method: 'DELETE',
+        cache: 'no-store',
+        credentials: 'include',
+    }).catch(() => null);
+    if (!response) {
+        return { ok: false, message: '评论服务暂不可用' };
+    }
+    return parseResponse<{ ok: boolean }>(response);
 }

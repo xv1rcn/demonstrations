@@ -21,12 +21,25 @@ def get_db_connection() -> sqlite3.Connection:
     return connection
 
 
-def _ensure_feedback_comment_target(connection: sqlite3.Connection) -> None:
+def _ensure_comments_schema(connection: sqlite3.Connection) -> None:
     table_row = connection.execute(
         "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'comments'"
     ).fetchone()
     table_sql = str(table_row["sql"]).lower() if table_row and table_row["sql"] else ""
-    if "target_type in ('simulation', 'lesson', 'feedback')" in table_sql:
+
+    has_feedback_target = "target_type in ('simulation', 'lesson', 'feedback')" in table_sql
+    has_deleted_status = "status in ('pending', 'approved', 'deleted')" in table_sql
+
+    if has_feedback_target and has_deleted_status:
+        connection.execute(
+            """
+            UPDATE comments
+            SET status = 'deleted',
+                deleted_at = COALESCE(deleted_at, CURRENT_TIMESTAMP),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE status = 'rejected'
+            """
+        )
         return
 
     connection.execute(
@@ -39,7 +52,7 @@ def _ensure_feedback_comment_target(connection: sqlite3.Connection) -> None:
             target_key TEXT NOT NULL,
             target_title TEXT NOT NULL DEFAULT '',
             content TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+            status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'deleted')),
             reviewed_by INTEGER,
             reviewed_at DATETIME,
             deleted_at DATETIME,
@@ -76,10 +89,10 @@ def _ensure_feedback_comment_target(connection: sqlite3.Connection) -> None:
             target_key,
             target_title,
             content,
-            status,
+            CASE WHEN status = 'rejected' THEN 'deleted' ELSE status END,
             reviewed_by,
             reviewed_at,
-            deleted_at,
+            CASE WHEN status = 'rejected' AND deleted_at IS NULL THEN CURRENT_TIMESTAMP ELSE deleted_at END,
             created_at,
             updated_at
         FROM comments
@@ -130,7 +143,7 @@ def init_db() -> None:
                 target_key TEXT NOT NULL,
                 target_title TEXT NOT NULL DEFAULT '',
                 content TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+                status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'deleted')),
                 reviewed_by INTEGER,
                 reviewed_at DATETIME,
                 deleted_at DATETIME,
@@ -148,7 +161,7 @@ def init_db() -> None:
         connection.execute("CREATE INDEX IF NOT EXISTS idx_comments_parent ON comments(parent_id)")
         connection.execute("CREATE INDEX IF NOT EXISTS idx_comments_status ON comments(status)")
 
-        _ensure_feedback_comment_target(connection)
+        _ensure_comments_schema(connection)
 
         existing_admin = connection.execute(
             "SELECT id FROM users WHERE username = ?",
