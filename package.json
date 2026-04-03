@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "concurrently -k -n frontend,backend -c cyan,green \"npm:dev:frontend\" \"npm:dev:backend\"",
     "dev:frontend": "next dev --turbopack",
-    "dev:backend": "uv run --project backend backend/main.py",
+    "dev:backend": "uv run --project backend backend/main.py --debug",
     "build": "next build",
     "start": "concurrently -k -n frontend,backend -c cyan,green \"npm:start:frontend\" \"npm:start:backend\"",
     "start:frontend": "next start",
-    "start:backend": "uv run --project backend backend/main.py",
+    "start:backend": "cd backend && uv run waitress-serve --listen=127.0.0.1:5000 wsgi:app",
     "lint": "next lint"
   },
   "dependencies": {
